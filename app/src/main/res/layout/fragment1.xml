@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
@@ -8,13 +8,34 @@
         android:textColor="#00f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v4.view.ViewPager>
 
     <Button
         android:id="@+id/ceshi"
         android:text="测试用的按钮"
         android:visibility="gone"
-        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/trend"
+        android:text="趋势"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginRight="50sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/category"
+        android:text="分类"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="50sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</LinearLayout>
+
+</FrameLayout>
