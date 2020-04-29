@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Fragment1_2 extends Fragment {
-
-
+public class Fragment1_3 extends Fragment {
     private View mView;
 
 
@@ -16,7 +14,7 @@ public class Fragment1_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //注意View对象的重复使用，以便节省资源
         if(mView == null) {
-            mView = inflater.inflate(R.layout.fragment1_2,container,false);
+            mView = inflater.inflate(R.layout.fragment1_3,container,false);
         }
 
         return mView;
