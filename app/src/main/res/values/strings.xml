@@ -4,4 +4,5 @@
     <string name="title_account">手动记账</string>
     <string name="title_cycleaccount">周期记账</string>
     <string name="title_myself">我的</string>
+    <string name="income">收入</string>
 </resources>
