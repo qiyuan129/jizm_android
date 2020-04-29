@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private Fragment3 fragment3;
+    private Fragment4 fragment4;
     private List<Fragment> list;
 
 
@@ -34,14 +35,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_graph:
                     viewPager.setCurrentItem(0);
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_account:
                     viewPager.setCurrentItem(1);
                     return true;
-                case R.id.navigation_notifications:
+                case R.id.navigation_cycleaccount:
                     viewPager.setCurrentItem(2);
+                    return true;
+                case R.id.navigation_myself:
+                    viewPager.setCurrentItem(3);
                     return true;
             }
             return false;
@@ -63,16 +67,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initView(){
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
 
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
+        fragment4 = new Fragment4();
 
         list = new ArrayList<>();
         list.add(fragment1);
         list.add(fragment2);
         list.add(fragment3);
+        list.add(fragment4);
 
         MyViewPagerAdapter adapter = new MyViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);

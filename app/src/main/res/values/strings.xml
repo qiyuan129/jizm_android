@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_graph">报表</string>
+    <string name="title_account">手动记账</string>
+    <string name="title_cycleaccount">周期记账</string>
+    <string name="title_myself">我的</string>
 </resources>
