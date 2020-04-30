@@ -12,6 +12,15 @@ public class Fragment1_3 extends Fragment {
     private View mView;
 
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //注意View对象的重复使用，以便节省资源
