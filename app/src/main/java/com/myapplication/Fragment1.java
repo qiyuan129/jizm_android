@@ -1,4 +1,5 @@
 package com.myapplication;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.MyDatabaseHelper;
+//import util.MyDatabaseHelper;
 
 public class Fragment1 extends Fragment {
     private View mView;
@@ -27,15 +28,20 @@ public class Fragment1 extends Fragment {
     private List<Fragment> list;
 
 
-    private MyDatabaseHelper dbHelper;
+    //private MyDatabaseHelper dbHelper;
     private Button ceshi;
+
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         //注意View对象的重复使用，以便节省资源
         if(mView == null) {
             mView = inflater.inflate(R.layout.fragment1,container,false);
         }
-        dbHelper=new MyDatabaseHelper(getActivity(),"JiZM",null,1);
+
+
+        //dbHelper=new MyDatabaseHelper(getActivity(),"JiZM",null,1);
+
+
 //        ceshi=(Button) mView.findViewById(R.id.ceshi);
 //        ceshi.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -43,6 +49,7 @@ public class Fragment1 extends Fragment {
 //                dbHelper.getWritableDatabase();
 //            }
 //        });
+
         fragment1_1 = new Fragment1_1();
         fragment1_2 = new Fragment1_2();
         fragment1_3 = new Fragment1_3();
@@ -79,15 +86,22 @@ public class Fragment1 extends Fragment {
         });
 
 
-        dbHelper.getWritableDatabase();
+        //dbHelper.getWritableDatabase();
+
 
 
         return mView;
     }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 //        ceshi=(Button) getView().findViewById(R.id.ceshi);
+
+
+
 
 
     }

@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="50dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+    <TextView
+        android:text="趋势"
+        android:textSize="28sp"
+        android:textColor="#00f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-
-    <view
-        android:id="@+id/linechart"
-        class="com.github.mikephil.charting.charts.LineChart"
-        android:layout_width="387dp"
-        android:layout_height="232dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
