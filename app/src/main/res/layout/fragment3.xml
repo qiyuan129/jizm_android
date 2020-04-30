@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="第3个"
-        android:textSize="28sp"
-        android:textColor="#00f"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:background="@color/cardview_light_background">
+
+        <RelativeLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/add_periodic"
+                android:text="添加事件"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:background="@drawable/shape_tb_cash"
+                android:textColor="@color/cardview_light_background" />
+
+            <Button
+                android:id="@+id/search_periodic"
+                android:text="查找事件"
+                android:layout_toRightOf="@+id/add_periodic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:background="@drawable/shape_tb_cash"
+                android:textColor="@color/cardview_light_background" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/period_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@color/cardview_light_background">
+
+        <hlq.com.slidedeletelistview.SlideDeleteListView
+            android:id="@+id/periodic_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+
 
 </LinearLayout>
