@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
+    <!--这个文件是没有使用的了-->
 
 
     <hlq.com.slidedeletelistview.SlideDeleteListView
@@ -11,7 +11,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants"/>
-
-
 
 </LinearLayout>

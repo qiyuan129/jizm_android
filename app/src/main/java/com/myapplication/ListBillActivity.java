@@ -22,7 +22,7 @@ import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
 /*
-实现罗列账单项
+这个类是没用的了
  */
 
 public class ListBillActivity extends AppCompatActivity {
