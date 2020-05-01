@@ -39,7 +39,7 @@
     <RelativeLayout
         android:layout_below="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:background="@color/cardview_light_background"
         >
@@ -47,7 +47,19 @@
         <GridLayout
             android:id="@+id/viewpager_item"
             android:layout_width="match_parent"
-            android:layout_height="180dp" />
+            android:layout_height="150dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+        </GridLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
