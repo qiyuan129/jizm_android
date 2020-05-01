@@ -3,6 +3,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <SearchView
+            android:id="@+id/search_periodic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:queryHint="请输入周期事件名字搜索"/>
+
+
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/buttons_layout"
@@ -10,30 +25,15 @@
         android:layout_height="40dp"
         android:gravity="center_vertical"
         android:background="@color/cardview_light_background">
-
-        <RelativeLayout
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
             <Button
                 android:id="@+id/add_periodic"
                 android:text="添加事件"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:textSize="15sp"
                 android:background="@drawable/shape_tb_cash"
                 android:textColor="@color/cardview_light_background" />
-
-            <Button
-                android:id="@+id/search_periodic"
-                android:text="查找事件"
-                android:layout_toRightOf="@+id/add_periodic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:background="@drawable/shape_tb_cash"
-                android:textColor="@color/cardview_light_background" />
-        </RelativeLayout>
     </RelativeLayout>
 
 
@@ -48,7 +48,7 @@
         android:background="@color/cardview_light_background">
 
         <hlq.com.slidedeletelistview.SlideDeleteListView
-            android:id="@+id/periodic_list"
+            android:id="@+id/list_periodic_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
