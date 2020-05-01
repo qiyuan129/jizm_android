@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -35,14 +36,14 @@ import pojo.Categorytest;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
-    private Context mContext;
 
-    private Button incomeTv;    //收入按钮
-    private Button outcomeTv;   //支出按钮
-    private TextView sortTv;    //显示选择的分类
-    private TextView moneyTv;   //金额
-    private TextView dateTv;    //日期选择
-    private TextView cashTv;    //支出账户
+    private Button incomeTv;        //收入按钮
+    private Button outcomeTv;       //支出按钮
+    private TextView edittypeTv;    //编辑类别
+    private TextView sortTv;        //显示选择的分类
+    private TextView moneyTv;       //金额
+    private TextView dateTv;        //日期选择
+    private TextView cashTv;        //支出账户
     //数字键盘
     private TextView num1;
     private TextView num2;
@@ -99,6 +100,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         outcomeTv = (Button) mView.findViewById(R.id.outcome_tv);
         outcomeTv.setOnClickListener(this);
+
+        edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
+        edittypeTv.setOnClickListener(this);
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
 
@@ -172,6 +176,11 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 break;
             case R.id.outcome_tv:
                 Log.d("Fragment","收入");
+                break;
+            case R.id.type_edit:
+                Intent intent = new Intent(getActivity(), TypeEditActivity.class);
+                startActivity(intent);
+                Log.d("Fragment","编辑分类");
                 break;
             case R.id.tb_note_cash:
                 showPayAccount();
