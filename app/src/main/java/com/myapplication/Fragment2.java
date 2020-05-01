@@ -1,5 +1,6 @@
 package com.myapplication;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,6 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import pojo.Categorytest;
@@ -66,7 +69,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     protected int selectedPayinfoIndex = 0;      //选择的支付方式序号
 
     //选择时间
-    protected String days = "2020-4-30";
+    protected String days;
+    protected int mYear;
+    protected int mMonth;
+    protected int mDays;
 
     //备注
     protected String remarkInput = "";
@@ -99,7 +105,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         moneyTv = (TextView) mView.findViewById(R.id.tb_note_money);
         moneyTv.setText(num+dotNum);
 
+        //获取当前年，月，日
+        Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDays = calendar.get(Calendar.DAY_OF_MONTH);
+
         dateTv = (TextView) mView.findViewById(R.id.tb_note_date);
+        days = new StringBuffer().append(mYear).append("-").append(mMonth + 1).append("-").append(mDays).toString();
         dateTv.setText(days);
         dateTv.setOnClickListener(this);
 
@@ -165,6 +178,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 Log.d("Fragment","选择账户");
                 break;
             case R.id.tb_note_date:
+                showDateSelector();
                 Log.d("Fragment","选择日期");
                 break;
             case R.id.tb_note_remark:
@@ -247,6 +261,33 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                     dialog.dismiss();
                     return false;
                 }).show();
+    }
+
+    //显示日期选择器
+    public void showDateSelector() {
+        new DatePickerDialog(getActivity(),(DatePicker datePicker, int i, int i1, int i2) -> {
+            mYear = i;
+            mMonth = i1;
+            mDays = i2;
+            if (mMonth + 1 < 10) {
+                if (mDays < 10) {
+                    days = new StringBuffer().append(mYear).append("-").append("0")
+                            .append(mMonth + 1).append("-").append("0").append(mDays).toString();
+                } else {
+                    days = new StringBuffer().append(mYear).append("-").append("0")
+                            .append(mMonth + 1).append("-").append(mDays).toString();
+                }
+            } else{
+                if (mDays < 10) {
+                    days = new StringBuffer().append(mYear).append("-")
+                            .append(mMonth + 1).append("-").append("0").append(mDays).toString();
+                } else {
+                    days = new StringBuffer().append(mYear).append("-")
+                            .append(mMonth + 1).append("-").append(mDays).toString();
+                }
+            }
+            dateTv.setText(days);
+        },mYear,mMonth,mDays).show();
     }
 
     //显示备注内容输入框
