@@ -10,7 +10,7 @@
         android:layout_height="50dp"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        android:textSize="12sp"/>
+        android:textSize="25dp"/>
     <TextView
         android:id="@+id/trendincome"
         android:layout_width="0dp"

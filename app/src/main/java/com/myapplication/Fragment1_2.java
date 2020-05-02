@@ -26,22 +26,19 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Fragment1_2 extends Fragment {
-    boolean OutcomeFlag = false;
-    boolean IncomeFlag = true;
+public class Fragment1_2 extends Fragment
+{
+    boolean OutcomeFlag = true;
+    boolean IncomeFlag = false;
     private View mView;
     private PieChart mPieChart;
     private Switch mChangeType;
     private ListView lview;
-    private Date mdate;
-    private CategoryListAdapter adapter;
     private List<CategoryListItem> categoryList = new ArrayList<>();
-    private List<CategoryChartItem> categoryChart = new ArrayList<>();
 
 
     @Override
@@ -52,74 +49,82 @@ public class Fragment1_2 extends Fragment {
         }
 
         lview = mView.findViewById(R.id.CategoryList);
-        categoryList = loadcategoryList(OutcomeFlag);
-        adapter = new CategoryListAdapter(getActivity(), R.layout.categorylist_item, categoryList);
-        lview.setAdapter(adapter);
+        ShowCategoryList(lview,OutcomeFlag);
 
         mPieChart = mView.findViewById(R.id.PieChart);
-        categoryChart = loadcategoryChart(OutcomeFlag);
-        ShowPieChart(mPieChart, setPieChartData(categoryChart), OutcomeFlag);
+        ShowPieChart(mPieChart, setPieChartData(OutcomeFlag),OutcomeFlag);
 
         mChangeType = mView.findViewById(R.id.Switch_In_Out);
-        mChangeType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mChangeType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    RefreshData(IncomeFlag);
-                }
-                else {
-                    RefreshData(OutcomeFlag);
+                    Toast.makeText(getActivity(), "收入", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getActivity(), "支出", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
         return mView;
     }
-    //加载数据用于饼图展示  后续可能加入 dadte事件 使用接口获取数据
-    public List<CategoryChartItem> loadcategoryChart(boolean typeflag) {
-        int i;
-        List<CategoryChartItem> mcategoryChart = new ArrayList<>();
-        if (typeflag == OutcomeFlag) {
-            for (i = 0; i < 5; i++) {
-                CategoryChartItem c1 = new CategoryChartItem("火锅",15F);
-                mcategoryChart.add(c1);
-                CategoryChartItem c2 = new CategoryChartItem("购物",5F);
-                mcategoryChart.add(c2);
-            }
+
+    private HashMap<String,Float> setData(boolean typeflag) {
+        HashMap<String, Float> chartdate = new HashMap<String, Float>();
+        if (typeflag) {
+            chartdate.put("淘宝", 12F);
+            chartdate.put("聚餐", 8F);
+            chartdate.put("衣物", 24F);
+            chartdate.put("旅行", 6F);
+            chartdate.put("生活用品", 32F);
+            chartdate.put("购物", 12F);
+            chartdate.put("早餐", 4F);
+            chartdate.put("啥也不是", 2F);
+        } else {
+            chartdate.put("收入1", 12F);
+            chartdate.put("收入2", 8F);
+            chartdate.put("收入3", 24F);
+            chartdate.put("收入4", 6F);
+            chartdate.put("收入5", 32F);
+            chartdate.put("收入6", 12F);
+            chartdate.put("收入7", 4F);
+            chartdate.put("收入8", 2F);
         }
-        else {
-            for (i = 0; i < 5; i++) {
-                CategoryChartItem c1 = new CategoryChartItem("工资",10F);
-                mcategoryChart.add(c1);
-                CategoryChartItem c2 = new CategoryChartItem("奖金",10F);
-                mcategoryChart.add(c2);
-            }
-        }
-        return mcategoryChart;
+
+        return chartdate;
     }
-    private List<PieEntry> setPieChartData(List<CategoryChartItem> chartdata) {
+
+    private List<PieEntry> setPieChartData(boolean typeflag)
+    {
         //       List<String> dataList = new ArrayList<>();
+        Map<String,Float> datemap = setData(typeflag);
         List<PieEntry> mPie = new ArrayList<>();
         PieEntry pieEntry;
-        for (CategoryChartItem c : chartdata) {
-            mPie.add(new PieEntry(c.getPrecent(), c.getCategoryname()));
+        for(Map.Entry<String, Float> entry: datemap.entrySet())
+        {
+            mPie.add(new PieEntry(entry.getValue(),entry.getKey()));
         }
         return mPie;
     }
-    private void ShowPieChart(PieChart pieChart, List<PieEntry> piedata, boolean typeflag) {
-        PieDataSet dataSet = new PieDataSet(piedata, "");
+
+    private void ShowPieChart(PieChart pieChart, List<PieEntry> piedata,boolean typeflag)
+    {
+        PieDataSet dataSet = new PieDataSet(piedata,"");
         ArrayList<Integer> mColorList = new ArrayList<Integer>();
-        int[] color = {Color.rgb(239, 199, 194),
-                Color.rgb(215, 144, 123),
-                Color.rgb(232, 221, 181),
-                Color.rgb(178, 201, 171),
-                Color.rgb(104, 166, 145),
-                Color.rgb(108, 75, 94),
-                Color.rgb(179, 103, 155),
-                Color.rgb(244, 165, 174),
-                Color.rgb(125, 130, 184),
-                Color.rgb(250, 156, 56)
+        int[] color={Color.rgb(239,199,194),
+                Color.rgb(215,144,123),
+                Color.rgb(232,221,181),
+                Color.rgb(178,201,171),
+                Color.rgb(104,166,145),
+                Color.rgb(108,75,94),
+                Color.rgb(179,103,155),
+                Color.rgb(244,165,174),
+                Color.rgb(125,130,184),
+                Color.rgb(250,156,56)
         };
-        for (int c : color) {
+        for(int c :color)
+        {
             mColorList.add(c);
         }
         dataSet.setColors(mColorList);
@@ -164,7 +169,7 @@ public class Fragment1_2 extends Fragment {
         pieChart.setDrawEntryLabels(false);
         //是否绘制PieChart内部中心文本
         pieChart.setDrawCenterText(true);
-        if (typeflag == OutcomeFlag)
+        if(typeflag)
             pieChart.setCenterText("支出比例");
         else
             pieChart.setCenterText("收入比例");
@@ -182,53 +187,54 @@ public class Fragment1_2 extends Fragment {
         pieChart.postInvalidate();
     }
 
-    //加载获取数据源 用于列表展示  后续可能加入 dadte事件 使用接口获取数据
-    public List<CategoryListItem> loadcategoryList(boolean typeflag) {
-        int i;
-        List<CategoryListItem> mcategoryList = new ArrayList<>();
-        if (typeflag == OutcomeFlag) {
-            for (i = 0; i < 5; i++) {
-                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "支出", 1234.00, "2020-2-7");
-                mcategoryList.add(c1);
-                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "支出", 123451.00, "2020-2-7");
-                mcategoryList.add(c2);
-            }
-            CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "支出", 123451.00, "2020-2-7");
-            mcategoryList.add(c2);
-        } else {
-            for (i = 0; i < 5; i++) {
-                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "收入", 12, "2020-2-7");
-                mcategoryList.add(c1);
-                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "收入", 12, "2020-2-7");
-                mcategoryList.add(c2);
-            }
-            CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "收入",12, "2020-2-7");
-            mcategoryList.add(c2);
-        }
-        return mcategoryList;
+    public void ShowCategoryList(ListView listview,boolean typeflag)
+    {
+        if(typeflag == OutcomeFlag)
+            setCategoryListData(OutcomeFlag);
+        if(typeflag == IncomeFlag)
+            setCategoryListData(IncomeFlag);
+        CategoryListAdapter adapter = new CategoryListAdapter(getActivity(), R.layout.categorylist_item, categoryList);
+        listview.setAdapter(adapter);
     }
 
-    public void RefreshData(boolean flag)
+    public void setCategoryListData(boolean isoutcome)
     {
-        categoryList.clear();
-        categoryList.addAll(loadcategoryList(flag));
-        adapter.notifyDataSetChanged();
-        lview.setAdapter(adapter);
-
-        categoryChart.clear();
-        categoryChart.addAll(loadcategoryChart(flag));
-        ShowPieChart(mPieChart, setPieChartData(categoryChart), flag);
+        int i;
+        if(isoutcome)
+        {
+            for (i = 0; i < 5; i++) {
+                CategoryListItem c1 = new CategoryListItem(String.valueOf(i*2+1), "支出", "1234.00", "2020-2-7");
+                categoryList.add(c1);
+                CategoryListItem c2 = new CategoryListItem(String.valueOf(i*2+2), "支出", "123451.00", "2020-2-7");
+                categoryList.add(c2);
+            }
+            CategoryListItem c2 = new CategoryListItem(String.valueOf(i*2+2), "支出", "123451.00", "2020-2-7");
+            categoryList.add(c2);
+        }
+        else
+        {
+            for (i = 0; i < 5; i++)
+            {
+                CategoryListItem c1 = new CategoryListItem(String.valueOf(i*2+1), "收入", "12", "2020-2-7");
+                categoryList.add(c1);
+                CategoryListItem c2 = new CategoryListItem(String.valueOf(i*2+2), "收入", "12", "2020-2-7");
+                categoryList.add(c2);
+            }
+            CategoryListItem c2 = new CategoryListItem(String.valueOf(i*2+2), "收入", "12", "2020-2-7");
+            categoryList.add(c2);
+        }
     }
 }
+
+
 class CategoryListItem
 {
-    private int order;
+    private String order;
     private String categoryname;
-    private double money;
-    private Float precent;
+    private String money;
     private String date;
 
-    public CategoryListItem(int order,String categoryname,double money,String date)
+    public CategoryListItem(String order,String categoryname,String money,String date)
     {
         this.order=order;
         this.categoryname=categoryname;
@@ -236,7 +242,7 @@ class CategoryListItem
         this.date=date;
     }
 
-    public int getOrder() {
+    public String getOrder() {
         return order;
     }
 
@@ -244,11 +250,7 @@ class CategoryListItem
         return categoryname;
     }
 
-    public Float getPrecent() {
-        return precent;
-    }
-
-    public double getMoney() {
+    public String getMoney() {
         return money;
     }
 
@@ -257,65 +259,27 @@ class CategoryListItem
     }
 }
 
-class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
-{
+class CategoryListAdapter extends ArrayAdapter<CategoryListItem> {
     private int id;
 
-    public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects)
-    {
+    public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects) {
         super(context, textid, objects);
         id = textid;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         CategoryListItem categoryListItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(id, parent, false);
         TextView month = (TextView) view.findViewById(R.id.order);
         TextView income = (TextView) view.findViewById(R.id.categoryname);
         TextView outcome = (TextView) view.findViewById(R.id.money);
         TextView balance = (TextView) view.findViewById(R.id.date);
-        month.setText(String.valueOf(categoryListItem.getOrder()));
+        month.setText(categoryListItem.getOrder());
         income.setText(categoryListItem.getCategoryname());
-        outcome.setText(String.valueOf(categoryListItem.getMoney()));
-        balance.setText(String.valueOf(categoryListItem.getDate()));
+        outcome.setText(categoryListItem.getMoney());
+        balance.setText(categoryListItem.getDate());
         return view;
     }
 }
-
-class CategoryChartItem
-{
-    private String categoryname;
-    private Float precent;
-    private double money;
-
-    public CategoryChartItem(String categoryname,Float precent)
-    {
-        this.categoryname=categoryname;
-        this.precent=precent;
-    }
-    public CategoryChartItem(String categoryname,Float precent,Float money)
-    {
-        this.categoryname=categoryname;
-        this.precent=precent;
-        this.money=money;
-    }
-
-    public String getCategoryname() {
-        return categoryname;
-    }
-
-    public Float getPrecent() {
-        return precent;
-    }
-
-    public double getMoney() {
-        return money;
-    }
-}
-
-
-
-
 

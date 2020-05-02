@@ -27,11 +27,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
 
-            android:textOff="开"
             android:textOn="关"
+            android:textOff="开"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.215"
-            app:layout_constraintStart_toEndOf="@+id/ButtonDate"
+            app:layout_constraintHorizontal_bias="0.892"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <view
