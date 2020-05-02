@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/cancel_edit"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="取消"
+           />
+
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:text="账号"
+            android:editable="false"/>
+
+        <Button
+            android:id="@+id/update_personal_data"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:textColor="@color/red"/>
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#090808"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="60dp">
+        <TextView
+            android:text="手机"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <EditText
+            android:id="@+id/phone_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="134***24625"/>
+
+    </LinearLayout>
+
+
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#090808"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="60dp">
+        <TextView
+            android:text="邮箱"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <EditText
+            android:id="@+id/email_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="245258851147@qq.com"/>
+
+    </LinearLayout>
+
+
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#090808"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="60dp">
+        <TextView
+            android:text="昵称"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <EditText
+            android:id="@+id/nickname_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="阳关三叠"/>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+</LinearLayout>

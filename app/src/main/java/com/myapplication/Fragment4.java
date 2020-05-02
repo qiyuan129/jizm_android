@@ -1,5 +1,6 @@
 package com.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,14 +16,17 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 
-public class Fragment4 extends Fragment {
+public class Fragment4 extends Fragment implements View.OnClickListener{
 
     private View mView;
 
     ImageView imageViewb;
     ImageView imageViewh;
+    ImageView personalDateEnter;
+    ImageView settingEnter;
     TextView userName;
     TextView userTel;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
@@ -31,13 +35,29 @@ public class Fragment4 extends Fragment {
             mView = inflater.inflate(R.layout.fragment4,container,false);
         }
 
+        //初始化页面组件数据
         initInfomation();
+
+        //设置事件监听
+        setActionListener();
+
+
+
         return mView;
     }
+
+
+
+
 
     private void initInfomation(){
         imageViewb=(ImageView)mView.findViewById(R.id.h_back) ;
         imageViewh=(ImageView)mView.findViewById(R.id.h_head) ;
+        personalDateEnter =(ImageView)mView.findViewById(R.id.personal_enter);
+        settingEnter =(ImageView) mView.findViewById(R.id.setting_enter);
+
+
+
         userName=(TextView)mView.findViewById(R.id.user_name);
         userTel=(TextView)mView.findViewById(R.id.user_val);
 
@@ -53,7 +73,55 @@ public class Fragment4 extends Fragment {
 
         userName.setText("乔大");
         userTel.setText("132546785");
+
+
+
+
     }
+
+
+    public void setActionListener(){
+        imageViewh.setOnClickListener(this);
+        personalDateEnter.setOnClickListener(this);
+        settingEnter.setOnClickListener(this);
+    }
+
+
+
+
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.h_head:
+
+                break;
+
+
+            case R.id.personal_enter:
+                Intent intent1 = new Intent(getActivity(),PersonalDataEditActivity.class);
+                startActivity(intent1);
+                break;
+
+
+            case R.id.setting_enter:
+                Intent intent2 = new Intent(getActivity(),EditSettingActivity.class);
+                startActivity(intent2);
+                break;
+
+
+                default:
+                    break;
+
+        }
+    }
+
+
+
+
+
+
 
 
 
