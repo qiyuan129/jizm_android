@@ -34,6 +34,17 @@
                 android:background="@drawable/shape_tb_cash"
                 android:textColor="@color/cardview_light_background" />
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/type_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="编辑分类"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
     <RelativeLayout
