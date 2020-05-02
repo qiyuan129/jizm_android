@@ -37,6 +37,16 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
 
+    private List<Categorytest> categorytestList = new ArrayList<>();
+
+    private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
+            "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
+            "酒店旅行", "爱车养车", "其他"};
+
+    private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
+
+    public boolean isOutcome = true;
+
     private Button incomeTv;        //收入按钮
     private Button outcomeTv;       //支出按钮
     private TextView edittypeTv;    //编辑类别
@@ -85,8 +95,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     protected final int MAX_NUM = 9999999;   //最大整数
     protected final int DOT_NUM = 2;         //小数点后最大位数
     protected int count = 0;
-
-    private List<Categorytest> categorytestList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
@@ -159,11 +167,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         //分类展示
         initCategory();
-        recyclerView = (RecyclerView) mView.findViewById(R.id.recycle_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),5);
-        recyclerView.setLayoutManager(layoutManager);
-        CategoryAdapter adapter = new CategoryAdapter(categorytestList);
-        recyclerView.setAdapter(adapter);
+
 
         return mView;
     }
@@ -172,9 +176,11 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.income_tv:
+                isOutcome = true;
                 Log.d("Fragment","支出");
                 break;
             case R.id.outcome_tv:
+                isOutcome = false;
                 Log.d("Fragment","收入");
                 break;
             case R.id.type_edit:
@@ -366,24 +372,24 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initCategory() {
-        for (int i = 0; i < 2; i++) {
-            Categorytest apple = new Categorytest("Apple");
-            categorytestList.add(apple);
-            Categorytest banana = new Categorytest("Banana");
-            categorytestList.add(banana);
-            Categorytest orange = new Categorytest("orange");
-            categorytestList.add(orange);
-            Categorytest apple1 = new Categorytest("apple1");
-            categorytestList.add(apple1);
-            Categorytest apple2 = new Categorytest("apple2");
-            categorytestList.add(apple2);
-            Categorytest apple3 = new Categorytest("apple3");
-            categorytestList.add(apple3);
-            Categorytest apple4 = new Categorytest("apple4");
-            categorytestList.add(apple4);
-            Categorytest apple5 = new Categorytest("apple5");
-            categorytestList.add(apple5);
+        if (isOutcome) {
+            for(int i = 0; i < category_outcome.length; i++){
+                Categorytest categorytest = new Categorytest(category_outcome[i]);
+                categorytestList.add(categorytest);
+            }
+        } else {
+            for(int i = 0; i < category_income.length; i++){
+                Categorytest categorytest = new Categorytest(category_income[i]);
+                categorytestList.add(categorytest);
+            }
         }
+        recyclerView = (RecyclerView) mView.findViewById(R.id.recycle_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
+        recyclerView.setLayoutManager(layoutManager);
+        CategoryAdapter adapter = new CategoryAdapter(categorytestList);
+        recyclerView.setAdapter(adapter);
+
+
     }
 
 }
