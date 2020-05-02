@@ -287,7 +287,7 @@ class PeriodicListAdapter extends ArrayAdapter<Periodic> {
  * @author 郑明亮   @email 1072307340@qq.com
  * @version 1.0
  * @time 2016/7/29 18:28
- * 
+ *
  */
 class RecomendAdapter extends BaseAdapter implements Filterable {
     Context context;

@@ -1,19 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="第4个"
-        android:textSize="28sp"
-        android:textColor="#00f"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/h_back"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
+        <ImageView
+            android:id="@+id/h_head"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/h_back"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/user_line"
+                android:layout_width="1dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="15dp"
+                android:layout_centerHorizontal="true"
+                android:background="@color/white"/>
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/user_line"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:text="张三"/>
+
+            <TextView
+                android:id="@+id/user_val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:layout_toRightOf="@id/user_line"
+                android:text="182****5882"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+    <!--子项-->
+    <LinearLayout
+        android:id="@+id/ll"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="60dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/ic_wallet"
+                android:layout_gravity="left"
+                android:paddingLeft="0dp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="我的钱包"
+                android:textSize="20dp"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/user_Name_i"
+                android:layout_gravity="right"
+                android:paddingRight="0dp"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_enter"/>
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+
+
+            android:background="#090808"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="60dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/ic_recover"
+                android:paddingLeft="0dp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="恢复数据"
+                android:textSize="20dp"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:paddingRight="0dp"
+                android:layout_width="40dp"
+                android:src="@drawable/ic_enter"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+
+
+            android:background="#090808"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="60dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/ic_update"
+                android:paddingLeft="0dp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="更新数据"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:paddingRight="0dp"
+                android:layout_width="40dp"
+                android:src="@drawable/ic_enter"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+
+
+            android:background="#090808"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="60dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/ic_export"
+                android:paddingLeft="0dp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="导出账单"
+                android:textSize="20dp"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:paddingRight="0dp"
+                android:layout_width="40dp"
+                android:src="@drawable/ic_enter"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+
+
+            android:background="#090808"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="60dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/ic_setting"
+                android:paddingLeft="0dp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="设置"
+                android:textSize="20dp"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:paddingRight="0dp"
+                android:layout_width="40dp"
+                android:src="@drawable/ic_enter"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+
+
+
+
+
+    </LinearLayout>
 
 
 

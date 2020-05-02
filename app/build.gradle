@@ -37,4 +37,8 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     //左滑删除ListView组件
     implementation 'com.hlq:slideDeleteListView:1.0.0'
+    //图片显示组件
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'jp.wasabeef:glide-transformations:2.0.1'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
 }
