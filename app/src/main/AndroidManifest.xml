@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdateBillActivity"></activity>
+        <activity android:name=".EditSettingActivity"></activity>
+        <activity android:name=".PersonalDataEditActivity" />
+        <activity android:name=".UpdateBillActivity" />
         <activity android:name=".ListBillActivity" />
         <activity
             android:name=".MainActivity"
@@ -20,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TypeEditActivity"></activity>
+        <activity android:name=".TypeEditActivity" />
     </application>
 
 </manifest>
