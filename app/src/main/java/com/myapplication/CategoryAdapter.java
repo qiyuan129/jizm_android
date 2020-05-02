@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -15,10 +16,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private List<Categorytest> mCategoryList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+        View categoryView;
         TextView categoryName;
 
         public ViewHolder(View view) {
             super(view);
+            categoryView = view;
             categoryName = (TextView) view.findViewById(R.id.category_name);
         }
     }
@@ -31,7 +34,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item,parent,false);
-        ViewHolder holder = new ViewHolder(view);
+        final ViewHolder holder = new ViewHolder(view);
+        holder.categoryView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Categorytest categorytest = mCategoryList.get(position);
+                Toast.makeText(v.getContext(), "you clicked view" + categorytest.getName(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
         return holder;
     }
 

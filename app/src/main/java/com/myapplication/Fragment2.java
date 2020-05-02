@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.text.InputType;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -76,7 +78,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private RecyclerView recyclerView;
 
     //选择器
-    protected List<String> cardItems;
+    protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
+   // protected List<String> cardItems;
     protected int selectedPayinfoIndex = 0;      //选择的支付方式序号
 
     //选择时间
@@ -111,6 +114,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
         edittypeTv.setOnClickListener(this);
+
+        recyclerView = (RecyclerView) mView.findViewById(R.id.category_recycle_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
+        recyclerView.setLayoutManager(layoutManager);
+        //分类展示
+        initCategory();
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
 
@@ -165,8 +174,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         delect = (RelativeLayout) mView.findViewById(R.id.tb_calc_num_del);
         delect.setOnClickListener(this);
 
-        //分类展示
-        initCategory();
 
 
         return mView;
@@ -267,15 +274,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         new MaterialDialog.Builder(getActivity())
                 .title("请选择支付账户")
                 .titleGravity(GravityEnum.CENTER)
-                .items(cardItems)
+                .items(account)
                 .positiveText("确定")
                 .negativeText("取消")
-                .itemsCallbackSingleChoice(selectedPayinfoIndex,(dialog, itemView, which, text)->{
-                    selectedPayinfoIndex = which;
-                    cashTv.setText(cardItems.get(which));
-                    dialog.dismiss();
-                    return false;
-                }).show();
+                .canceledOnTouchOutside(false)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        cashTv.setText(text);
+                        return true;
+                    }
+                })
+                .show();
     }
 
     //显示日期选择器
@@ -309,6 +319,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void showContentDialog() {
         new MaterialDialog.Builder(getActivity())
                 .title("备注")
+                .canceledOnTouchOutside(false)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
                 .input("备注", remarkInput, (dialog, input) -> {
@@ -383,13 +394,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 categorytestList.add(categorytest);
             }
         }
-        recyclerView = (RecyclerView) mView.findViewById(R.id.recycle_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
-        recyclerView.setLayoutManager(layoutManager);
         CategoryAdapter adapter = new CategoryAdapter(categorytestList);
         recyclerView.setAdapter(adapter);
-
-
     }
 
 }
