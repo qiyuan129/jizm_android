@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,9 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -30,17 +37,27 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import static java.lang.Long.valueOf;
 
 public class Fragment1_1 extends Fragment {
 
+    private TimePickerView mStartDatePickerView;
     private View mView;
     private ListView lview;
-    private Button mButtonYear;
+    private TextView choiceYear;
+    private ImageButton refresh;
+    private int year=(Calendar.getInstance()).get(Calendar.YEAR);
     private LineChart lineChart;
     private TrendListAdapter adapter;
     private XAxis xAxis;                //X轴
@@ -49,7 +66,6 @@ public class Fragment1_1 extends Fragment {
     private Legend legend;              //图例
     private LimitLine limitLine;        //限制线
 
-    private int year = (Calendar.getInstance()).get(Calendar.YEAR);
     private List<TrendListItem> trendList = new ArrayList<>();
     private List<IncomeLineItem> incomeLine = new ArrayList<>();
     private List<OutcomeLineItem> outcomeLine = new ArrayList<>();
@@ -58,7 +74,7 @@ public class Fragment1_1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        //注意View对象的重复使用，以便节省资源
+
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment1_1, container, false);
         }
@@ -66,9 +82,9 @@ public class Fragment1_1 extends Fragment {
         lineChart = mView.findViewById(R.id.LineChart);
         initChart(lineChart);
 
-        incomeLine = loadincomeChart(2020);
+        incomeLine = loadincomeChart(year);
         showLineChart(incomeLine, "收入", Color.rgb(104,134,197));
-        outcomeLine = loadoutcomeChart(2020);
+        outcomeLine = loadoutcomeChart(year);
         addLine(outcomeLine, "支出", Color.rgb(187,59,14));
 
         lview = (ListView) mView.findViewById(R.id.TrendList);
@@ -76,17 +92,42 @@ public class Fragment1_1 extends Fragment {
         adapter = new TrendListAdapter(getActivity(), R.layout.trendlist_item, trendList);
         lview.setAdapter(adapter);
 
-        mButtonYear = (Button)mView.findViewById(R.id.ButtonYear);
-        mButtonYear.setOnClickListener(new View.OnClickListener() {
+        choiceYear = (TextView) mView.findViewById(R.id.ButtonYear);
+        choiceYear.setText(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+        choiceYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RefreshLineChart(2019);
-                RefreshTrendList(2019);
+                mStartDatePickerView.show();
+            }
+        });
+        initStartTimePicker();
+
+        //refresh_year = getYear(choiceYear.getText().toString());
+        refresh=(ImageButton)mView.findViewById(R.id.refresh_trend);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                year = getYear(choiceYear.getText().toString());
+                RefreshData(year);
+                //Toast.makeText(mView.getContext(),String.valueOf(refresh_year),Toast.LENGTH_SHORT).show();
             }
         });
         return mView;
     }
 
+    public int getYear(String stryear)
+    {
+        int year = 0;
+        try {
+
+            year = valueOf(stryear).intValue();
+
+        } catch (NumberFormatException e) {
+
+            e.printStackTrace();
+        }
+        return year;
+    }
     public List<TrendListItem> loadtrendList(int myear)
     {
                 int i;
@@ -110,15 +151,15 @@ public class Fragment1_1 extends Fragment {
                 }
                 return trendList;
             }
-     public List<IncomeLineItem> loadincomeChart(int year)
-     {
+    public List<IncomeLineItem> loadincomeChart(int year)
+    {
            int i;
            List<IncomeLineItem> incomeChart = new ArrayList<>();
            if (year == 2020)
            {
-               for (i = 0; i < 6; i++)
+               for (i = 0; i < 13; i++)
                {
-                   incomeChart.add(new IncomeLineItem(5*i,i));
+                   incomeChart.add(new IncomeLineItem(22*i,i));
                }
 
            }
@@ -136,16 +177,15 @@ public class Fragment1_1 extends Fragment {
            }
            return incomeChart;
      }
-
      public List<OutcomeLineItem> loadoutcomeChart(int year)
      {
          int i;
          List<OutcomeLineItem> outcomeChart = new ArrayList<>();
          if (year == 2020)
          {
-             for (i = 0; i < 12; i++)
+             for (i = 0; i < 13; i++)
             {
-             outcomeChart.add(new OutcomeLineItem(10*i,i));
+             outcomeChart.add(new OutcomeLineItem(15*i,i));
             }
 
          }
@@ -164,8 +204,8 @@ public class Fragment1_1 extends Fragment {
          return outcomeChart;
      }
 
-      private void initChart(LineChart lineChart)
-      {
+     private void initChart(LineChart lineChart)
+     {
            /***图表设置***/
            //是否展示网格线
           lineChart.setDrawGridBackground(false);
@@ -292,7 +332,7 @@ public class Fragment1_1 extends Fragment {
           setMarkerView();
       }
 
-      public void RefreshLineChart(int year)
+      public void RefreshData(int year)
       {
           incomeLine.clear();
           outcomeLine.clear();
@@ -300,16 +340,54 @@ public class Fragment1_1 extends Fragment {
           outcomeLine.addAll(loadoutcomeChart(year));
           showLineChart(incomeLine, "收入", Color.rgb(104,134,197));
           addLine(outcomeLine, "支出", Color.rgb(187,59,14));
-      }
 
-      public void RefreshTrendList(int year)
-      {
           trendList.clear();
           trendList.addAll(loadtrendList(year));
           adapter.notifyDataSetChanged();
           lview.setAdapter(adapter);
       }
 
+    private void initStartTimePicker() {
+        //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
+        //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
+        Calendar selectedDate = Calendar.getInstance();
+        //设置最小日期和最大日期
+        Calendar startDate = Calendar.getInstance();
+        try {
+            startDate.setTime(DateTimeHelper.parseStringToDate("1970-01-01"));//设置为2006年4月28日
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar endDate = Calendar.getInstance();//最大日期是今天
+
+        //时间选择器
+        mStartDatePickerView = new TimePickerBuilder(mView.getContext(), new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
+                choiceYear.setText(DateTimeHelper.formatToString(date,"yyyy"));
+            }
+        })
+                .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
+                //年月日时分秒 的显示与否，不设置则默认全部显示
+                .setType(new boolean[]{true, false, false, false, false, false})
+                .setLabel("", "", "", "", "", "")
+                .isCenterLabel(false)//是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setTitleText("开始日期")//标题文字
+                .setTitleSize(20)//标题文字大小
+                .setTitleColor(getResources().getColor(R.color.pickerview_title_text_color))//标题文字颜色
+                .setCancelText("取消")//取消按钮文字
+                .setCancelColor(getResources().getColor(R.color.pickerview_cancel_text_color))//取消按钮文字颜色
+                .setSubmitText("确定")//确认按钮文字
+                .setSubmitColor(getResources().getColor(R.color.pickerview_submit_text_color))//确定按钮文字颜色
+                .setContentTextSize(20)//滚轮文字大小
+                .setTextColorCenter(getResources().getColor(R.color.pickerview_center_text_color))//设置选中文本的颜色值
+                .setLineSpacingMultiplier(1.8f)//行间距
+                .setDividerColor(getResources().getColor(R.color.pickerview_divider_color))//设置分割线的颜色
+                .setRangDate(startDate, endDate)//设置最小和最大日期
+                .setDate(selectedDate)//设置选中的日期
+                .build();
+    }
 
 }
 
@@ -379,7 +457,7 @@ class OutcomeLineItem
     public double getValue() { return value; }
     public int getMonth() { return month; }
 }
- class LineChartMarkView extends MarkerView
+class LineChartMarkView extends MarkerView
  {
      private TextView tvDate;
      private TextView tvValue1;
