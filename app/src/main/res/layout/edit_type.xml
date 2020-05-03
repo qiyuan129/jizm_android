@@ -49,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tb_note_outcome"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/shape_tb_cash"
                 android:text="收入"
                 android:textColor="@color/cardview_light_background"

@@ -42,6 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 Categorytest categorytest = mCategoryList.get(position);
                 Toast.makeText(v.getContext(), "you clicked view" + categorytest.getName(),
                         Toast.LENGTH_SHORT).show();
+
             }
         });
         return holder;
@@ -56,5 +57,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public int getItemCount() {
         return mCategoryList.size();
+    }
+
+    public void clear() {
+        mCategoryList.clear();
     }
 }
