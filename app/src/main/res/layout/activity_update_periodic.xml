@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/go_back"
+            android:id="@+id/cancel_update"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:textStyle="bold"
-            android:text="添加周期事件"
+            android:text="修改周期事件"
             android:editable="false"/>
 
     </RelativeLayout>
@@ -33,7 +33,7 @@
 
 
     <RadioGroup
-        android:id="@+id/rg_type"
+        android:id="@+id/rg_type_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -42,15 +42,15 @@
 
 
         <RadioButton
-            android:id="@+id/income_RB"
+            android:id="@+id/income_RB_update"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="收入" />
 
         <RadioButton
-            android:id="@+id/outcome_RB"
-            android:layout_toRightOf="@+id/income_RB"
+            android:id="@+id/outcome_RB_update"
+            android:layout_toRightOf="@+id/income_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出" />
@@ -65,6 +65,7 @@
         android:background="#090808"/>
 
     <EditText
+        android:id="@+id/periodic_name_update"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
@@ -74,6 +75,7 @@
         android:singleLine="true"
         android:textColorHint="#0E171D" />
     <EditText
+        android:id="@+id/periodic_money_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
@@ -90,13 +92,13 @@
         android:background="#090808"
         android:visibility="invisible" />
 
-    <TextView android:id="@+id/spinnerText"
+    <TextView android:id="@+id/spinnerText_update"
         android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </TextView>
 
-    <Spinner android:id="@+id/Spinner01"
+    <Spinner android:id="@+id/Spinner_update"
         android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -115,7 +117,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tmp_text1"
+            android:id="@+id/tmp_text1_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -124,10 +126,10 @@
 
 
         <TextView
-            android:id="@+id/date_start"
+            android:id="@+id/date_start_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tmp_text1"
+            android:layout_toRightOf="@+id/tmp_text1_up"
             android:layout_marginTop="7dp"
             android:background="@drawable/shape_tb_cash"
             android:paddingLeft="20dp"
@@ -139,18 +141,18 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tmp_text2"
+            android:id="@+id/tmp_text2_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/date_start"
+            android:layout_toRightOf="@+id/date_start_update"
             android:textSize="25dp"
             android:text="结束于"/>
 
         <TextView
-            android:id="@+id/date_end"
+            android:id="@+id/date_end_update_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tmp_text2"
+            android:layout_toRightOf="@+id/tmp_text2_up"
             android:layout_marginTop="7dp"
             android:background="@drawable/shape_tb_cash"
             android:paddingLeft="20dp"
@@ -175,7 +177,7 @@
 
 
     <RadioGroup
-        android:id="@+id/rg_cycle"
+        android:id="@+id/rg_cycle_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -184,23 +186,21 @@
 
 
         <RadioButton
-            android:id="@+id/per_day_RB"
-            android:layout_centerInParent="true"
+            android:id="@+id/per_day_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:text="每天" />
 
         <RadioButton
-            android:id="@+id/per_week_RB"
-            android:layout_toRightOf="@+id/income_RB"
+            android:id="@+id/per_week_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每周" />
 
 
         <RadioButton
-            android:id="@+id/per_month_RB"
-            android:layout_centerInParent="true"
+            android:id="@+id/per_month_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每月" />
@@ -208,20 +208,16 @@
 
 
         <RadioButton
-            android:id="@+id/per_season_RB"
-            android:layout_centerInParent="true"
+            android:id="@+id/per_season_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每季度" />
 
         <RadioButton
-            android:id="@+id/per_year_RB"
-            android:layout_toRightOf="@+id/income_RB"
+            android:id="@+id/per_year_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每年" />
-
-
 
 
     </RadioGroup>
@@ -242,12 +238,12 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/store_periodic"
+            android:id="@+id/store_periodic_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
-            android:text="确认添加"
+            android:text="确认修改"
             android:textSize="24dp"
             android:background="@drawable/shape_tb_cash"
             />
