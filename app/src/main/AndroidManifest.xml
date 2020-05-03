@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditSettingActivity"></activity>
+        <activity android:name=".AddPeriodicActivity"></activity>
+        <activity android:name=".EditSettingActivity" />
         <activity android:name=".PersonalDataEditActivity" />
         <activity android:name=".UpdateBillActivity" />
         <activity android:name=".ListBillActivity" />

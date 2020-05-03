@@ -1,6 +1,7 @@
 package com.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -155,8 +156,11 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.add_periodic:
-                Log.d("add_periodic","添加事件");
-                Toast.makeText(getActivity(), "功能尚未编写", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(getActivity(), AddPeriodicActivity.class);
+                startActivity(intent1);
+
+               // Log.d("add_periodic","添加事件");
+                //Toast.makeText(getActivity(), "功能尚未编写", Toast.LENGTH_SHORT).show();
 
                 break;
             case R.id.search_periodic:

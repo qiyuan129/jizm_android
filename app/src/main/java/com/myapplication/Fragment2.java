@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.text.InputType;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,6 +38,16 @@ import pojo.Categorytest;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
+
+    private List<Categorytest> categorytestList = new ArrayList<>();
+
+    private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
+            "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
+            "酒店旅行", "爱车养车", "其他"};
+
+    private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
+
+    public boolean isOutcome = true;
 
     private Button incomeTv;        //收入按钮
     private Button outcomeTv;       //支出按钮
@@ -66,7 +78,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private RecyclerView recyclerView;
 
     //选择器
-    protected List<String> cardItems;
+    protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
+   // protected List<String> cardItems;
     protected int selectedPayinfoIndex = 0;      //选择的支付方式序号
 
     //选择时间
@@ -86,8 +99,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     protected final int DOT_NUM = 2;         //小数点后最大位数
     protected int count = 0;
 
-    private List<Categorytest> categorytestList = new ArrayList<>();
-
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         //注意View对象的重复使用，以便节省资源
@@ -103,6 +114,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
         edittypeTv.setOnClickListener(this);
+
+        recyclerView = (RecyclerView) mView.findViewById(R.id.category_recycle_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
+        recyclerView.setLayoutManager(layoutManager);
+        //分类展示
+        initCategory();
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
 
@@ -157,13 +174,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         delect = (RelativeLayout) mView.findViewById(R.id.tb_calc_num_del);
         delect.setOnClickListener(this);
 
-        //分类展示
-        initCategory();
-        recyclerView = (RecyclerView) mView.findViewById(R.id.recycle_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),5);
-        recyclerView.setLayoutManager(layoutManager);
-        CategoryAdapter adapter = new CategoryAdapter(categorytestList);
-        recyclerView.setAdapter(adapter);
+
 
         return mView;
     }
@@ -172,9 +183,11 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.income_tv:
+                isOutcome = true;
                 Log.d("Fragment","支出");
                 break;
             case R.id.outcome_tv:
+                isOutcome = false;
                 Log.d("Fragment","收入");
                 break;
             case R.id.type_edit:
@@ -261,15 +274,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         new MaterialDialog.Builder(getActivity())
                 .title("请选择支付账户")
                 .titleGravity(GravityEnum.CENTER)
-                .items(cardItems)
+                .items(account)
                 .positiveText("确定")
                 .negativeText("取消")
-                .itemsCallbackSingleChoice(selectedPayinfoIndex,(dialog, itemView, which, text)->{
-                    selectedPayinfoIndex = which;
-                    cashTv.setText(cardItems.get(which));
-                    dialog.dismiss();
-                    return false;
-                }).show();
+                .canceledOnTouchOutside(false)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        cashTv.setText(text);
+                        return true;
+                    }
+                })
+                .show();
     }
 
     //显示日期选择器
@@ -303,6 +319,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void showContentDialog() {
         new MaterialDialog.Builder(getActivity())
                 .title("备注")
+                .canceledOnTouchOutside(false)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
                 .input("备注", remarkInput, (dialog, input) -> {
@@ -366,24 +383,19 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initCategory() {
-        for (int i = 0; i < 2; i++) {
-            Categorytest apple = new Categorytest("Apple");
-            categorytestList.add(apple);
-            Categorytest banana = new Categorytest("Banana");
-            categorytestList.add(banana);
-            Categorytest orange = new Categorytest("orange");
-            categorytestList.add(orange);
-            Categorytest apple1 = new Categorytest("apple1");
-            categorytestList.add(apple1);
-            Categorytest apple2 = new Categorytest("apple2");
-            categorytestList.add(apple2);
-            Categorytest apple3 = new Categorytest("apple3");
-            categorytestList.add(apple3);
-            Categorytest apple4 = new Categorytest("apple4");
-            categorytestList.add(apple4);
-            Categorytest apple5 = new Categorytest("apple5");
-            categorytestList.add(apple5);
+        if (isOutcome) {
+            for(int i = 0; i < category_outcome.length; i++){
+                Categorytest categorytest = new Categorytest(category_outcome[i]);
+                categorytestList.add(categorytest);
+            }
+        } else {
+            for(int i = 0; i < category_income.length; i++){
+                Categorytest categorytest = new Categorytest(category_income[i]);
+                categorytestList.add(categorytest);
+            }
         }
+        CategoryAdapter adapter = new CategoryAdapter(categorytestList);
+        recyclerView.setAdapter(adapter);
     }
 
 }
