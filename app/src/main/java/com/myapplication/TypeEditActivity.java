@@ -55,9 +55,6 @@ public class TypeEditActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_type);
 
-//        mRecycleView = (RecyclerView) findViewById(R.id.recyclerView);
-//        mRecycleView.setOnClickListener(this);
-
         incomeTv = (TextView) findViewById(R.id.tb_note_income);
         incomeTv.setOnClickListener(this);
 
@@ -118,22 +115,43 @@ public class TypeEditActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initCategory() {
-        if (isOutcome) {
-            for(int i = 0; i < category_outcome.length; i++){
-                Categorytest categorytest = new Categorytest(category_outcome[i]);
-                categoryList.add(categorytest);
+        if (categoryList != null) {
+            categoryList.clear();
+            if (isOutcome) {
+                for(int i = 0; i < category_outcome.length; i++){
+                    Categorytest categorytest = new Categorytest(category_outcome[i]);
+                    categoryList.add(categorytest);
+                }
+            } else {
+                for(int i = 0; i < category_income.length; i++){
+                    Categorytest categorytest = new Categorytest(category_income[i]);
+                    categoryList.add(categorytest);
+                }
             }
+            mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            mRecycleView.setLayoutManager(layoutManager);
+            CategoryAdapter adapter = new CategoryAdapter(categoryList);
+            adapter.notifyDataSetChanged();
+            mRecycleView.setAdapter(adapter);
         } else {
-            for(int i = 0; i < category_income.length; i++){
-                Categorytest categorytest = new Categorytest(category_income[i]);
-                categoryList.add(categorytest);
+            if (isOutcome) {
+                for(int i = 0; i < category_outcome.length; i++){
+                    Categorytest categorytest = new Categorytest(category_outcome[i]);
+                    categoryList.add(categorytest);
+                }
+            } else {
+                for(int i = 0; i < category_income.length; i++){
+                    Categorytest categorytest = new Categorytest(category_income[i]);
+                    categoryList.add(categorytest);
+                }
             }
+            mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            mRecycleView.setLayoutManager(layoutManager);
+            CategoryAdapter adapter = new CategoryAdapter(categoryList);
+            adapter.notifyDataSetChanged();
+            mRecycleView.setAdapter(adapter);
         }
-        mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecycleView.setLayoutManager(layoutManager);
-        CategoryAdapter adapter = new CategoryAdapter(categoryList);
-        mRecycleView.setAdapter(adapter);
-
     }
 }

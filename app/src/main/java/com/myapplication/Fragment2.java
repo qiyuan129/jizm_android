@@ -38,6 +38,7 @@ import pojo.Categorytest;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
+    private CategoryAdapter categoryAdapter;
 
     private List<Categorytest> categorytestList = new ArrayList<>();
 
@@ -174,8 +175,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         delect = (RelativeLayout) mView.findViewById(R.id.tb_calc_num_del);
         delect.setOnClickListener(this);
 
-
-
         return mView;
     }
 
@@ -183,17 +182,22 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.income_tv:
-                isOutcome = true;
-                Log.d("Fragment","支出");
+                isOutcome = false;
+                initCategory();
+                Log.d("Fragment","收入");
                 break;
             case R.id.outcome_tv:
-                isOutcome = false;
-                Log.d("Fragment","收入");
+                isOutcome = true;
+                initCategory();
+                Log.d("Fragment","支出");
                 break;
             case R.id.type_edit:
                 Intent intent = new Intent(getActivity(), TypeEditActivity.class);
                 startActivity(intent);
                 Log.d("Fragment","编辑分类");
+                break;
+            case R.id.category_recycle_view:
+               // sortTv.setText();
                 break;
             case R.id.tb_note_cash:
                 showPayAccount();
@@ -383,19 +387,37 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initCategory() {
-        if (isOutcome) {
-            for(int i = 0; i < category_outcome.length; i++){
-                Categorytest categorytest = new Categorytest(category_outcome[i]);
-                categorytestList.add(categorytest);
+        if (categorytestList != null) {
+            categorytestList.clear();
+            if (isOutcome) {
+                for(int i = 0; i < category_outcome.length; i++){
+                    Categorytest categorytest = new Categorytest(category_outcome[i]);
+                    categorytestList.add(categorytest);
+                }
+            } else {
+                for(int i = 0; i < category_income.length; i++){
+                    Categorytest categorytest = new Categorytest(category_income[i]);
+                    categorytestList.add(categorytest);
+                }
             }
+            categoryAdapter = new CategoryAdapter(categorytestList);
+            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
+            recyclerView.setAdapter(categoryAdapter);
         } else {
-            for(int i = 0; i < category_income.length; i++){
-                Categorytest categorytest = new Categorytest(category_income[i]);
-                categorytestList.add(categorytest);
+            if (isOutcome) {
+                for(int i = 0; i < category_outcome.length; i++){
+                    Categorytest categorytest = new Categorytest(category_outcome[i]);
+                    categorytestList.add(categorytest);
+                }
+            } else {
+                for(int i = 0; i < category_income.length; i++){
+                    Categorytest categorytest = new Categorytest(category_income[i]);
+                    categorytestList.add(categorytest);
+                }
             }
+            categoryAdapter = new CategoryAdapter(categorytestList);
+            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
+            recyclerView.setAdapter(categoryAdapter);
         }
-        CategoryAdapter adapter = new CategoryAdapter(categorytestList);
-        recyclerView.setAdapter(adapter);
     }
-
 }
