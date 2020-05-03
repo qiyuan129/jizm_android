@@ -146,8 +146,11 @@ public class Fragment1_2 extends Fragment
                     }
 
                 }
-                else
-                    Toast.makeText(getActivity(),"起始时间大于终止时间，请重新选择",Toast.LENGTH_SHORT).show();
+                else {
+                    tvBeginDate.setText(strbeginDate);
+                    tvEndDate.setText(strendDate);
+                    Toast.makeText(getActivity(), "起始时间大于终止时间，请重新选择", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return mView;
