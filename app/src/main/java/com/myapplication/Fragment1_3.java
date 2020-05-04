@@ -1,6 +1,7 @@
 package com.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class Fragment1_3 extends Fragment {
 
     private View mView;
     private List<Bill> billList;
+    BillListAdapter adapter;
 
 
     @Override
@@ -37,7 +39,7 @@ public class Fragment1_3 extends Fragment {
         //初始化数据数组
         initBills("学习用品");
         //创建listView的数据适配器
-        BillListAdapter adapter = new BillListAdapter(getActivity(),R.layout.bill_list_item,billList);
+        adapter = new BillListAdapter(getActivity(),R.layout.bill_list_item,billList);
 
         //设置视图
         SlideDeleteListView listView=(SlideDeleteListView)mView.findViewById(R.id.list_bill_view_frag);
@@ -51,8 +53,16 @@ public class Fragment1_3 extends Fragment {
                 Toast.makeText(getActivity(), "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
 
                 //查看账单,后续添加
+                Bill tempBill = billList.get(position);
+                Intent intent1 = new Intent(getActivity(),UpdateBillActivity.class);
+                intent1.putExtra("billId",String.valueOf(tempBill.getBill_id()));
+                startActivity(intent1);
             }
         });
+
+
+
+
 
 
         //左滑删除
@@ -85,7 +95,7 @@ public class Fragment1_3 extends Fragment {
         billList = new ArrayList<>();
         for(int i=0;i<=20;i++){
             Bill bill = new Bill(i,23,2,25,
-                    1,"学习用品:"+i,new Date(154725),36.5,2,new Date(53455));
+                    1,"学习用品:"+i,546524,36.5,2,254625);
             billList.add(bill);
         }
 

@@ -35,6 +35,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.contrarywind:Android-PickerView:4.1.4'
     //左滑删除ListView组件
     implementation 'com.hlq:slideDeleteListView:1.0.0'
     //图片显示组件

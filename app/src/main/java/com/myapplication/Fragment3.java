@@ -94,10 +94,20 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 //获取点击到的Periodic
                 Periodic tmp=(Periodic)tmpadapter.getItem(position);
 
+
                 Toast.makeText(getActivity(), "点击的是第" + position + "项:"+tmp.getPeriodic_name(), Toast.LENGTH_SHORT).show();
 
 
-                //查看账单,后续添加
+                //查看和修改账单,后续添加
+                Intent intent1 = new Intent(getContext(),UpdatePeriodicActivity.class);
+                tmp.setPeriodic_id(45);//设置一下id
+                intent1.putExtra("periodicId",Integer.toString(tmp.getPeriodic_id()));
+                startActivity(intent1);
+
+                //应该要从数据库重新查询更新列表，因为数据可能已经 修改了
+
+
+
             }
         });
 
@@ -192,7 +202,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         periodics = new ArrayList<>();
         for(int i=0;i<=20;i++){
            Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
-                   6,new Date(45236+i),new Date(99954+i),50,3,new Date());
+                   6,45236+i,99954+i,50,3,425575);
            periodics.add(periodic);
         }
 

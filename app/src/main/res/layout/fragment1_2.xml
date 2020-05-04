@@ -11,26 +11,15 @@
         android:descendantFocusability="blocksDescendants">
 
 
-        <Button
-            android:id="@+id/ButtonDate"
-            android:layout_width="280dp"
-            android:layout_height="36dp"
-            android:text="Date"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.312"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <Switch
             android:id="@+id/Switch_In_Out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_width="43dp"
+            android:layout_height="29dp"
 
-            android:textOn="关"
             android:textOff="开"
+            android:textOn="关"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.892"
+            app:layout_constraintHorizontal_bias="0.809"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,9 +32,9 @@
             android:background="#bee3db"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ButtonDate" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.myapplication.MyListview
             android:id="@+id/CategoryList"
@@ -56,6 +45,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/beginDate"
+            android:layout_width="103dp"
+            android:layout_height="27dp"
+            android:background="#bee3db"
+            android:text="起:2020-05-20"
+            android:textColor="#005082"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/endDate"
+            android:layout_width="101dp"
+            android:layout_height="26dp"
+            android:background="#bee3db"
+            android:text="止:2020-05-20"
+            android:textColor="#005082"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/refresh_category"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.976"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_popup_sync" />
 
 
     </android.support.constraint.ConstraintLayout>

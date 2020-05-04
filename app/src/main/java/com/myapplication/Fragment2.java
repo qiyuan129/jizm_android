@@ -1,20 +1,15 @@
 package com.myapplication;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -28,7 +23,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,6 +32,8 @@ import pojo.Categorytest;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
+    private CategoryAdapter categoryAdapter;
+    private CategoryChooseAdapter categoryChooseAdapter;
 
     private List<Categorytest> categorytestList = new ArrayList<>();
 
@@ -123,6 +119,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
 
+        categoryChooseAdapter = new CategoryChooseAdapter(categorytestList);
+        categoryChooseAdapter.notifyItemRangeChanged(0, categorytestList.size());
+        recyclerView.setAdapter(categoryChooseAdapter);
+
+        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Categorytest categorytest = categorytestList.get(position);
+                sortTv.setText(categorytest.getName());
+            }
+        });
+
         moneyTv = (TextView) mView.findViewById(R.id.tb_note_money);
         moneyTv.setText(num+dotNum);
 
@@ -174,8 +182,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         delect = (RelativeLayout) mView.findViewById(R.id.tb_calc_num_del);
         delect.setOnClickListener(this);
 
-
-
         return mView;
     }
 
@@ -183,12 +189,36 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.income_tv:
-                isOutcome = true;
-                Log.d("Fragment","支出");
+                isOutcome = false;
+                initCategory();
+                categoryChooseAdapter = new CategoryChooseAdapter(categorytestList);
+                categoryChooseAdapter.notifyItemRangeChanged(0, categorytestList.size());
+                recyclerView.setAdapter(categoryChooseAdapter);
+
+                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        Categorytest categorytest = categorytestList.get(position);
+                        sortTv.setText(categorytest.getName());
+                    }
+                });
+                Log.d("Fragment","收入");
                 break;
             case R.id.outcome_tv:
-                isOutcome = false;
-                Log.d("Fragment","收入");
+                isOutcome = true;
+                initCategory();
+                categoryChooseAdapter = new CategoryChooseAdapter(categorytestList);
+                categoryChooseAdapter.notifyItemRangeChanged(0, categorytestList.size());
+                recyclerView.setAdapter(categoryChooseAdapter);
+
+                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        Categorytest categorytest = categorytestList.get(position);
+                        sortTv.setText(categorytest.getName());
+                    }
+                });
+                Log.d("Fragment","支出");
                 break;
             case R.id.type_edit:
                 Intent intent = new Intent(getActivity(), TypeEditActivity.class);
@@ -208,6 +238,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 Log.d("Fragment","备注");
                 break;
             case R.id.tb_calc_num_done:
+                doCommit();
                 Log.d("Fragment","确定按钮");
                 break;
             case R.id.tb_calc_num_1:
@@ -382,20 +413,56 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void initCategory() {
-        if (isOutcome) {
-            for(int i = 0; i < category_outcome.length; i++){
-                Categorytest categorytest = new Categorytest(category_outcome[i]);
-                categorytestList.add(categorytest);
-            }
-        } else {
-            for(int i = 0; i < category_income.length; i++){
-                Categorytest categorytest = new Categorytest(category_income[i]);
-                categorytestList.add(categorytest);
-            }
+    public void doCommit() {
+        if ((num + dotNum).equals("0.00")) {
+            Toast.makeText(getActivity(), "请输入金额", Toast.LENGTH_SHORT).show();
+            return;
         }
-        CategoryAdapter adapter = new CategoryAdapter(categorytestList);
-        recyclerView.setAdapter(adapter);
+        String accountText = account.toString();
+        String dateText = String.valueOf(dateTv.getText());
+        String remark = remarkInput;
+        Float money = Float.valueOf(num + dotNum);
+        Log.d("Fragment", accountText);
+        Log.d("Fragment", dateText);
+        Log.d("Fragment", remark);
+
     }
 
+    private void initCategory() {
+        if (categorytestList != null) {
+            categorytestList.clear();
+            if (isOutcome) {
+                for(int i = 0; i < category_outcome.length; i++){
+                    Categorytest categorytest = new Categorytest(category_outcome[i]);
+                    categorytestList.add(categorytest);
+                }
+            } else {
+                for(int i = 0; i < category_income.length; i++){
+                    Categorytest categorytest = new Categorytest(category_income[i]);
+                    categorytestList.add(categorytest);
+                }
+            }
+            categoryAdapter = new CategoryAdapter(categorytestList);
+            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
+            recyclerView.setAdapter(categoryAdapter);
+        } else {
+            if (isOutcome) {
+                for(int i = 0; i < category_outcome.length; i++){
+                    Categorytest categorytest = new Categorytest(category_outcome[i]);
+                    categorytestList.add(categorytest);
+                }
+            } else {
+                for(int i = 0; i < category_income.length; i++){
+                    Categorytest categorytest = new Categorytest(category_income[i]);
+                    categorytestList.add(categorytest);
+                }
+            }
+//            categoryAdapter = new CategoryAdapter(categorytestList);
+//            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
+//            recyclerView.setAdapter(categoryAdapter);
+
+
+
+        }
+    }
 }
