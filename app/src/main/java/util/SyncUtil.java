@@ -7,12 +7,22 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import pojo.Account;
 import pojo.Bill;
 import pojo.Category;
@@ -24,8 +34,10 @@ import static android.support.constraint.Constraints.TAG;
 public class SyncUtil {
     public static final MediaType MEDIA_TYPE_MARKDOWN
             = MediaType.parse("text/x-markdown; charset=utf-8");
+    public static final MediaType MEDIA_TYPE_JSON
+            = MediaType.parse("application/json; charset=utf-8");
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final static OkHttpClient client = new OkHttpClient();
 
     public void run() throws Exception {
         String postBody = ""
@@ -49,7 +61,38 @@ public class SyncUtil {
     }
 
     public static void uploadRecords(){
+        JSONObject syncRecordsJsonObject=SyncUtil.getAllSyncRecords();
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,
+                syncRecordsJsonObject.toJSONString());
 
+        Request request = new Request.Builder()
+                .url("http://192.168.0.100:8080/app/synchronization")    //这里的主机地址要填电脑的ip地址
+                .post(requestBody)
+                .addHeader("token", "emptyToken")
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful())
+                        throw new IOException("Unexpected code " + response);
+
+//                            Headers responseHeaders = response.headers();
+//                            for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+//                                System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+//                            }
+                    //resultText.setText(responseBody.string());
+                    System.out.println(responseBody.string());
+                }
+            }
+        });
     }
     public static JSONObject getAccountSyncRecordsJson(boolean needSync, List<Account> accountList){
         JSONObject accountSyncRecords=new JSONObject();
@@ -165,6 +208,58 @@ public class SyncUtil {
         periodicSyncRecords.put("recordList",periodicArray);
 
         return periodicSyncRecords;
+    }
+    public static JSONObject getAllSyncRecords() {
+        JSONObject accountRecordsJson;
+        JSONObject billRecordsJson;
+        JSONObject categoryRecordsJson;
+        JSONObject periodicRecordsJson;
+        JSONObject finalResult=new JSONObject();
+
+        AccountDAO accountDAO = new AccountDAOImpl();
+        BillDAO billDAO = new BillDAOImpl();
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+
+        List<Account> accountList = accountDAO.getAyncAccount();
+        List<Bill> billList = billDAO.getAyncBill();
+        List<Category> categoryList=categoryDAO.getAyncCategory();
+        List<Periodic> periodicList=periodicDAO.getAyncPeriodic();
+
+        if(accountList.size()>0) {
+            accountRecordsJson = SyncUtil.getAccountSyncRecordsJson(true, accountList);
+        }
+        else{
+            accountRecordsJson=SyncUtil.getAccountSyncRecordsJson(false,null);
+        }
+
+        if(billList.size()>0){
+            billRecordsJson=SyncUtil.getBillSyncRecordsJson(true,billList);
+        }
+        else{
+            billRecordsJson=SyncUtil.getBillSyncRecordsJson(false,null);
+        }
+
+        if(categoryList.size()>0){
+            categoryRecordsJson=SyncUtil.getCategorySyncRecordsJson(true,categoryList);
+        }
+        else{
+            categoryRecordsJson=SyncUtil.getCategorySyncRecordsJson(false,null);
+        }
+
+        if(periodicList.size()>0){
+            periodicRecordsJson=SyncUtil.getPeriodicSyncRecordsJson(true,periodicList);
+        }
+        else{
+            periodicRecordsJson=SyncUtil.getPeriodicSyncRecordsJson(false,null);
+        }
+
+        finalResult.put("Account",accountRecordsJson);
+        finalResult.put("Bill",billRecordsJson);
+        finalResult.put("Category",categoryRecordsJson);
+        finalResult.put("Periodic",periodicRecordsJson);
+
+        return finalResult;
     }
 
 }
