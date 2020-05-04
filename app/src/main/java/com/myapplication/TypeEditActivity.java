@@ -10,21 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import pojo.Bill;
 import pojo.Category;
-import pojo.Categorytest;
 
 /**
  * 账单分类编辑Activity
@@ -34,7 +29,7 @@ public class TypeEditActivity extends AppCompatActivity implements View.OnClickL
     private View mView;
     private Context mContext;
 
-    private List<Categorytest> categoryList = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
 
     private RecyclerView mRecycleView;
     private TextView incomeTv;   //收入按钮
@@ -49,6 +44,12 @@ public class TypeEditActivity extends AppCompatActivity implements View.OnClickL
             "酒店旅行", "爱车养车", "其他"};
 
     private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
+
+    private int category_id = 1;
+    private int user_id = 1;
+    private int type = 1;
+    private int state = 1;
+    private long anchor = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,13 +120,13 @@ public class TypeEditActivity extends AppCompatActivity implements View.OnClickL
             categoryList.clear();
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
-                    Categorytest categorytest = new Categorytest(category_outcome[i]);
-                    categoryList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < category_income.length; i++){
-                    Categorytest categorytest = new Categorytest(category_income[i]);
-                    categoryList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             }
             mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
@@ -137,13 +138,13 @@ public class TypeEditActivity extends AppCompatActivity implements View.OnClickL
         } else {
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
-                    Categorytest categorytest = new Categorytest(category_outcome[i]);
-                    categoryList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < category_income.length; i++){
-                    Categorytest categorytest = new Categorytest(category_income[i]);
-                    categoryList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             }
             mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);

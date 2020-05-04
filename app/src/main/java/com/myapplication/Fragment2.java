@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,15 +25,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import pojo.Categorytest;
+import pojo.Category;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
-    private CategoryAdapter categoryAdapter;
     private CategoryChooseAdapter categoryChooseAdapter;
 
-    private List<Categorytest> categorytestList = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
 
     private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
             "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
@@ -43,8 +40,16 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
 
+    private int category_id = 1;
+    private int user_id = 1;
+    private int type = 1;
+    private int state = 1;
+    private long anchor = 1;
+
+
     public boolean isOutcome = true;
 
+    private RecyclerView recyclerView;
     private Button incomeTv;        //收入按钮
     private Button outcomeTv;       //支出按钮
     private TextView edittypeTv;    //编辑类别
@@ -66,12 +71,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private TextView dot;        //小数点
     private TextView done;       //确认
 
-    private ImageView clear;     //清空金额
-    private ImageView remarkIv;  //备注
-    private RelativeLayout delect;    //数字键盘回格键
-    private ViewPager viewPagerItem;
-    private LinearLayout layoutIcon;
-    private RecyclerView recyclerView;
+    private ImageView clear;           //清空金额
+    private ImageView remarkIv;        //备注
+    private RelativeLayout delect;     //数字键盘回格键
 
     //选择器
     protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
@@ -119,15 +121,15 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
 
-        categoryChooseAdapter = new CategoryChooseAdapter(categorytestList);
-        categoryChooseAdapter.notifyItemRangeChanged(0, categorytestList.size());
+        categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+        categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
         recyclerView.setAdapter(categoryChooseAdapter);
 
         categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                Categorytest categorytest = categorytestList.get(position);
-                sortTv.setText(categorytest.getName());
+                Category categorytest = categoryList.get(position);
+                sortTv.setText(categorytest.getCategory_name());
             }
         });
 
@@ -191,15 +193,15 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.income_tv:
                 isOutcome = false;
                 initCategory();
-                categoryChooseAdapter = new CategoryChooseAdapter(categorytestList);
-                categoryChooseAdapter.notifyItemRangeChanged(0, categorytestList.size());
+                categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+                categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
                 recyclerView.setAdapter(categoryChooseAdapter);
 
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
-                        Categorytest categorytest = categorytestList.get(position);
-                        sortTv.setText(categorytest.getName());
+                        Category category = categoryList.get(position);
+                        sortTv.setText(category.getCategory_name());
                     }
                 });
                 Log.d("Fragment","收入");
@@ -207,15 +209,15 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.outcome_tv:
                 isOutcome = true;
                 initCategory();
-                categoryChooseAdapter = new CategoryChooseAdapter(categorytestList);
-                categoryChooseAdapter.notifyItemRangeChanged(0, categorytestList.size());
+                categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+                categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
                 recyclerView.setAdapter(categoryChooseAdapter);
 
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
-                        Categorytest categorytest = categorytestList.get(position);
-                        sortTv.setText(categorytest.getName());
+                        Category category = categoryList.get(position);
+                        sortTv.setText(category.getCategory_name());
                     }
                 });
                 Log.d("Fragment","支出");
@@ -429,40 +431,32 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initCategory() {
-        if (categorytestList != null) {
-            categorytestList.clear();
+        if (categoryList != null) {
+            categoryList.clear();
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
-                    Categorytest categorytest = new Categorytest(category_outcome[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+
+                    categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < category_income.length; i++){
-                    Categorytest categorytest = new Categorytest(category_income[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             }
-            categoryAdapter = new CategoryAdapter(categorytestList);
-            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
-            recyclerView.setAdapter(categoryAdapter);
         } else {
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
-                    Categorytest categorytest = new Categorytest(category_outcome[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < category_income.length; i++){
-                    Categorytest categorytest = new Categorytest(category_income[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             }
-//            categoryAdapter = new CategoryAdapter(categorytestList);
-//            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
-//            recyclerView.setAdapter(categoryAdapter);
-
-
-
         }
     }
 }

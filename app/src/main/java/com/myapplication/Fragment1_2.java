@@ -281,21 +281,21 @@ public class Fragment1_2 extends Fragment
         List<CategoryListItem> mcategoryList = new ArrayList<>();
         if (typeflag == OutcomeFlag) {
             for (i = 0; i < 5; i++) {
-                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "支出", 1234.00, "2020-2-7");
+                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "出行", 1234.00, "2020-2-7");
                 mcategoryList.add(c1);
-                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "支出", 123451.00, "2020-2-7");
+                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "饮食", 123451.00, "2020-2-7");
                 mcategoryList.add(c2);
             }
-            CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "支出", 123451.00, "2020-2-7");
+            CategoryListItem c2 = new CategoryListItem(i * 2 + 1, "房租", 123451.00, "2020-2-7");
             mcategoryList.add(c2);
         } else {
             for (i = 0; i < 5; i++) {
-                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "收入", 12, "2020-2-7");
+                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "工资", 12, "2020-2-7");
                 mcategoryList.add(c1);
-                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "收入", 12, "2020-2-7");
+                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "奖金", 12, "2020-2-7");
                 mcategoryList.add(c2);
             }
-            CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "收入", 12, "2020-2-7");
+            CategoryListItem c2 = new CategoryListItem(i * 2 + 1, "红包", 12, "2020-2-7");
             mcategoryList.add(c2);
         }
         return mcategoryList;
@@ -402,7 +402,7 @@ class CategoryListItem
     private int order;
     private String categoryname;
     private double money;
-    private Float precent;
+    //private Float precent;
     private String date;
 
     public CategoryListItem(int order,String categoryname,double money,String date)
@@ -420,9 +420,7 @@ class CategoryListItem
         return categoryname;
     }
 
-    public Float getPrecent() {
-        return precent;
-    }
+    //public Float getPrecent() {return precent; }
 
     public double getMoney() {
         return money;

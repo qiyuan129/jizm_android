@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import pojo.Categorytest;
+import pojo.Category;
 
 public class CategoryChooseAdapter extends RecyclerView.Adapter<CategoryChooseAdapter.ViewHolder> {
-    private List<Categorytest> mCategoryList;
+    private List<Category> mCategoryList;
 
     public interface OnItemClickListener {
         void onClick(int position);
@@ -28,7 +28,7 @@ public class CategoryChooseAdapter extends RecyclerView.Adapter<CategoryChooseAd
         }
     }
 
-    public CategoryChooseAdapter(List<Categorytest> mCList) {
+    public CategoryChooseAdapter(List<Category> mCList) {
         mCategoryList = mCList;
     }
 
@@ -45,8 +45,8 @@ public class CategoryChooseAdapter extends RecyclerView.Adapter<CategoryChooseAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Categorytest categorytest = mCategoryList.get(position);
-        holder.categoryName.setText(categorytest.getName());
+        Category category = mCategoryList.get(position);
+        holder.categoryName.setText(category.getCategory_name());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
