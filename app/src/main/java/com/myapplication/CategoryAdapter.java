@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import pojo.Categorytest;
+import pojo.Category;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-    private List<Categorytest> mCategoryList;
+    private List<Category> mCategoryList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         View categoryView;
@@ -26,8 +26,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
     }
 
-    public CategoryAdapter(List<Categorytest> categorytestList) {
-        mCategoryList = categorytestList;
+    public CategoryAdapter(List<Category> categoryList) {
+        mCategoryList = categoryList;
     }
 
     @NonNull
@@ -39,8 +39,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
-                Categorytest categorytest = mCategoryList.get(position);
-                Toast.makeText(v.getContext(), "you clicked view" + categorytest.getName(),
+                Category category = mCategoryList.get(position);
+                Toast.makeText(v.getContext(), "you clicked view" + category.getCategory_name(),
                         Toast.LENGTH_SHORT).show();
 
             }
@@ -50,8 +50,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Categorytest categorytest = mCategoryList.get(position);
-        holder.categoryName.setText(categorytest.getName());
+        Category category = mCategoryList.get(position);
+        holder.categoryName.setText(category.getCategory_name());
         holder.itemView.getTag(position);
     }
 
