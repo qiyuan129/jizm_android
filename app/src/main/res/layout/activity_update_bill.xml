@@ -4,72 +4,123 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
- <TextView
-     android:id="@+id/id_text"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="账单ID"/>
- <EditText
-     android:id="@+id/id_edit"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/bill_update_outcome"
+            android:text="支出"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:background="@drawable/shape_tb_cash"
+            android:textColor="@color/cardview_light_background" />
+
+
+        <Button
+            android:id="@+id/bill_update_income"
+            android:text="收入"
+            android:layout_toRightOf="@+id/bill_update_outcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:background="@drawable/shape_tb_cash"
+            android:textColor="@color/cardview_light_background"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tmp_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="名称："/>
+        <EditText
+            android:id="@+id/bill_name_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tmp_1"
+            android:textSize="20dp"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColorHint="#0E171D"
+            />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tmp_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="金额："/>
+
+        <EditText
+            android:id="@+id/bill_update_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tmp_2"
+            android:textSize="20dp"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColorHint="#0E171D"
+            />
+
+    </RelativeLayout>
 
 
 
- <TextView
-     android:id="@+id/category_id_text"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="分类"/>
- <EditText
-     android:id="@+id/category_id_edit"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/bill_update_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tmp_text2"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/shape_tb_cash"
+        android:paddingLeft="20dp"
+        android:paddingTop="6dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="7dp"
+        android:text="选择时间"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="15sp" />
 
 
 
 
- <TextView
-     android:id="@+id/type_text"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="收入/支出"/>
- <EditText
-     android:id="@+id/type_edit"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/bill_update_spinnerText"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <Spinner android:id="@+id/bill_update_spinner"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
 
 
- <TextView
-     android:id="@+id/name_text"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="账目名字"/>
- <EditText
-     android:id="@+id/name_edit"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"/>
 
 
- <TextView
-     android:id="@+id/money_text"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="金额"/>
- <EditText
-     android:id="@+id/money_edit"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"/>
 
- <TextView
-     android:id="@+id/time_text"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="时间"/>
- <DatePicker
-     android:id="@+id/time_edit"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"/>
+
+
+
 
 
 
