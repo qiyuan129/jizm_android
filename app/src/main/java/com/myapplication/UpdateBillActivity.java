@@ -100,7 +100,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         bill= billDAO.getById(id);*/
 
        //实验用，后面删除
-        bill = new Bill(2,3,2,5,2,"早餐",new Date(452575),32.2,2, new Date(55452));
+        bill = new Bill(2,3,2,5,2,"早餐",1245785,32.2,2, 5545278);
 
 
         //设置开始结束时间

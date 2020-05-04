@@ -84,7 +84,7 @@ public class ListBillActivity extends AppCompatActivity {
         billList = new ArrayList<>();
         for(int i=0;i<=20;i++){
             Bill bill = new Bill(i,23,2,25,
-                    1,"学习用品:"+i,new Date(154725),36.5,2,new Date(53455));
+                    1,"学习用品:"+i,2452777,36.5,2,2078278);
             billList.add(bill);
         }
 
