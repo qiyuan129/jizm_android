@@ -8,10 +8,10 @@ public class Category {
     private String category_name;
     private int type;
     private int state;
-    private Date anchor;
+    private long anchor;
 
 
-    public Category(int category_id, int user_id, String category_name, int type, int state, Date anchor) {
+    public Category(int category_id, int user_id, String category_name, int type, int state, long anchor) {
         this.category_id = category_id;
         this.user_id = user_id;
         this.category_name = category_name;
@@ -60,11 +60,11 @@ public class Category {
         this.state = state;
     }
 
-    public Date getAnchor() {
+    public long getAnchor() {
         return anchor;
     }
 
-    public void setAnchor(Date anchor) {
+    public void setAnchor(long anchor) {
         this.anchor = anchor;
     }
 }

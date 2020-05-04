@@ -9,12 +9,12 @@ public class Bill {
     private int user_id;
     private int type;
     private String bill_name;
-    private Date bill_date;
+    private long bill_date;
     private double bill_money;
     private int state;
-    private Date anchor;
+    private long anchor;
 
-    public Bill(int bill_id, int account_id, int category_id, int user_id, int type, String bill_name, Date bill_date, double bill_money, int state, Date anchor) {
+    public Bill(int bill_id, int account_id, int category_id, int user_id, int type, String bill_name, long bill_date, double bill_money, int state, long anchor) {
         this.bill_id = bill_id;
         this.account_id = account_id;
         this.category_id = category_id;
@@ -75,11 +75,11 @@ public class Bill {
         this.bill_name = bill_name;
     }
 
-    public Date getBill_date() {
+    public long getBill_date() {
         return bill_date;
     }
 
-    public void setBill_date(Date bill_date) {
+    public void setBill_date(long bill_date) {
         this.bill_date = bill_date;
     }
 
@@ -99,11 +99,11 @@ public class Bill {
         this.state = state;
     }
 
-    public Date getAnchor() {
+    public long getAnchor() {
         return anchor;
     }
 
-    public void setAnchor(Date anchor) {
+    public void setAnchor(long anchor) {
         this.anchor = anchor;
     }
 }
