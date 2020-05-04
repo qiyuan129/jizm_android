@@ -1,7 +1,9 @@
 package com.myapplication;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,7 +27,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import pojo.Account;
 import pojo.Category;
+import util.MyDatabaseHelper;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
@@ -33,6 +41,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private CategoryChooseAdapter categoryChooseAdapter;
 
     private List<Category> categoryList = new ArrayList<>();
+    private List<Account> accountList = new ArrayList<>();
 
     private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
             "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
@@ -45,7 +54,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private int type = 1;
     private int state = 1;
     private long anchor = 1;
-
 
     public boolean isOutcome = true;
 
@@ -223,7 +231,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 Log.d("Fragment","支出");
                 break;
             case R.id.type_edit:
-                Intent intent = new Intent(getActivity(), TypeEditActivity.class);
+                Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                 startActivity(intent);
                 Log.d("Fragment","编辑分类");
                 break;
@@ -304,10 +312,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     //显示支付账户选择器
     public void showPayAccount() {
+        AccountDAO accountDAO = new AccountDAOImpl();
+        accountList=accountDAO.listAccount();
         new MaterialDialog.Builder(getActivity())
                 .title("请选择支付账户")
                 .titleGravity(GravityEnum.CENTER)
-                .items(account)
+                .items(accountList)
                 .positiveText("确定")
                 .negativeText("取消")
                 .canceledOnTouchOutside(false)
@@ -420,10 +430,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             Toast.makeText(getActivity(), "请输入金额", Toast.LENGTH_SHORT).show();
             return;
         }
-        String accountText = account.toString();
+        String categorySelect = String.valueOf(sortTv.getText());
+        String accountText = String.valueOf(cashTv.getText());
         String dateText = String.valueOf(dateTv.getText());
         String remark = remarkInput;
         Float money = Float.valueOf(num + dotNum);
+        Log.d("Fragment", categorySelect);
         Log.d("Fragment", accountText);
         Log.d("Fragment", dateText);
         Log.d("Fragment", remark);
@@ -431,12 +443,13 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initCategory() {
+//        CategoryDAO categoryDAO = new CategoryDAOImpl();
         if (categoryList != null) {
             categoryList.clear();
+//            categoryList=categoryDAO.listCategory();
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
                     Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
-
                     categoryList.add(category);
                 }
             } else {
