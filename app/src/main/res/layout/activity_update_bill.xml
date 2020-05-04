@@ -24,7 +24,7 @@
         <Button
             android:id="@+id/bill_update_income"
             android:text="收入"
-            android:layout_toRightOf="@+id/bill_update_outcome"
+            android:layout_toRightOf="@id/bill_update_outcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"

@@ -50,7 +50,7 @@
 
         <RadioButton
             android:id="@+id/outcome_RB"
-            android:layout_toRightOf="@+id/income_RB"
+            android:layout_toRightOf="@id/income_RB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出" />
@@ -127,7 +127,7 @@
             android:id="@+id/date_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tmp_text1"
+            android:layout_toRightOf="@id/tmp_text1"
             android:layout_marginTop="7dp"
             android:background="@drawable/shape_tb_cash"
             android:paddingLeft="20dp"
@@ -142,7 +142,7 @@
             android:id="@+id/tmp_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/date_start"
+            android:layout_toRightOf="@id/date_start"
             android:textSize="25dp"
             android:text="结束于"/>
 
@@ -150,7 +150,7 @@
             android:id="@+id/date_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tmp_text2"
+            android:layout_toRightOf="@id/tmp_text2"
             android:layout_marginTop="7dp"
             android:background="@drawable/shape_tb_cash"
             android:paddingLeft="20dp"
@@ -192,7 +192,7 @@
 
         <RadioButton
             android:id="@+id/per_week_RB"
-            android:layout_toRightOf="@+id/income_RB"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每周" />
@@ -216,7 +216,7 @@
 
         <RadioButton
             android:id="@+id/per_year_RB"
-            android:layout_toRightOf="@+id/income_RB"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每年" />

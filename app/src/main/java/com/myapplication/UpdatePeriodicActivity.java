@@ -133,6 +133,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
     }
 
+
+
+
+
     public void setData(){
         String tmpId=getIntent().getStringExtra("periodicId");
         int id = Integer.parseInt(tmpId);
