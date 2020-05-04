@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Date;
 import java.util.List;
 
 import pojo.Bill;
@@ -16,8 +17,12 @@ public interface PeriodicDAO {
 
     void deletePeriodic(int id);
 
-    List<Periodic> getAyncPeriodic();
+    Periodic getPeriodicById(int id);
 
-    Long getMaxAnchor();
+    List<Periodic> getSyncPeriodic();
+
+    Date getMaxAnchor();
+
+    void setStateAndAnchor(int id, int state, Date anchor);
 
 }

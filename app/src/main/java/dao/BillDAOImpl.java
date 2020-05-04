@@ -28,10 +28,10 @@ public class BillDAOImpl implements BillDAO {
         values.put("user_id",bill.getUser_id());
         values.put("type",bill.getType());
         values.put("bill_name",bill.getBill_name());
-        values.put("bill_date",bill.getBill_date());
+        values.put("bill_date",bill.getBill_date().getTime());
         values.put("bill_money",bill.getBill_money());
         values.put("state",bill.getState());
-        values.put("anchor",bill.getAnchor());
+        values.put("anchor",bill.getAnchor().getTime());
 
         db.insert("bill",null,values);
     }
@@ -52,10 +52,10 @@ public class BillDAOImpl implements BillDAO {
                 int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
-                long bill_date=cursor.getLong(cursor.getColumnIndex("bill_date"));
+                Date bill_date= new Date(cursor.getLong(cursor.getColumnIndex("bill_date")));
                 double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor= new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
                 list.add(bill);
@@ -75,12 +75,36 @@ public class BillDAOImpl implements BillDAO {
         values.put("user_id",bill.getUser_id());
         values.put("type",bill.getType());
         values.put("bill_name",bill.getBill_name());
-        values.put("bill_date",bill.getBill_date());
+        values.put("bill_date",bill.getBill_date().getTime());
         values.put("bill_money",bill.getBill_money());
         values.put("state",bill.getState());
-        values.put("anchor",bill.getAnchor());
+        values.put("anchor",bill.getAnchor().getTime());
 
         db.update("bill",values,"bill_id = ?",new String[]{""+bill.getBill_id()});
+    }
+
+    @Override
+    public Bill getBillById(int id) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Bill bill=null;
+        Cursor cursor = db.query("bill",null,"bill_id = ?",new String[]{""+id},null,null,null);
+        if (cursor.moveToFirst())
+        {
+            int bill_id=cursor.getInt(cursor.getColumnIndex("bill_id"));
+            int account_id=cursor.getInt(cursor.getColumnIndex("account_id"));
+            int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+            int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+            int type=cursor.getInt(cursor.getColumnIndex("type"));
+            String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
+            Date bill_date= new Date(cursor.getLong(cursor.getColumnIndex("bill_date")));
+            double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
+            int state=cursor.getInt(cursor.getColumnIndex("state"));
+            Date anchor= new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
+
+            bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
+        }
+        cursor.close();
+        return bill;
     }
 
     @Override
@@ -257,10 +281,10 @@ public class BillDAOImpl implements BillDAO {
                 int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
-                long bill_date=cursor.getLong(cursor.getColumnIndex("bill_date"));
+                Date bill_date= new Date(cursor.getLong(cursor.getColumnIndex("bill_date")));
                 double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor= new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
                 list.add(bill);
@@ -317,7 +341,7 @@ public class BillDAOImpl implements BillDAO {
     }
 
     @Override
-    public List<Bill> getAyncBill() {
+    public List<Bill> getSyncBill() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Bill bill=null;
         List<Bill> list=new ArrayList<>();
@@ -332,10 +356,10 @@ public class BillDAOImpl implements BillDAO {
                 int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
-                long bill_date=cursor.getLong(cursor.getColumnIndex("bill_date"));
+                Date bill_date= new Date(cursor.getLong(cursor.getColumnIndex("bill_date")));
                 double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor= new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
                 list.add(bill);
@@ -348,7 +372,7 @@ public class BillDAOImpl implements BillDAO {
     }
 
     @Override
-    public Long getMaxAnchor() {
+    public Date getMaxAnchor() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         long anchor=0;
         Cursor cursor = db.query("bill",null,null,null,null,null,"anchor desc");
@@ -359,6 +383,16 @@ public class BillDAOImpl implements BillDAO {
         }
         cursor.close();
 
-        return anchor;
+        return new Date(anchor);
+    }
+
+    @Override
+    public void setStateAndAnchor(int id, int state, Date anchor) {
+        Bill bill=getBillById(id);
+        if (bill!=null){
+            bill.setState(state);
+            bill.setAnchor(anchor);
+            updateBill(bill);
+        }
     }
 }

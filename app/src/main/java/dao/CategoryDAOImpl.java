@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pojo.Bill;
@@ -28,7 +29,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 String category_name=cursor.getString(cursor.getColumnIndex("category_name"));
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 category=new Category(category_id,user_id,category_name,type,state,anchor);
                 list.add(category);
@@ -48,7 +49,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         values.put("category_name",category.getCategory_name());
         values.put("type",category.getType());
         values.put("state",category.getState());
-        values.put("anchor",category.getAnchor());
+        values.put("anchor",category.getAnchor().getTime());
 
         db.insert("category",null,values);
     }
@@ -61,7 +62,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         values.put("category_name",category.getCategory_name());
         values.put("type",category.getType());
         values.put("state",category.getState());
-        values.put("anchor",category.getAnchor());
+        values.put("anchor",category.getAnchor().getTime());
 
         db.update("category",values,"category_id = ?",new String[]{""+category.getCategory_id()});
 
@@ -85,7 +86,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 String category_name=cursor.getString(cursor.getColumnIndex("category_name"));
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 category=new Category(category_id,user_id,category_name,type,state,anchor);
         }
@@ -94,7 +95,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public List<Category> getAyncCategory() {
+    public List<Category> getSyncCategory() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Category category=null;
         List<Category> list=new ArrayList<>();
@@ -108,7 +109,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 String category_name=cursor.getString(cursor.getColumnIndex("category_name"));
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 category=new Category(category_id,user_id,category_name,type,state,anchor);
                 list.add(category);
@@ -120,7 +121,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public Long getMaxAnchor() {
+    public Date getMaxAnchor() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         long anchor=0;
         Cursor cursor = db.query("category",null,null,null,null,null,"anchor desc");
@@ -131,6 +132,16 @@ public class CategoryDAOImpl implements CategoryDAO {
         }
         cursor.close();
 
-        return anchor;
+        return new Date(anchor);
+    }
+
+    @Override
+    public void setStateAndAnchor(int id, int state, Date anchor) {
+        Category category=getCategoryById(id);
+        if (category!=null){
+            category.setState(state);
+            category.setAnchor(anchor);
+            updateCategory(category);
+        }
     }
 }
