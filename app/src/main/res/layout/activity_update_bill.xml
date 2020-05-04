@@ -87,7 +87,6 @@
         android:id="@+id/bill_update_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tmp_text2"
         android:layout_marginTop="7dp"
         android:background="@drawable/shape_tb_cash"
         android:paddingLeft="20dp"
@@ -114,6 +113,19 @@
         android:layout_height="wrap_content">
     </Spinner>
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/save_bill_update"
+            android:background="@drawable/shape_tb_cash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="保存修改"/>
+    </RelativeLayout>
 
 
 

@@ -50,7 +50,7 @@
 
         <RadioButton
             android:id="@+id/outcome_RB_update"
-            android:layout_toRightOf="@+id/income_RB_update"
+            android:layout_toRightOf="@id/income_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出" />
@@ -207,17 +207,7 @@
 
 
 
-        <RadioButton
-            android:id="@+id/per_season_RB_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="每季度" />
 
-        <RadioButton
-            android:id="@+id/per_year_RB_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="每年" />
 
 
     </RadioGroup>

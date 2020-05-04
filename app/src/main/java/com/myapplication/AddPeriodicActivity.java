@@ -1,25 +1,38 @@
 package com.myapplication;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import pojo.Category;
 
 public class AddPeriodicActivity extends AppCompatActivity implements View.OnClickListener{
+    ArrayList<Category> categories;
+
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
-    public String[] listData ={"学习用品","生活用品","买菜","娱乐","其他"};
+    public ArrayList<String> listData;
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -30,7 +43,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
     //周期类型单选button组
     private RadioGroup RecycleRBGroup;
-    private RadioButton perDay,perWeek,perMonth,perSeason,perYear;
+    private RadioButton perDay,perWeek,perMonth;
 
 
 
@@ -54,8 +67,21 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
     //确认添加按钮
     Button storePeriodic;
+    private EditText nameEditText;
+    private EditText moneyEditText;
 
 
+
+
+    //辅助变量
+    String periodicName;
+    double money;
+    long start;
+    long end;
+    long anchor;
+    int recycleId;
+    int typeId;
+    int categoryId;
 
 
 
@@ -69,6 +95,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
         init();
+        setData();
 
 
         //将可选内容与ArrayAdapter连接起来
@@ -85,6 +112,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         //设置默认值
         spinner.setVisibility(View.VISIBLE);
+
+
+        //设置默认选中的下拉列表项，需要在spinner填充数据之后
+        spinner.setSelection(0,true);
 
 
         //注意是给RadioGroup绑定监视器
@@ -109,8 +140,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         perDay = (RadioButton) findViewById(R.id.per_day_RB);
         perWeek = (RadioButton) findViewById(R.id.per_week_RB);
         perMonth = (RadioButton) findViewById(R.id.per_month_RB);
-        perSeason = (RadioButton) findViewById(R.id.per_season_RB);
-        perYear = (RadioButton) findViewById(R.id.per_year_RB);
+
+
+        //名称金额
+        nameEditText = (EditText)findViewById(R.id.add_periodic_name_edit);
+        moneyEditText = (EditText)findViewById(R.id.add_periodic_money_edit);
+
+
 
 
 
@@ -152,6 +188,41 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         storePeriodic.setOnClickListener(this);
 
 
+
+    }
+
+
+
+
+
+    public void setData(){
+        //设置种类
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        categories = (ArrayList<Category>) categoryDAO.listCategory();
+        for(Category cat:categories){
+            listData.add(cat.getCategory_name());
+        }
+
+
+
+        //测试用，后面删除
+        if(categories==null){
+            categories = new ArrayList<Category>();
+        }
+        if(listData==null){
+            listData=new ArrayList<String>();
+            listData.add("学习用品");
+            listData.add("生活用品");
+        }
+
+
+
+
+
+
+        //设置默认选中的值
+        RBGroup.check(outcomeRB.getId());
+        RecycleRBGroup.check(perDay.getId());
     }
 
 
@@ -169,7 +240,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
             case R.id.store_periodic:
-                Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
+                savePeriodic();
+                AddPeriodicActivity.this.finish();
                 break;
 
 
@@ -180,12 +253,96 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     }
 
 
+    public boolean review(){
+        //检查数据是否达到存入要求
+
+        AlertDialog.Builder builder  = new AlertDialog.Builder(AddPeriodicActivity.this);
+        builder.setTitle("确认" ) ;
+        builder.setMessage("事件信息有误，请检查" ) ;
+        builder.setPositiveButton("是" ,  null );
+
+        //输入框为空
+        if(TextUtils.isEmpty(nameEditText.getText())||
+                TextUtils.isEmpty(moneyEditText.getText())){
+            builder.show();
+            return false;
+        }
+
+
+
+        try {
+            Date startDate= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
+            Date endDate= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
+
+           // Date now = new Date();
+
+            if(startDate.compareTo(endDate)==1){
+                builder.setMessage("开始时间应小于结束时间" ) ;
+                builder.show();
+                return false;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return true;
+    }
+
+
+    public boolean savePeriodic(){
+        if(!review()){
+            return false;
+        }
+
+        periodicName=nameEditText.getText().toString();
+        money=Double.valueOf(moneyEditText.getText().toString());
+
+       //recycleId和typeId已近处理了
+
+
+        //categoryId在  SpinnerSelectedListener里处理了
+
+
+
+        try {
+            Date startDate= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
+            Date endDate= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
+            Date now = new Date();
+
+            start=startDate.getTime();
+            end=endDate.getTime();
+            anchor=now.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        //存入数据库，暂时不做，因为缺少一些信息，比如Periodic.id需要沟通一下
+
+      /*  Periodic periodic=new Periodic();
+        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+        periodicDAO.addPeriodic(periodic);*/
+
+
+        Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show();
+        return true;
+    }
 
     //内部类，下拉列表监听者，使用数组形式操作
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData[arg2]+":"+String.valueOf(arg2));
+            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+
+            //设置Category_id 记得去掉注释
+            //categoryId = categories.get(arg2).getCategory_id();
+
+            //测试用，后面删除
+            categoryId=0;
+
 
         }
 
@@ -285,31 +442,26 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                 case R.id.outcome_RB:
                     // 当用户选择收入时
                     Log.i("outcome_RB", "当前用户选择"+ outcomeRB.getText().toString());
+                    setType(1);
                     break;
                 case R.id.income_RB:
                     // 当用户选择支出时
+                    setType(0);
                     Log.i("income_RB", "当前用户选择"+ incomeRB.getText().toString());
                     break;
 
                 case R.id.per_day_RB:
-                   setRecycle(1);
+                    setRecycleId(0);
                     break;
 
                 case R.id.per_week_RB:
-                    setRecycle(7);
+                    setRecycleId(1);
                     break;
 
                 case R.id.per_month_RB:
-                    setRecycle(30);
+                    setRecycleId(2);
                     break;
 
-                case R.id.per_season_RB:
-                    setRecycle(4*30);
-                    break;
-
-                case R.id.per_year_RB:
-                    setRecycle(265);
-                    break;
 
 
                     default:break;
@@ -323,14 +475,19 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         /*
         设置周期事件周期 day week month season year
          */
-        public void setRecycle(int days){
+        public void setRecycleId(int id){
           /*
           将周期设为多少天就可以了
            */
 
-         Log.i("周期将被设置为： ",String.valueOf(days));
+         Log.i("周期id将被设置为： ",String.valueOf(id));
+         recycleId = id;
+
+        }
 
 
+        public void setType(int id){
+            typeId=id;
         }
 
 

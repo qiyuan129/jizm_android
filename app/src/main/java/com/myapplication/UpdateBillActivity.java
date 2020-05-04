@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +36,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     Bill bill;
     ArrayList<Category> categories;
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
-    public ArrayList<String> listData=new  ArrayList<String>();
+    public ArrayList<String> listData = new  ArrayList<String>();
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -43,6 +44,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
     Button incomeButton;
     Button outComeButton;
+    Button saveBillButton;
 
     //名称和金额
     EditText BillNameEdit;
@@ -56,10 +58,16 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     public int mMonth;
     public int mDays;
 
+
+    //辅助变量
+    public int categoryItemId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_bill);
+
+
         init();
         setData();
 
@@ -96,6 +104,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         //输入支出按钮
         incomeButton = (Button)findViewById(R.id.bill_update_income);
         outComeButton = (Button)findViewById((R.id.bill_update_outcome));
+        saveBillButton = (Button)findViewById(R.id.save_bill_update) ;
 
 
         //选择时间
@@ -116,6 +125,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         billUpdateTime.setOnClickListener(this);
         incomeButton.setOnClickListener(this);
         outComeButton.setOnClickListener(this);
+        saveBillButton.setOnClickListener(this);
 
 
     }
@@ -127,23 +137,24 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     设置下拉列表默认选中的值
      */
     public void setDefaultPsinnerItem(){
-       /* //dao的代码还没好，先注释掉
+        //dao的代码还没好，先注释掉
         //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
         int catId = bill.getCategory_id();
         CategoryDAO catDAO = new CategoryDAOImpl();
-        Category category = catDAO.getById(catId);
-
+        Category category = catDAO.getCategoryById(catId);
         String categoryName = category.getCategory_name();
         for(int i=0;i<listData.size();i++){
             if(categoryName.equals(listData.get(i))){
                 spinner.setSelection(i);
                 break;
             }
-        }*/
+        }
 
 
 
-        spinner.setSelection(1);
+
+
+       // spinner.setSelection(1);
 
 
     }
@@ -160,8 +171,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         BillDAO billDAO = new BillDAOImpl();
         bill= billDAO.getById(id);*/
 
+
        //实验用，后面删除
-        bill = new Bill(2,3,2,5,1,"早餐",1245785,32.2,2, 5545278);
+        bill = new Bill(1,3,1,5,1,"早餐",1245724485,32.2,2, 55545278);
 
 
         //设置开始结束时间
@@ -193,22 +205,28 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
 
-        /*//设置类别值
+        //设置类别值
 
         CategoryDAO categoryDAO=new CategoryDAOImpl();
-        categories=categoryDAO.getList();
+        categories = (ArrayList<Category>) categoryDAO.listCategory();
         for(Category cat:categories){
             listData.add(cat.getCategory_name());
-        }*/
+        }
 
-        listData.add("学习用品");
+
+        /*listData.add("学习用品");
         listData.add("生活用品");
         listData.add("娱乐消费");
         listData.add("买菜");
         listData.add("旅游");
-        listData.add("其他");
+        listData.add("其他");*/
+
+
 
     }
+
+
+
 
     @Override
     public void onClick(View view) {
@@ -224,6 +242,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 setBillType(1);//1代表收入
                 break;
 
+            case R.id.save_bill_update:
+                saveBill();
+                break;
 
 
                 default:
@@ -241,10 +262,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
             //设置类别
             //adapter和listData顺序应该是一样的吧
-            bill.setCategory_id(
-                    categories.get(arg2).
-                            getCategory_id());
 
+            //设置类别id
+            setCategoryItemId(arg2);
 
 
         }
@@ -302,6 +322,17 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
 
+    public void setCategoryItemId(int itemId){
+        //记录选中的category在数组中的id
+        categoryItemId=itemId;
+    }
+
+
+    public void setBillCategory(){
+        //设置categoryId
+        bill.setCategory_id(categories.get(categoryItemId).getCategory_id());
+    }
+
 
 
     public boolean review(){
@@ -321,12 +352,21 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
        }
 
         //检查时间是否超过现在
-        Date time=new Date(days);
-        Date now = new Date();
-        if(time.compareTo(now)==1){//输入事件比当前时间大，错误
-            builder.show();
-            return false;
+        Log.i("days: ",days);
+        try {
+            Date date= new SimpleDateFormat("yyyy-MM-dd").parse(days);
+            Date now = new Date();
+            if(date.compareTo(now)==1){//输入事件比当前时间大，错误
+                builder.show();
+                return false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+
+
+
 
         String moneyStr=BillMoneyEdit.getText().toString();
         if(moneyStr.startsWith("-")){
@@ -353,18 +393,34 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         bill.setBill_money(Double.valueOf(moneyStr));
 
 
-        //设置种类....已经在SpinnerSelectedListenerBup里设置过了
+        //设置种类
+        setBillCategory();
 
 
         //设置时间
-        Date date=new Date(days);
+        Date date= null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(days);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Date date=new Date(days);
+
         long dateTime = date.getTime();
         bill.setBill_date(dateTime);
 
 
-        //存入数据库
-        BillDAO billDAO = new BillDAOImpl();
-        billDAO.updateBill(bill);
+        Log.i("bill_name: ",bill.getBill_name());
+        Log.i("bill_money: ",String.valueOf(bill.getBill_money()));
+        Log.i("bill_type: ",String.valueOf(bill.getType()));
+        Log.i("bill_category: ",String.valueOf(bill.getCategory_id()));
+        Log.i("bill_recycle: ",String.valueOf(bill));
+
+
+        //存入数据库 暂时注解掉
+        //BillDAO billDAO = new BillDAOImpl();
+        //billDAO.updateBill(bill);
 
 
     }
