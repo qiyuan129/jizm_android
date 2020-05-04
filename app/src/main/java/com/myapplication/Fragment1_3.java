@@ -93,11 +93,11 @@ public class Fragment1_3 extends Fragment {
 
         //实验用，后面删除
         billList = new ArrayList<>();
-        for(int i=0;i<=20;i++){
-            Bill bill = new Bill(i,23,2,25,
-                    1,"学习用品:"+i,546524,36.5,2,254625);
-            billList.add(bill);
-        }
+//        for(int i=0;i<=20;i++){
+//            Bill bill = new Bill(i,23,2,25,
+//                    1,"学习用品:"+i,546524,36.5,2,254625);
+//            billList.add(bill);
+//        }
 
 
     }

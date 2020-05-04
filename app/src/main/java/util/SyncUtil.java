@@ -221,10 +221,10 @@ public class SyncUtil {
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();
 
-        List<Account> accountList = accountDAO.getAyncAccount();
-        List<Bill> billList = billDAO.getAyncBill();
-        List<Category> categoryList=categoryDAO.getAyncCategory();
-        List<Periodic> periodicList=periodicDAO.getAyncPeriodic();
+        List<Account> accountList = accountDAO.getSyncAccount();
+        List<Bill> billList = billDAO.getSyncBill();
+        List<Category> categoryList=categoryDAO.getSyncCategory();
+        List<Periodic> periodicList=periodicDAO.getSyncPeriodic();
 
         if(accountList.size()>0) {
             accountRecordsJson = SyncUtil.getAccountSyncRecordsJson(true, accountList);

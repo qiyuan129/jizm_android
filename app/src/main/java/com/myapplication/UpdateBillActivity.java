@@ -173,7 +173,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
        //实验用，后面删除
-        bill = new Bill(1,3,1,5,1,"早餐",1245724485,32.2,2, 55545278);
+//        bill = new Bill(1,3,1,5,1,"早餐",1245724485,32.2,2, 55545278);
 
 
         //设置开始结束时间
@@ -408,7 +408,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         //Date date=new Date(days);
 
         long dateTime = date.getTime();
-        bill.setBill_date(dateTime);
+        bill.setBill_date(date);
 
 
         Log.i("bill_name: ",bill.getBill_name());

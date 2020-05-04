@@ -200,11 +200,11 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
         //实验用，后面删除
         periodics = new ArrayList<>();
-        for(int i=0;i<=20;i++){
-           Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
-                   6,45236+i,99954+i,50,3,425575);
-           periodics.add(periodic);
-        }
+//        for(int i=0;i<=20;i++){
+//           Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
+//                   6,45236+i,99954+i,50,3,425575);
+//           periodics.add(periodic);
+//        }
 
 
     }

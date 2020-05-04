@@ -166,8 +166,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
          */
 
 
-        periodic = new Periodic(1,2,1,3,1,"shopping"+String.valueOf(2),
-                1,3838737,25785872,50,3,21288);
+//        periodic = new Periodic(1,2,1,3,1,"shopping"+String.valueOf(2),
+//                1,3838737,25785872,50,3,21288);
 
 
         //设置收入支出类别
@@ -384,9 +384,9 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         //更新事件的值
         periodic.setPeriodic_name(name);
         periodic.setPeriodic_money(money);
-        periodic.setStart(start);
-        periodic.setEnd(end);
-        periodic.setAnchor(anchor);
+        periodic.setStart(new Date(start));
+        periodic.setEnd(new Date(end));
+        periodic.setAnchor(new Date(anchor));
         periodic.setCycle(recycleId);
         periodic.setType(typeId);
         periodic.setCategory_id(categoryId);
