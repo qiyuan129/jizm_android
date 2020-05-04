@@ -9,17 +9,29 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
-public class AddPeriodicActivity extends AppCompatActivity implements View.OnClickListener{
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import pojo.Category;
+import pojo.Periodic;
+
+public class UpdatePeriodicActivity extends AppCompatActivity implements View.OnClickListener{
+
+    ArrayList<Category> categories;
+    public Periodic periodic;
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
-    public String[] listData ={"学习用品","生活用品","买菜","娱乐","其他"};
+    public ArrayList<String> listData=new  ArrayList<String>();
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -52,27 +64,27 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     protected int endDay;
 
 
-    //确认添加按钮
+    //确认修改按钮
     Button storePeriodic;
 
 
-
-
-
-
+    //需要设置默认值组件
+    EditText periodicName;
+    EditText periodicMoney;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_periodic);
-
+        setContentView(R.layout.activity_update_periodic);
 
         init();
+        setData();
+
 
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listData);
+        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listData);
 
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -80,51 +92,103 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         //将adapter 添加到spinner中
         spinner.setAdapter(adapter);
 
+        //spinner数据加载完，设置一下默认选中的值
+        setDefaultPsinnerItem();
+
+
         //添加事件Spinner事件监听
-        spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+        spinner.setOnItemSelectedListener(new SpinnerSelectedListenerUp());
 
         //设置默认值
         spinner.setVisibility(View.VISIBLE);
 
 
         //注意是给RadioGroup绑定监视器
-        RBGroup.setOnCheckedChangeListener(new MyRadioButtonListener());
-        RecycleRBGroup.setOnCheckedChangeListener(new MyRadioButtonListener());
+        RBGroup.setOnCheckedChangeListener(new MyRadioButtonListenerUp());
+        RecycleRBGroup.setOnCheckedChangeListener(new MyRadioButtonListenerUp());
+
+
+    }
+
+
+    /*
+    设置下拉列表默认选中的值
+     */
+    public void setDefaultPsinnerItem(){
+        //dao的代码还没好，先注释掉
+       /* //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
+        int catId = periodic.getCategory_id();
+        CategoryDAO catDAO = new CategoryDAOImpl();
+        Category category = catDAO.getById(catId);
+
+        String categoryName = category.getCategory_name();
+        for(int i=0;i<listData.size();i++){
+            if(categoryName.equals(listData.get(i))){
+                spinner.setSelection(i);
+                break;
+            }
+        }
+        */
+        spinner.setSelection(1);
+
 
     }
 
 
 
-    public void init(){
-        view = (TextView) findViewById(R.id.spinnerText);
-        spinner = (Spinner) findViewById(R.id.Spinner01);
-
-        //收入支出单选
-        RBGroup = (RadioGroup) findViewById(R.id.rg_type);
-        incomeRB = (RadioButton) findViewById(R.id.income_RB);
-        outcomeRB = (RadioButton) findViewById(R.id.outcome_RB);
-
-        //周期单选按钮组
-        RecycleRBGroup = (RadioGroup) findViewById(R.id.rg_cycle);
-        perDay = (RadioButton) findViewById(R.id.per_day_RB);
-        perWeek = (RadioButton) findViewById(R.id.per_week_RB);
-        perMonth = (RadioButton) findViewById(R.id.per_month_RB);
-        perSeason = (RadioButton) findViewById(R.id.per_season_RB);
-        perYear = (RadioButton) findViewById(R.id.per_year_RB);
 
 
+    public void setData(){
+        String tmpId=getIntent().getStringExtra("periodicId");
+        int id = Integer.parseInt(tmpId);
+
+        /*
+         PeriodicDAO perDao = new PeriodicDAOImpl();
+         Periodic periodic= perDao.getById(id);
+         */
 
 
-        //日期选择
-        startDate = (TextView)findViewById(R.id.date_start);
-        endDate = (TextView)findViewById(R.id.date_end);
+        periodic = new Periodic(1,2,5,3,1,"eat"+String.valueOf(2),
+                7,3838737,25785872,50,3,21288);
 
 
-        //保存按钮
-        storePeriodic=(Button)findViewById(R.id.store_periodic);
+        //设置收入支出类别
+        if(periodic.getType()==1){//收入
+            RBGroup.check(incomeRB.getId());
+        }
+        else {//支出
+            RBGroup.check(outcomeRB.getId());
+        }
 
 
-        //获取当前年，月，日
+        //设置事件名称和金额
+        periodicName.setText(periodic.getPeriodic_name());
+        periodicMoney.setText(Double.toString(periodic.getPeriodic_money()));
+
+
+
+
+       /* //设置类别值
+
+          CategoryDAO categoryDAO=new CategoryDAOImpl();
+          categories=categoryDAO.getList();
+          for(Category cat:categories){
+              listData.add(cat.getCategory_name());
+          }*/
+
+        listData.add("学习用品");
+        listData.add("生活用品");
+        listData.add("娱乐消费");
+        listData.add("买菜");
+        listData.add("旅游");
+        listData.add("其他");
+
+
+
+
+
+
+        /*//获取当前年，月，日
         Calendar calendar = Calendar.getInstance();
         //开始时间
         startYear = calendar.get(Calendar.YEAR);
@@ -135,18 +199,99 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         endMonth = calendar.get(Calendar.MONTH);
         endDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-
-
-
         //设置当前时间
         myStartDay = new StringBuffer().append(startYear).append("-").append( startMonth + 1).append("-").append(startDay).toString();
         startDate.setText(myStartDay);
-        startDate.setOnClickListener(this);
+
 
         myEndDay = new StringBuffer().append(endYear).append("-").append( endMonth + 1).append("-").append(endDay).toString();
-        endDate.setText(myEndDay);
-        endDate.setOnClickListener(this);
+        endDate.setText(myEndDay);*/
 
+
+        //设置开始结束时间
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String satrtDateString = formatter.format(periodic.getStart());
+        String endDateString = formatter.format(periodic.getEnd());
+
+        startDate.setText(satrtDateString);
+        endDate.setText(endDateString);
+
+
+
+        //设置周期
+        switch (periodic.getCycle()){
+          case 1:RecycleRBGroup.check(perDay.getId());
+              break;
+          case 7:RecycleRBGroup.check(perWeek.getId());
+              break;
+          case 30:RecycleRBGroup.check(perMonth.getId());
+              break;
+          case 120:RecycleRBGroup.check(perSeason.getId());
+              break;
+          case 256:RecycleRBGroup.check(perYear.getId());
+              break;
+
+              default:
+                  break;
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    public void init(){
+        view = (TextView) findViewById(R.id.spinnerText_update);
+        spinner = (Spinner) findViewById(R.id.Spinner_update);
+
+        //收入支出单选
+        RBGroup = (RadioGroup) findViewById(R.id.rg_type_update);
+        incomeRB = (RadioButton) findViewById(R.id.income_RB_update);
+        outcomeRB = (RadioButton) findViewById(R.id.outcome_RB_update);
+
+        //周期单选按钮组
+        RecycleRBGroup = (RadioGroup) findViewById(R.id.rg_cycle_update);
+        perDay = (RadioButton) findViewById(R.id.per_day_RB_update);
+        perWeek = (RadioButton) findViewById(R.id.per_week_RB_update);
+        perMonth = (RadioButton) findViewById(R.id.per_month_RB_update);
+        perSeason = (RadioButton) findViewById(R.id.per_season_RB_update);
+        perYear = (RadioButton) findViewById(R.id.per_year_RB_update);
+
+
+
+
+
+        //日期选择
+        startDate = (TextView)findViewById(R.id.date_start_update);
+        endDate = (TextView)findViewById(R.id.date_end_update_);
+
+
+        //保存按钮
+        storePeriodic=(Button)findViewById(R.id.store_periodic_update);
+
+
+        //需要设置默认值的组件
+        periodicName = (EditText)findViewById(R.id.periodic_name_update);
+        periodicMoney = (EditText)findViewById(R.id.periodic_money_update);
+
+
+
+
+
+
+
+
+        startDate.setOnClickListener(this);
+        endDate.setOnClickListener(this);
 
         //保存按钮事件监听
         storePeriodic.setOnClickListener(this);
@@ -156,14 +301,15 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.date_start:
+            case R.id.date_start_update:
                 showStartDateSelector();
                 break;
 
-            case R.id.date_end:
+            case R.id.date_end_update_:
                 showEndDateSelector();
                 break;
 
@@ -181,11 +327,12 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
 
+
     //内部类，下拉列表监听者，使用数组形式操作
-    class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+    class SpinnerSelectedListenerUp implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData[arg2]+":"+String.valueOf(arg2));
+            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
 
         }
 
@@ -270,13 +417,8 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
 
-
-
-
-
-
     //按钮组的监听者
-    class MyRadioButtonListener implements RadioGroup.OnCheckedChangeListener {
+    class MyRadioButtonListenerUp implements RadioGroup.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -292,7 +434,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     break;
 
                 case R.id.per_day_RB:
-                   setRecycle(1);
+                    setRecycle(1);
                     break;
 
                 case R.id.per_week_RB:
@@ -312,7 +454,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     break;
 
 
-                    default:break;
+                default:break;
             }
 
 
@@ -328,7 +470,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
           将周期设为多少天就可以了
            */
 
-         Log.i("周期将被设置为： ",String.valueOf(days));
+            Log.i("周期将被设置为： ",String.valueOf(days));
 
 
         }
@@ -336,12 +478,6 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
     }
-
-
-
-
-
-
 
 
 }

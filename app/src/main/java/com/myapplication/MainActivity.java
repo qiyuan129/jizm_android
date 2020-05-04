@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment4 fragment4;
     private List<Fragment> list;
 
-
+    public static MyDatabaseHelper dbHelper;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         initView();
-
+        dbHelper=new MyDatabaseHelper(this,"JiZM",null,1);
 
 
     }

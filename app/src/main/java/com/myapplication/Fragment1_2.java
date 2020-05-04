@@ -2,16 +2,23 @@ package com.myapplication;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -21,7 +28,12 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.myapplication.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,32 +44,69 @@ public class Fragment1_2 extends Fragment
     boolean OutcomeFlag = false;
     boolean IncomeFlag = true;
     private View mView;
+    private ImageButton refresh;
     private PieChart mPieChart;
     private Switch mChangeType;
     private ListView lview;
-    private Date mdate;
+    private String strbeginDate;
+    private String strendDate;
+    private TextView tvBeginDate;
+    private TextView tvEndDate;
     private CategoryListAdapter adapter;
     private List<CategoryListItem> categoryList = new ArrayList<>();
     private List<CategoryChartItem> categoryChart = new ArrayList<>();
-
+    private TimePickerView mStartDatePickerView1;
+    private TimePickerView mStartDatePickerView2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-            //注意View对象的重复使用，以便节省资源
+        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        strbeginDate =  new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+
+
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment1_2, container, false);
         }
 
         lview = mView.findViewById(R.id.CategoryList);
-        categoryList = loadcategoryList(OutcomeFlag);
+        mPieChart = mView.findViewById(R.id.PieChart);
+        mChangeType = mView.findViewById(R.id.Switch_In_Out);
+        refresh = mView.findViewById(R.id.refresh_category);
+        tvBeginDate = mView.findViewById(R.id.beginDate);
+        tvEndDate = mView.findViewById(R.id.endDate);
+
+        //设置texeview初始时间，为本月1号——今日
+        tvBeginDate.setText(strbeginDate);
+        tvEndDate.setText(strendDate);
+        tvBeginDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStartDatePickerView1.show();
+            }
+        });
+        initStartTimePicker1();
+        tvEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStartDatePickerView2.show();
+            }
+        });
+        initStartTimePicker2();
+
+
+        //设置Listview,默认数据为当月支出前10
+        categoryList = loadcategoryList(strbeginDate,strendDate,OutcomeFlag);
         adapter = new CategoryListAdapter(getActivity(), R.layout.categorylist_item, categoryList);
         lview.setAdapter(adapter);
 
-        mPieChart = mView.findViewById(R.id.PieChart);
-        categoryChart = loadcategoryChart(OutcomeFlag);
+        //设置PieChart,默认数据为当月支出
+        categoryChart = loadcategoryChart(strbeginDate,strendDate,OutcomeFlag);
         ShowPieChart(mPieChart, setPieChartData(categoryChart), OutcomeFlag);
-        mChangeType = mView.findViewById(R.id.Switch_In_Out);
+
+        //收支切换时 refresh数据
         mChangeType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
@@ -65,19 +114,68 @@ public class Fragment1_2 extends Fragment
             {
                 if (isChecked)
                 {
-                    RefreshData(IncomeFlag);
+                    RefreshData(strbeginDate,strendDate,IncomeFlag);
+                    Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    RefreshData(OutcomeFlag);
+                    RefreshData(strbeginDate,strendDate,OutcomeFlag);
+                    Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //起止日期切换时 refresh数据
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(compareDate(tvBeginDate.getText().toString(),tvEndDate.getText().toString()))
+                {
+                    strbeginDate = tvBeginDate.getText().toString();
+                    strendDate = tvEndDate.getText().toString();
+                    if(mChangeType.isChecked())
+                    {
+                        RefreshData(strbeginDate,strendDate,IncomeFlag);
+                        Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        RefreshData(strbeginDate,strendDate,OutcomeFlag);
+                        Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+                else {
+                    tvBeginDate.setText(strbeginDate);
+                    tvEndDate.setText(strendDate);
+                    Toast.makeText(getActivity(), "起始时间大于终止时间，请重新选择", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         return mView;
     }
 
+    //比较两个yyyy-mm-dd格式的时间，d1<=d2返回true
+    public boolean compareDate(String d1,String d2)
+    {
+        boolean flag=false;
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            Date dt1 = df.parse(d1);
+            Date dt2 = df.parse(d2);
+            //dt1在dt2后
+            if (dt1.getTime() <= dt2.getTime()) {
+                flag=true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
     //加载数据用于饼图展示  后续可能加入 dadte事件 使用接口获取数据
-    public List<CategoryChartItem> loadcategoryChart(boolean typeflag)
+    public List<CategoryChartItem> loadcategoryChart(String begindate,String enddate,boolean typeflag)
     {
         int i;
         List<CategoryChartItem> mcategoryChart = new ArrayList<>();
@@ -178,7 +276,7 @@ public class Fragment1_2 extends Fragment
         pieChart.postInvalidate();
     }
     //加载获取数据源 用于列表展示  后续可能加入 dadte事件 使用接口获取数据
-    public List<CategoryListItem> loadcategoryList(boolean typeflag) {
+    public List<CategoryListItem> loadcategoryList(String begindate,String enddate,boolean typeflag) {
         int i;
         List<CategoryListItem> mcategoryList = new ArrayList<>();
         if (typeflag == OutcomeFlag) {
@@ -203,16 +301,100 @@ public class Fragment1_2 extends Fragment
         return mcategoryList;
     }
 
-
-    public void RefreshData(boolean flag)
+    public void RefreshData(String begindate,String enddate,boolean flag)
     {
         categoryList.clear();
-        categoryList.addAll(loadcategoryList(flag));
+        categoryList.addAll(loadcategoryList(begindate,enddate,flag));
         adapter.notifyDataSetChanged();
         lview.setAdapter(adapter);
         categoryChart.clear();
-        categoryChart.addAll(loadcategoryChart(flag));
+        categoryChart.addAll(loadcategoryChart(begindate,enddate,flag));
         ShowPieChart(mPieChart, setPieChartData(categoryChart), flag);
+    }
+
+    private void initStartTimePicker1() {
+        //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
+        //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
+        Calendar selectedDate = Calendar.getInstance();
+        //设置最小日期和最大日期
+        Calendar startDate = Calendar.getInstance();
+        try {
+            startDate.setTime(DateTimeHelper.parseStringToDate("1970-01-01"));//设置为2006年4月28日
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar endDate = Calendar.getInstance();//最大日期是今天
+
+        //时间选择器
+        mStartDatePickerView1 = new TimePickerBuilder(mView.getContext(), new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
+                tvBeginDate.setText(DateTimeHelper.formatToString(date,"yyyy-MM-dd"));
+            }
+        })
+                .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
+                //年月日时分秒 的显示与否，不设置则默认全部显示
+                .setType(new boolean[]{true, true, true, false, false, false})
+                .setLabel("", "", "", "", "", "")
+                .isCenterLabel(false)//是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setTitleText("开始日期")//标题文字
+                .setTitleSize(20)//标题文字大小
+                .setTitleColor(getResources().getColor(R.color.pickerview_title_text_color))//标题文字颜色
+                .setCancelText("取消")//取消按钮文字
+                .setCancelColor(getResources().getColor(R.color.pickerview_cancel_text_color))//取消按钮文字颜色
+                .setSubmitText("确定")//确认按钮文字
+                .setSubmitColor(getResources().getColor(R.color.pickerview_submit_text_color))//确定按钮文字颜色
+                .setContentTextSize(20)//滚轮文字大小
+                .setTextColorCenter(getResources().getColor(R.color.pickerview_center_text_color))//设置选中文本的颜色值
+                .setLineSpacingMultiplier(1.8f)//行间距
+                .setDividerColor(getResources().getColor(R.color.pickerview_divider_color))//设置分割线的颜色
+                .setRangDate(startDate, endDate)//设置最小和最大日期
+                .setDate(selectedDate)//设置选中的日期
+                .build();
+    }
+    private void initStartTimePicker2() {
+        //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
+        //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
+        Calendar selectedDate = Calendar.getInstance();
+        //设置最小日期和最大日期
+        Calendar startDate = Calendar.getInstance();
+        try {
+            startDate.setTime(DateTimeHelper.parseStringToDate("1970-01-01"));//设置为2006年4月28日
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar endDate = Calendar.getInstance();//最大日期是今天
+
+        //时间选择器
+        mStartDatePickerView2 = new TimePickerBuilder(mView.getContext(), new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
+                tvEndDate.setText(DateTimeHelper.formatToString(date,"yyyy-MM-dd"));
+            }
+        })
+                .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
+                //年月日时分秒 的显示与否，不设置则默认全部显示
+                .setType(new boolean[]{true, true, true, false, false, false})
+                .setLabel("", "", "", "", "", "")
+                .isCenterLabel(false)//是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setTitleText("开始日期")//标题文字
+                .setTitleSize(20)//标题文字大小
+                .setTitleColor(getResources().getColor(R.color.pickerview_title_text_color))//标题文字颜色
+                .setCancelText("取消")//取消按钮文字
+                .setCancelColor(getResources().getColor(R.color.pickerview_cancel_text_color))//取消按钮文字颜色
+                .setSubmitText("确定")//确认按钮文字
+                .setSubmitColor(getResources().getColor(R.color.pickerview_submit_text_color))//确定按钮文字颜色
+                .setContentTextSize(20)//滚轮文字大小
+                .setTextColorCenter(getResources().getColor(R.color.pickerview_center_text_color))//设置选中文本的颜色值
+                .setLineSpacingMultiplier(1.8f)//行间距
+                .setDividerColor(getResources().getColor(R.color.pickerview_divider_color))//设置分割线的颜色
+                .setRangDate(startDate, endDate)//设置最小和最大日期
+                .setDate(selectedDate)//设置选中的日期
+                .build();
+
+
     }
 }
 class CategoryListItem
@@ -249,8 +431,9 @@ class CategoryListItem
         return date;
     }
 }
- class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
- {
+
+class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
+{
      private int id;
      public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects)
      {
@@ -275,8 +458,8 @@ class CategoryListItem
      }
  }
 
- class CategoryChartItem
- {
+class CategoryChartItem
+{
      private String categoryname;
      private Float precent;
      private double money;
