@@ -144,7 +144,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
         periodic = new Periodic(1,2,5,3,1,"eat"+String.valueOf(2),
-                7,new Date(45236),new Date(99954),50,3,new Date());
+                7,3838737,25785872,50,3,21288);
 
 
         //设置收入支出类别
