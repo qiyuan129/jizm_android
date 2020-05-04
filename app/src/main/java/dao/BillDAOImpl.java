@@ -277,10 +277,8 @@ public class BillDAOImpl implements BillDAO {
         Bill bill=null;
         CategoryDAO categoryDAO=new CategoryDAOImpl();
         List<Category> categoryList=categoryDAO.listCategory();
-        List<Integer> categoryIdList=new ArrayList<>();
         Map<Integer, Double> map = new HashMap<Integer,Double>();
         for (Category category : categoryList){
-            categoryIdList.add(category.getCategory_id());
             map.put(category.getCategory_id(),0.0);
         }
         Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type},null,null,"bill_money desc");
@@ -293,22 +291,28 @@ public class BillDAOImpl implements BillDAO {
                 sum+=bill_money;
                 map.put(category_id,sum);
 
-//                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
-//                int type=cursor.getInt(cursor.getColumnIndex("type"));
-//                String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
-//                long bill_date=cursor.getLong(cursor.getColumnIndex("bill_date"));
-//                int state=cursor.getInt(cursor.getColumnIndex("state"));
-//                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
-//
-//                bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
-//                list.add(bill);
-//                i++;
             } while (cursor.moveToNext());
         }
         cursor.close();
 
-
-
         return map;
+    }
+
+    @Override
+    public double getAllmoney(Date begin, Date end, int type) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        double sum=0;
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type},null,null,"bill_money desc");
+
+        if (cursor.moveToFirst())
+        {
+            do {
+                double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
+                sum+=bill_money;
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return sum;
     }
 }
