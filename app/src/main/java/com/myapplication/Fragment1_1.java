@@ -128,7 +128,8 @@ public class Fragment1_1 extends Fragment {
             incomeChart.add(new IncomeLineItem(c,i+1));
             i++;
         }
-        incomeChart.add(new IncomeLineItem(dbData.get(i-1),i-1));
+        if(i>0)
+            incomeChart.add(new IncomeLineItem(dbData.get(i-1),i-1));
         incomeChart.add(new IncomeLineItem(110,i));
         return incomeChart;
     }
@@ -143,7 +144,8 @@ public class Fragment1_1 extends Fragment {
             outcomeChart.add(new OutcomeLineItem(c,i+1));
             i++;
         }
-        outcomeChart.add(new OutcomeLineItem(dbData.get(i-1),i-1));
+        if(i>0)
+            outcomeChart.add(new OutcomeLineItem(dbData.get(i-1),i-1));
         outcomeChart.add(new OutcomeLineItem(220,i));
         //outcomeChart.add(new OutcomeLineItem(90,i));
         /*
@@ -179,7 +181,7 @@ public class Fragment1_1 extends Fragment {
     public List<TrendListItem> loadtrendList(int myear)
     {
         BillDAOImpl billDAO = new BillDAOImpl();
-        int i;
+        int i=0;
         double in,out;
         TrendListItem t1;
         List<TrendListItem> trendList = new ArrayList<>();
@@ -192,9 +194,14 @@ public class Fragment1_1 extends Fragment {
             t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i+1),String.valueOf(in), String.valueOf(out), String.valueOf(in-out));
             trendList.add(t1);
         }
-        t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i-1), String.valueOf(dbDataIncome.get(i-1)),
+        TrendListItem tt = new TrendListItem("测试"+String.format("%02d",i+1),"1111", "1111", "1111");
+        trendList.add(tt);
+        if(i>0)
+        {
+            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
                 String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
-        trendList.add(t1);
+            trendList.add(t1);
+        }
         return trendList;
     }
     public void RefreshData(int year)
@@ -216,8 +223,7 @@ public class Fragment1_1 extends Fragment {
 
 
 
-    public int getYear(String stryear)
-    {
+    public int getYear(String stryear) {
         int year = 0;
         try {
 
@@ -229,6 +235,7 @@ public class Fragment1_1 extends Fragment {
         }
         return year;
     }
+
      private void initChart(LineChart lineChart)
      {
            /***图表设置***/
@@ -357,7 +364,7 @@ public class Fragment1_1 extends Fragment {
           setMarkerView();
       }
 
-    private void initStartTimePicker() {
+    public void initStartTimePicker() {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
         //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
         Calendar selectedDate = Calendar.getInstance();
@@ -398,6 +405,8 @@ public class Fragment1_1 extends Fragment {
                 .setDate(selectedDate)//设置选中的日期
                 .build();
     }
+
+
 
 }
 
