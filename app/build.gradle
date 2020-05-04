@@ -42,4 +42,5 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation 'com.alibaba:fastjson:1.2.61'
 }
