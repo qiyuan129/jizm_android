@@ -1,8 +1,10 @@
 package com.myapplication;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +33,7 @@ import pojo.Category;
 public class UpdateBillActivity extends AppCompatActivity implements View.OnClickListener{
 
     Bill bill;
+    ArrayList<Category> categories;
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
     public ArrayList<String> listData=new  ArrayList<String>();
     private TextView view ;
@@ -190,7 +193,14 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
 
-        //
+        /*//设置类别值
+
+        CategoryDAO categoryDAO=new CategoryDAOImpl();
+        categories=categoryDAO.getList();
+        for(Category cat:categories){
+            listData.add(cat.getCategory_name());
+        }*/
+
         listData.add("学习用品");
         listData.add("生活用品");
         listData.add("娱乐消费");
@@ -229,6 +239,13 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            //设置类别
+            //adapter和listData顺序应该是一样的吧
+            bill.setCategory_id(
+                    categories.get(arg2).
+                            getCategory_id());
+
+
 
         }
 
@@ -286,6 +303,71 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
 
+
+    public boolean review(){
+       /*
+       检查数据是否达到存入要求
+        */
+        AlertDialog.Builder builder  = new AlertDialog.Builder(UpdateBillActivity.this);
+        builder.setTitle("确认" ) ;
+        builder.setMessage("账单信息有误，请检查" ) ;
+        builder.setPositiveButton("是" ,  null );
+
+        //输入框为空
+        if(TextUtils.isEmpty(BillMoneyEdit.getText())||
+               TextUtils.isEmpty(BillMoneyEdit.getText())){
+            builder.show();
+            return false;
+       }
+
+        //检查时间是否超过现在
+        Date time=new Date(days);
+        Date now = new Date();
+        if(time.compareTo(now)==1){//输入事件比当前时间大，错误
+            builder.show();
+            return false;
+        }
+
+        String moneyStr=BillMoneyEdit.getText().toString();
+        if(moneyStr.startsWith("-")){
+            builder.show();
+            return false;
+        }
+
+
+        return true;
+
+    }
+
+
+    public void saveBill(){
+
+        if(!review()){ //检查是否有为空的数据，不合法的数据等,不合法则直接返回
+            return;
+        }
+
+       //设置名称和金额
+        String moneyStr=BillMoneyEdit.getText().toString();
+
+        bill.setBill_name(BillNameEdit.getText().toString());
+        bill.setBill_money(Double.valueOf(moneyStr));
+
+
+        //设置种类....已经在SpinnerSelectedListenerBup里设置过了
+
+
+        //设置时间
+        Date date=new Date(days);
+        long dateTime = date.getTime();
+        bill.setBill_date(dateTime);
+
+
+        //存入数据库
+        BillDAO billDAO = new BillDAOImpl();
+        billDAO.updateBill(bill);
+
+
+    }
 
 
 

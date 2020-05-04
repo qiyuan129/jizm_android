@@ -28,6 +28,7 @@ import pojo.Periodic;
 
 public class UpdatePeriodicActivity extends AppCompatActivity implements View.OnClickListener{
 
+    ArrayList<Category> categories;
     public Periodic periodic;
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
     public ArrayList<String> listData=new  ArrayList<String>();
@@ -167,14 +168,14 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
-        //设置类别值
+       /* //设置类别值
 
-        /*  CategoryDAO categoryDAO=new CategoryDAOImpl();
-          ArrayList<Category> categories=categoryDAO.getList();
+          CategoryDAO categoryDAO=new CategoryDAOImpl();
+          categories=categoryDAO.getList();
           for(Category cat:categories){
               listData.add(cat.getCategory_name());
-          }
-          */
+          }*/
+
         listData.add("学习用品");
         listData.add("生活用品");
         listData.add("娱乐消费");
