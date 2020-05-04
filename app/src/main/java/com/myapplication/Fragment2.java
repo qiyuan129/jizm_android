@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import dao.AccountDAO;
@@ -53,7 +54,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private int user_id = 1;
     private int type = 1;
     private int state = 1;
-    private long anchor = 1;
+    private Date anchor= new Date();
 
     public boolean isOutcome = true;
 

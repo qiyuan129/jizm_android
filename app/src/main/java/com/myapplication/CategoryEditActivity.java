@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import dao.CategoryDAO;
@@ -54,7 +55,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     private int user_id = 1;
     private int isOutcome = 1;
     private int state = 0;
-    private long anchor = 0;
+    private Date anchor = new Date();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
