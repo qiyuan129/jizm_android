@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pojo.Bill;
@@ -31,11 +32,11 @@ public class PeriodicDAOImpl implements PeriodicDAO {
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 String periodic_name=cursor.getString(cursor.getColumnIndex("periodic_name"));
                 int cycle=cursor.getInt(cursor.getColumnIndex("cycle"));
-                long start=cursor.getLong(cursor.getColumnIndex("start"));
-                long end=cursor.getLong(cursor.getColumnIndex("end"));
+                Date start=new Date(cursor.getLong(cursor.getColumnIndex("start")));
+                Date end=new Date(cursor.getLong(cursor.getColumnIndex("end")));
                 double periodic_money=cursor.getDouble(cursor.getColumnIndex("periodic_money"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 periodic=new Periodic(periodic_id,account_id,category_id,user_id,type,periodic_name,cycle,start,end,periodic_money,state,anchor);
                 list.add(periodic);
@@ -57,11 +58,11 @@ public class PeriodicDAOImpl implements PeriodicDAO {
         values.put("type",periodic.getType());
         values.put("periodic_name",periodic.getPeriodic_name());
         values.put("cycle",periodic.getCycle());
-        values.put("start",periodic.getStart());
-        values.put("end",periodic.getEnd());
+        values.put("start",periodic.getStart().getTime());
+        values.put("end",periodic.getEnd().getTime());
         values.put("periodic_money",periodic.getPeriodic_money());
         values.put("state",periodic.getState());
-        values.put("anchor",periodic.getAnchor());
+        values.put("anchor",periodic.getAnchor().getTime());
 
         db.insert("periodic",null,values);
     }
@@ -76,11 +77,11 @@ public class PeriodicDAOImpl implements PeriodicDAO {
         values.put("type",periodic.getType());
         values.put("periodic_name",periodic.getPeriodic_name());
         values.put("cycle",periodic.getCycle());
-        values.put("start",periodic.getStart());
-        values.put("end",periodic.getEnd());
+        values.put("start",periodic.getStart().getTime());
+        values.put("end",periodic.getEnd().getTime());
         values.put("periodic_money",periodic.getPeriodic_money());
         values.put("state",periodic.getState());
-        values.put("anchor",periodic.getAnchor());
+        values.put("anchor",periodic.getAnchor().getTime());
 
         db.update("periodic",values,"periodic_id = ?",new String[]{""+periodic.getPeriodic_id()});
 
@@ -94,7 +95,34 @@ public class PeriodicDAOImpl implements PeriodicDAO {
     }
 
     @Override
-    public List<Periodic> getAyncPeriodic() {
+    public Periodic getPeriodicById(int id) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Periodic periodic=null;
+        Cursor cursor = db.query("category",null,"category_id = ?",new String[]{""+id},null,null,null);
+        if (cursor.moveToFirst())
+        {
+            int periodic_id=cursor.getInt(cursor.getColumnIndex("periodic_id"));
+            int account_id=cursor.getInt(cursor.getColumnIndex("account_id"));
+            int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+            int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+            int type=cursor.getInt(cursor.getColumnIndex("type"));
+            String periodic_name=cursor.getString(cursor.getColumnIndex("periodic_name"));
+            int cycle=cursor.getInt(cursor.getColumnIndex("cycle"));
+            Date start=new Date(cursor.getLong(cursor.getColumnIndex("start")));
+            Date end=new Date(cursor.getLong(cursor.getColumnIndex("end")));
+            double periodic_money=cursor.getDouble(cursor.getColumnIndex("periodic_money"));
+            int state=cursor.getInt(cursor.getColumnIndex("state"));
+            Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
+
+            periodic=new Periodic(periodic_id,account_id,category_id,user_id,type,periodic_name,cycle,start,end,periodic_money,state,anchor);
+
+        }
+        cursor.close();
+        return periodic;
+    }
+
+    @Override
+    public List<Periodic> getSyncPeriodic() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Periodic periodic=null;
         List<Periodic> list=new ArrayList<>();
@@ -110,11 +138,11 @@ public class PeriodicDAOImpl implements PeriodicDAO {
                 int type=cursor.getInt(cursor.getColumnIndex("type"));
                 String periodic_name=cursor.getString(cursor.getColumnIndex("periodic_name"));
                 int cycle=cursor.getInt(cursor.getColumnIndex("cycle"));
-                long start=cursor.getLong(cursor.getColumnIndex("start"));
-                long end=cursor.getLong(cursor.getColumnIndex("end"));
+                Date start=new Date(cursor.getLong(cursor.getColumnIndex("start")));
+                Date end=new Date(cursor.getLong(cursor.getColumnIndex("end")));
                 double periodic_money=cursor.getDouble(cursor.getColumnIndex("periodic_money"));
                 int state=cursor.getInt(cursor.getColumnIndex("state"));
-                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
 
                 periodic=new Periodic(periodic_id,account_id,category_id,user_id,type,periodic_name,cycle,start,end,periodic_money,state,anchor);
                 list.add(periodic);
@@ -126,7 +154,7 @@ public class PeriodicDAOImpl implements PeriodicDAO {
     }
 
     @Override
-    public Long getMaxAnchor() {
+    public Date getMaxAnchor() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         long anchor=0;
         Cursor cursor = db.query("periodic",null,null,null,null,null,"anchor desc");
@@ -137,6 +165,16 @@ public class PeriodicDAOImpl implements PeriodicDAO {
         }
         cursor.close();
 
-        return anchor;
+        return new Date(anchor);
+    }
+
+    @Override
+    public void setStateAndAnchor(int id, int state, Date anchor) {
+        Periodic periodic=getPeriodicById(id);
+        if (periodic!=null){
+            periodic.setState(state);
+            periodic.setAnchor(anchor);
+            updatePeriodic(periodic);
+        }
     }
 }

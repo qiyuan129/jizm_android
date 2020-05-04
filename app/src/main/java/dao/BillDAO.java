@@ -15,6 +15,8 @@ public interface BillDAO {
 
     void deleteBill(int id);
 
+    Bill getBillById(int id);
+
     List<Double> monthlyIncome(int year);
 
     List<Double> monthlyOutcome(int year);
@@ -25,8 +27,10 @@ public interface BillDAO {
 
     double getAllmoney(Date begin,Date end,int type);
 
-    List<Bill> getAyncBill();
+    List<Bill> getSyncBill();
 
-    Long getMaxAnchor();
+    Date getMaxAnchor();
+
+    void setStateAndAnchor(int id, int state, Date anchor);
 
 }

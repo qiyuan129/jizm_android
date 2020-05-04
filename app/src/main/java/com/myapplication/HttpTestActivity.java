@@ -6,8 +6,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.io.IOException;
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
+
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -18,6 +30,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import pojo.Account;
+import pojo.Bill;
+import pojo.Category;
+import pojo.Periodic;
 import util.SyncUtil;
 
 public class HttpTestActivity extends AppCompatActivity {
@@ -30,7 +46,7 @@ public class HttpTestActivity extends AppCompatActivity {
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
 
-    public static String jsonStr="{\n" +
+    public static String jsonStr = "{\n" +
             "    \"Category\": {\n" +
             "        \"tableName\": \"Category\",\n" +
             "        \"needSync\": true,\n" +
@@ -134,23 +150,28 @@ public class HttpTestActivity extends AppCompatActivity {
 //                RequestBody formBody = new FormBody.Builder()
 //                        .add("search", "Jurassic Park")
 //                        .build();
-                RequestBody requestBody=RequestBody.create(MEDIA_TYPE_JSON,jsonStr);
+                JSONObject syncRecordsJsonObject=SyncUtil.getAllSyncRecords();
+                RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,
+                        syncRecordsJsonObject.toJSONString());
 
                 Request request = new Request.Builder()
                         .url("http://192.168.0.100:8080/app/synchronization")    //这里的主机地址要填电脑的ip地址
                         .post(requestBody)
-                        .addHeader("token","emptyToken")
+                        .addHeader("token", "emptyToken")
                         .build();
 
 
                 client.newCall(request).enqueue(new Callback() {
-                    @Override public void onFailure(Call call, IOException e) {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
                         e.printStackTrace();
                     }
 
-                    @Override public void onResponse(Call call, Response response) throws IOException {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
                         try (ResponseBody responseBody = response.body()) {
-                            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                            if (!response.isSuccessful())
+                                throw new IOException("Unexpected code " + response);
 
 //                            Headers responseHeaders = response.headers();
 //                            for (int i = 0, size = responseHeaders.size(); i < size; i++) {
@@ -182,12 +203,14 @@ public class HttpTestActivity extends AppCompatActivity {
         });
     }
 
-    private void init(){
-        submitButton=(Button)findViewById(R.id.button);
-        editText=(EditText)findViewById(R.id.editText);
-        resultText=(EditText)findViewById(R.id.resultText);
-    }
 
+
+
+    private void init() {
+        submitButton = (Button) findViewById(R.id.button);
+        editText = (EditText) findViewById(R.id.editText);
+        resultText = (EditText) findViewById(R.id.resultText);
+    }
 
 
     public void run() throws Exception {

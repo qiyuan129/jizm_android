@@ -28,7 +28,7 @@
             class="com.github.mikephil.charting.charts.PieChart"
             android:layout_width="330dp"
             android:layout_height="250dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="35dp"
             android:background="#bee3db"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,11 +36,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="330dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="290dp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:text="Top          类别              价格               时间       "
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.532"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.myapplication.MyListview
             android:id="@+id/CategoryList"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="300dp"
+            android:layout_marginTop="335dp"
             android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,6 +92,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_popup_sync" />
+
+
 
 
     </android.support.constraint.ConstraintLayout>
