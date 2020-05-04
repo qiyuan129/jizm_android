@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 
 import pojo.Bill;
+import pojo.Category;
 import pojo.Periodic;
 
 public interface PeriodicDAO {
@@ -15,6 +16,8 @@ public interface PeriodicDAO {
 
     void deletePeriodic(int id);
 
+    List<Periodic> getAyncPeriodic();
 
+    Long getMaxAnchor();
 
 }

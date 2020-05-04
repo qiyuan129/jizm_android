@@ -34,15 +34,9 @@ public class AccountDAOImpl implements AccountDAO {
                 account=new Account(account_id,user_id,account_name,money,state,anchor);
                 list.add(account);
 
-
-
             } while (cursor.moveToNext());
         }
         cursor.close();
-
-
-
-
         return list;
     }
 
@@ -58,9 +52,45 @@ public class AccountDAOImpl implements AccountDAO {
         values.put("anchor",account.getAnchor());
         db.insert("account",null,values);
 
-
     }
 
+    @Override
+    public List<Account> getAyncAccount() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Account account=null;
+        List<Account> list=new ArrayList<>();
 
+        Cursor cursor = db.query("account",null,"state != ?",new String[]{"9"},null,null,null);
+        if (cursor.moveToFirst())
+        {
+            do {
+                int account_id=cursor.getInt(cursor.getColumnIndex("account_id"));
+                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+                String account_name=cursor.getString(cursor.getColumnIndex("account_name"));
+                double money=cursor.getDouble(cursor.getColumnIndex("money"));
+                int state=cursor.getInt(cursor.getColumnIndex("state"));
+                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+                account=new Account(account_id,user_id,account_name,money,state,anchor);
+                list.add(account);
 
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public Long getMaxAnchor() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        long anchor=0;
+        Cursor cursor = db.query("account",null,null,null,null,null,"anchor desc");
+
+        if (cursor.moveToFirst())
+        {
+            anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+        }
+        cursor.close();
+
+        return anchor;
+    }
 }

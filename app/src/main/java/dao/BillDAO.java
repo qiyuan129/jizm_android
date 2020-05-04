@@ -25,5 +25,8 @@ public interface BillDAO {
 
     double getAllmoney(Date begin,Date end,int type);
 
+    List<Bill> getAyncBill();
+
+    Long getMaxAnchor();
 
 }
