@@ -8,9 +8,9 @@ public class Account {
     private String account_name;
     private double money;
     private int state;
-    private long anchor;
+    private Date anchor;
 
-    public Account(int account_id, int user_id, String account_name, double money, int state, long anchor) {
+    public Account(int account_id, int user_id, String account_name, double money, int state, Date anchor) {
         this.account_id = account_id;
         this.user_id = user_id;
         this.account_name = account_name;
@@ -60,11 +60,11 @@ public class Account {
         this.state = state;
     }
 
-    public long getAnchor() {
+    public Date getAnchor() {
         return anchor;
     }
 
-    public void setAnchor(long anchor) {
+    public void setAnchor(Date anchor) {
         this.anchor = anchor;
     }
 }

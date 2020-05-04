@@ -1,26 +1,21 @@
 package com.myapplication;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,19 +23,26 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import pojo.Categorytest;
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import pojo.Account;
+import pojo.Category;
+import util.MyDatabaseHelper;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
-    private CategoryAdapter categoryAdapter;
+    private CategoryChooseAdapter categoryChooseAdapter;
 
-    private List<Categorytest> categorytestList = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
+    private List<Account> accountList = new ArrayList<>();
 
     private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
             "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
@@ -48,8 +50,15 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
 
+    private int category_id = 1;
+    private int user_id = 1;
+    private int type = 1;
+    private int state = 1;
+    private Date anchor= new Date();
+
     public boolean isOutcome = true;
 
+    private RecyclerView recyclerView;
     private Button incomeTv;        //收入按钮
     private Button outcomeTv;       //支出按钮
     private TextView edittypeTv;    //编辑类别
@@ -71,12 +80,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private TextView dot;        //小数点
     private TextView done;       //确认
 
-    private ImageView clear;     //清空金额
-    private ImageView remarkIv;  //备注
-    private RelativeLayout delect;    //数字键盘回格键
-    private ViewPager viewPagerItem;
-    private LinearLayout layoutIcon;
-    private RecyclerView recyclerView;
+    private ImageView clear;           //清空金额
+    private ImageView remarkIv;        //备注
+    private RelativeLayout delect;     //数字键盘回格键
 
     //选择器
     protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
@@ -123,6 +129,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         initCategory();
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
+
+        categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+        categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
+        recyclerView.setAdapter(categoryChooseAdapter);
+
+        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Category categorytest = categoryList.get(position);
+                sortTv.setText(categorytest.getCategory_name());
+            }
+        });
 
         moneyTv = (TextView) mView.findViewById(R.id.tb_note_money);
         moneyTv.setText(num+dotNum);
@@ -184,20 +202,39 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.income_tv:
                 isOutcome = false;
                 initCategory();
+                categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+                categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
+                recyclerView.setAdapter(categoryChooseAdapter);
+
+                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        Category category = categoryList.get(position);
+                        sortTv.setText(category.getCategory_name());
+                    }
+                });
                 Log.d("Fragment","收入");
                 break;
             case R.id.outcome_tv:
                 isOutcome = true;
                 initCategory();
+                categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+                categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
+                recyclerView.setAdapter(categoryChooseAdapter);
+
+                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        Category category = categoryList.get(position);
+                        sortTv.setText(category.getCategory_name());
+                    }
+                });
                 Log.d("Fragment","支出");
                 break;
             case R.id.type_edit:
-                Intent intent = new Intent(getActivity(), TypeEditActivity.class);
+                Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                 startActivity(intent);
                 Log.d("Fragment","编辑分类");
-                break;
-            case R.id.category_recycle_view:
-               // sortTv.setText();
                 break;
             case R.id.tb_note_cash:
                 showPayAccount();
@@ -212,6 +249,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 Log.d("Fragment","备注");
                 break;
             case R.id.tb_calc_num_done:
+                doCommit();
                 Log.d("Fragment","确定按钮");
                 break;
             case R.id.tb_calc_num_1:
@@ -275,10 +313,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     //显示支付账户选择器
     public void showPayAccount() {
+        AccountDAO accountDAO = new AccountDAOImpl();
+        accountList=accountDAO.listAccount();
         new MaterialDialog.Builder(getActivity())
                 .title("请选择支付账户")
                 .titleGravity(GravityEnum.CENTER)
-                .items(account)
+                .items(accountList)
                 .positiveText("确定")
                 .negativeText("取消")
                 .canceledOnTouchOutside(false)
@@ -386,38 +426,51 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
     }
 
+    public void doCommit() {
+        if ((num + dotNum).equals("0.00")) {
+            Toast.makeText(getActivity(), "请输入金额", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String categorySelect = String.valueOf(sortTv.getText());
+        String accountText = String.valueOf(cashTv.getText());
+        String dateText = String.valueOf(dateTv.getText());
+        String remark = remarkInput;
+        Float money = Float.valueOf(num + dotNum);
+        Log.d("Fragment", categorySelect);
+        Log.d("Fragment", accountText);
+        Log.d("Fragment", dateText);
+        Log.d("Fragment", remark);
+
+    }
+
     private void initCategory() {
-        if (categorytestList != null) {
-            categorytestList.clear();
+//        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        if (categoryList != null) {
+            categoryList.clear();
+//            categoryList=categoryDAO.listCategory();
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
-                    Categorytest categorytest = new Categorytest(category_outcome[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < category_income.length; i++){
-                    Categorytest categorytest = new Categorytest(category_income[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             }
-            categoryAdapter = new CategoryAdapter(categorytestList);
-            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
-            recyclerView.setAdapter(categoryAdapter);
         } else {
             if (isOutcome) {
                 for(int i = 0; i < category_outcome.length; i++){
-                    Categorytest categorytest = new Categorytest(category_outcome[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < category_income.length; i++){
-                    Categorytest categorytest = new Categorytest(category_income[i]);
-                    categorytestList.add(categorytest);
+                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                    categoryList.add(category);
                 }
             }
-            categoryAdapter = new CategoryAdapter(categorytestList);
-            categoryAdapter.notifyItemRangeChanged(0, categorytestList.size());
-            recyclerView.setAdapter(categoryAdapter);
         }
     }
 }

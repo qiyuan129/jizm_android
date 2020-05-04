@@ -10,13 +10,13 @@ public class Periodic {
     private int type;
     private String periodic_name;
     private int cycle;
-    private long start;
-    private long end;
+    private Date start;
+    private Date end;
     private double periodic_money;
     private int state;
-    private long anchor;
+    private Date anchor;
 
-    public Periodic(int periodic_id, int account_id, int category_id, int user_id, int type, String periodic_name, int cycle, long start, long end, double periodic_money, int state, long anchor) {
+    public Periodic(int periodic_id, int account_id, int category_id, int user_id, int type, String periodic_name, int cycle, Date start, Date end, double periodic_money, int state, Date anchor) {
         this.periodic_id = periodic_id;
         this.account_id = account_id;
         this.category_id = category_id;
@@ -87,19 +87,19 @@ public class Periodic {
         this.cycle = cycle;
     }
 
-    public long getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(long start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public long getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(long end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 
@@ -119,11 +119,11 @@ public class Periodic {
         this.state = state;
     }
 
-    public long getAnchor() {
+    public Date getAnchor() {
         return anchor;
     }
 
-    public void setAnchor(long anchor) {
+    public void setAnchor(Date anchor) {
         this.anchor = anchor;
     }
 }

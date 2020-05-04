@@ -13,7 +13,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             +"category_name text,"
             +"type integer,"
             +"state integer,"
-            +"anchor timestamp)";
+            +"anchor integer)";
 
     public static final String CREATE_ACCOUNT="create table account("
             +"account_id integer primary key autoincrement,"
@@ -21,7 +21,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             +"account_name text,"
             +"money double,"
             +"state integer,"
-            +"anchor timestamp)";
+            +"anchor integer)";
 
     public static final String CREATE_BILL="create table bill("
             +"bill_id integer primary key autoincrement,"
@@ -30,10 +30,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             +"user_id integer,"
             +"type integer,"
             +"bill_name text,"
-            +"bill_date timestamp,"
+            +"bill_date integer,"
             +"bill_money double,"
             +"state integer,"
-            +"anchor timestamp)";
+            +"anchor integer)";
 
     public static final String CREATE_PERIODIC="create table periodic("
             +"periodic_id integer primary key autoincrement,"
@@ -43,11 +43,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             +"type integer,"
             +"periodic_name text,"
             +"cycle integer,"
-            +"start date,"
-            +"end date,"
+            +"start integer,"
+            +"end integer,"
             +"periodic_money double,"
             +"state integer,"
-            +"anchor timestamp)";
+            +"anchor integer)";
 
     private Context mContext;
 

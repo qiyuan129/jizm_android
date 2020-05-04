@@ -6,53 +6,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import pojo.Category;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+public class CategoryChooseAdapter extends RecyclerView.Adapter<CategoryChooseAdapter.ViewHolder> {
     private List<Category> mCategoryList;
 
+    public interface OnItemClickListener {
+        void onClick(int position);
+    }
+    private OnItemClickListener listener;
+
     static class ViewHolder extends RecyclerView.ViewHolder {
-        View categoryView;
         TextView categoryName;
 
         public ViewHolder(View view) {
             super(view);
-            categoryView = view;
             categoryName = (TextView) view.findViewById(R.id.category_name);
         }
     }
 
-    public CategoryAdapter(List<Category> categoryList) {
-        mCategoryList = categoryList;
+    public CategoryChooseAdapter(List<Category> mCList) {
+        mCategoryList = mCList;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item,parent,false);
-        final ViewHolder holder = new ViewHolder(view);
-        holder.categoryView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Category category = mCategoryList.get(position);
-                Toast.makeText(v.getContext(), "you clicked view" + category.getCategory_name(),
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        return holder;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Category category = mCategoryList.get(position);
         holder.categoryName.setText(category.getCategory_name());
-        holder.itemView.getTag(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClick(position);
+                }
+            }
+        });
     }
 
     @Override

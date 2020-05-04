@@ -1,5 +1,6 @@
 package com.myapplication;
-
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -115,8 +117,113 @@ public class Fragment1_1 extends Fragment {
         return mView;
     }
 
-    public int getYear(String stryear)
+
+    public List<IncomeLineItem> loadincomeChart(int myear)
     {
+        BillDAOImpl billDAO = new BillDAOImpl();
+        int i=0;
+        List<IncomeLineItem> incomeChart = new ArrayList<>();
+        List<Double> dbData = billDAO.monthlyIncome(myear);
+        for(double c:dbData) {
+            incomeChart.add(new IncomeLineItem(c,i+1));
+            i++;
+        }
+        if(i>0)
+            incomeChart.add(new IncomeLineItem(dbData.get(i-1),i-1));
+        incomeChart.add(new IncomeLineItem(110,i));
+        return incomeChart;
+    }
+
+    public List<OutcomeLineItem> loadoutcomeChart(int myear)
+    {
+        BillDAOImpl billDAO = new BillDAOImpl();
+        int i=0;
+        List<OutcomeLineItem> outcomeChart = new ArrayList<>();
+        List<Double> dbData = billDAO.monthlyOutcome(myear);
+        for(double c:dbData) {
+            outcomeChart.add(new OutcomeLineItem(c,i+1));
+            i++;
+        }
+        if(i>0)
+            outcomeChart.add(new OutcomeLineItem(dbData.get(i-1),i-1));
+        outcomeChart.add(new OutcomeLineItem(220,i));
+        //outcomeChart.add(new OutcomeLineItem(90,i));
+        /*
+        for(i=0;i<dbData.size();i++) {
+            outcomeChart.add(new OutcomeLineItem(dbData.get(i),i+1));
+        }
+        i=i-1;
+        outcomeChart.add(new OutcomeLineItem(dbData.get(i),i++));
+        outcomeChart.add(new OutcomeLineItem(220,i++));*/
+        /*if (year == 2020)
+        {
+            for (i = 0; i < 13; i++)
+            {
+                outcomeChart.add(new OutcomeLineItem(15*i,i));
+            }
+
+        }
+        else
+        {
+            for (i = 0; i < 5; i++)
+            {
+                OutcomeLineItem c1 = new OutcomeLineItem(82,i*2+1);
+                outcomeChart.add(c1);
+                OutcomeLineItem c2 = new OutcomeLineItem(64,i*2+2);
+                outcomeChart.add(c2);
+            }
+            OutcomeLineItem c2 = new OutcomeLineItem(102,i*2+2);
+            outcomeChart.add(c2);
+        }*/
+        return outcomeChart;
+    }
+
+    public List<TrendListItem> loadtrendList(int myear)
+    {
+        BillDAOImpl billDAO = new BillDAOImpl();
+        int i=0;
+        double in,out;
+        TrendListItem t1;
+        List<TrendListItem> trendList = new ArrayList<>();
+        List<Double> dbDataIncome = billDAO.monthlyIncome(myear);
+        List<Double> dbDataOutcome = billDAO.monthlyOutcome(myear);
+        for (i=0;i<dbDataIncome.size();i++)
+        {
+            in = dbDataIncome.get(i);
+            out = dbDataOutcome.get(i);
+            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i+1),String.valueOf(in), String.valueOf(out), String.valueOf(in-out));
+            trendList.add(t1);
+        }
+        TrendListItem tt = new TrendListItem("测试"+String.format("%02d",i+1),"1111", "1111", "1111");
+        trendList.add(tt);
+        if(i>0)
+        {
+            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
+                String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
+            trendList.add(t1);
+        }
+        return trendList;
+    }
+    public void RefreshData(int year)
+    {
+        incomeLine.clear();
+        outcomeLine.clear();
+        incomeLine.addAll(loadincomeChart(year));
+        outcomeLine.addAll(loadoutcomeChart(year));
+        showLineChart(incomeLine, "收入", Color.rgb(104,134,197));
+        addLine(outcomeLine, "支出", Color.rgb(187,59,14));
+
+        trendList.clear();
+        trendList.addAll(loadtrendList(year));
+        adapter.notifyDataSetChanged();
+        lview.setAdapter(adapter);
+    }
+
+
+
+
+
+    public int getYear(String stryear) {
         int year = 0;
         try {
 
@@ -128,81 +235,6 @@ public class Fragment1_1 extends Fragment {
         }
         return year;
     }
-    public List<TrendListItem> loadtrendList(int myear)
-    {
-                int i;
-                List<TrendListItem> trendList = new ArrayList<>();
-                if (myear == 2020 ) {
-                    for (i = 0; i < 6; i++) {
-                        TrendListItem c1 = new TrendListItem(String.valueOf(myear)+String.valueOf(i * 2 + 1), "1435.00", "126434.00", "774.00");
-                        trendList.add(c1);
-                        TrendListItem c2 = new TrendListItem(String.valueOf(myear)+String.valueOf(i * 2 + 2), "123464.00", "151.00", "227.00");
-                        trendList.add(c2);
-                    }
-
-                } else {
-                    for (i = 0; i < 6; i++) {
-                        TrendListItem c1 = new TrendListItem(String.valueOf(myear)+String.valueOf(i * 2 + 1), "1111.00", "14.00", "842.00");
-                        trendList.add(c1);
-                        TrendListItem c2 = new TrendListItem(String.valueOf(myear)+String.valueOf(i * 2 + 2),"2222.00", "121334.00", "1234.00");
-                        trendList.add(c2);
-                    }
-
-                }
-                return trendList;
-            }
-    public List<IncomeLineItem> loadincomeChart(int year)
-    {
-           int i;
-           List<IncomeLineItem> incomeChart = new ArrayList<>();
-           if (year == 2020)
-           {
-               for (i = 0; i < 13; i++)
-               {
-                   incomeChart.add(new IncomeLineItem(22*i,i));
-               }
-
-           }
-           else
-           {
-               for (i = 0; i < 5; i++)
-               {
-                   IncomeLineItem c1 = new IncomeLineItem(83,i*2+1);
-                   incomeChart.add(c1);
-                   IncomeLineItem c2 = new IncomeLineItem(24,i*2+2);
-                   incomeChart.add(c2);
-               }
-                    IncomeLineItem c2 = new IncomeLineItem(182,i*2+2);
-                    incomeChart.add(c2);
-           }
-           return incomeChart;
-     }
-     public List<OutcomeLineItem> loadoutcomeChart(int year)
-     {
-         int i;
-         List<OutcomeLineItem> outcomeChart = new ArrayList<>();
-         if (year == 2020)
-         {
-             for (i = 0; i < 13; i++)
-            {
-             outcomeChart.add(new OutcomeLineItem(15*i,i));
-            }
-
-         }
-         else
-          {
-              for (i = 0; i < 5; i++)
-              {
-                  OutcomeLineItem c1 = new OutcomeLineItem(82,i*2+1);
-                  outcomeChart.add(c1);
-                  OutcomeLineItem c2 = new OutcomeLineItem(64,i*2+2);
-                  outcomeChart.add(c2);
-              }
-              OutcomeLineItem c2 = new OutcomeLineItem(102,i*2+2);
-              outcomeChart.add(c2);
-          }
-         return outcomeChart;
-     }
 
      private void initChart(LineChart lineChart)
      {
@@ -332,22 +364,7 @@ public class Fragment1_1 extends Fragment {
           setMarkerView();
       }
 
-      public void RefreshData(int year)
-      {
-          incomeLine.clear();
-          outcomeLine.clear();
-          incomeLine.addAll(loadincomeChart(year));
-          outcomeLine.addAll(loadoutcomeChart(year));
-          showLineChart(incomeLine, "收入", Color.rgb(104,134,197));
-          addLine(outcomeLine, "支出", Color.rgb(187,59,14));
-
-          trendList.clear();
-          trendList.addAll(loadtrendList(year));
-          adapter.notifyDataSetChanged();
-          lview.setAdapter(adapter);
-      }
-
-    private void initStartTimePicker() {
+    public void initStartTimePicker() {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
         //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
         Calendar selectedDate = Calendar.getInstance();
@@ -388,6 +405,8 @@ public class Fragment1_1 extends Fragment {
                 .setDate(selectedDate)//设置选中的日期
                 .build();
     }
+
+
 
 }
 
@@ -437,19 +456,23 @@ class TrendListAdapter extends ArrayAdapter<TrendListItem>
 
 class IncomeLineItem
 {
-    private float value;
+    private double value;
     private int month;
 
-    public IncomeLineItem(float value,int month){this.value=value;this.month=month;}
+    public IncomeLineItem(double value,int month)
+    {
+        this.value=value;
+        this.month=month;
+    }
     public double getValue(){return value; }
     public int getMonth() { return month; }
 }
 
 class OutcomeLineItem
 {
-    private float value;
+    private double value;
     private int month;
-    public OutcomeLineItem(float value,int month)
+    public OutcomeLineItem(double value,int month)
     {
         this.value=value;
         this.month=month;

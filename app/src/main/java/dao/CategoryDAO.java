@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Date;
 import java.util.List;
 
 import pojo.Bill;
@@ -17,9 +18,11 @@ public interface CategoryDAO {
 
     Category getCategoryById(int id);
 
-    List<Category> getAyncCategory();
+    List<Category> getSyncCategory();
 
-    Long getMaxAnchor();
+    Date getMaxAnchor();
+
+    void setStateAndAnchor(int id, int state, Date anchor);
 
 
 }

@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Date;
 import java.util.List;
 
 import pojo.Account;
@@ -10,9 +11,15 @@ public interface AccountDAO {
 
     void insertAccount(Account account);
 
-    List<Account> getAyncAccount();
+    Account getAccountById(int id);
 
-    Long getMaxAnchor();
+    void updateAccount(Account account);
+
+    List<Account> getSyncAccount();
+
+    Date getMaxAnchor();
+
+    void setStateAndAnchor(int id, int state, Date anchor);
 
 
 }
