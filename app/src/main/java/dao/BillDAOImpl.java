@@ -277,10 +277,8 @@ public class BillDAOImpl implements BillDAO {
         Bill bill=null;
         CategoryDAO categoryDAO=new CategoryDAOImpl();
         List<Category> categoryList=categoryDAO.listCategory();
-        List<Integer> categoryIdList=new ArrayList<>();
         Map<Integer, Double> map = new HashMap<Integer,Double>();
         for (Category category : categoryList){
-            categoryIdList.add(category.getCategory_id());
             map.put(category.getCategory_id(),0.0);
         }
         Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type},null,null,"bill_money desc");
@@ -293,22 +291,74 @@ public class BillDAOImpl implements BillDAO {
                 sum+=bill_money;
                 map.put(category_id,sum);
 
-//                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
-//                int type=cursor.getInt(cursor.getColumnIndex("type"));
-//                String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
-//                long bill_date=cursor.getLong(cursor.getColumnIndex("bill_date"));
-//                int state=cursor.getInt(cursor.getColumnIndex("state"));
-//                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
-//
-//                bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
-//                list.add(bill);
-//                i++;
             } while (cursor.moveToNext());
         }
         cursor.close();
 
-
-
         return map;
+    }
+
+    @Override
+    public double getAllmoney(Date begin, Date end, int type) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        double sum=0;
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type},null,null,"bill_money desc");
+
+        if (cursor.moveToFirst())
+        {
+            do {
+                double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
+                sum+=bill_money;
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return sum;
+    }
+
+    @Override
+    public List<Bill> getAyncBill() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Bill bill=null;
+        List<Bill> list=new ArrayList<>();
+
+        Cursor cursor = db.query("bill",null,"state != ?",new String[]{"9"},null,null,null);
+        if (cursor.moveToFirst())
+        {
+            do {
+                int bill_id=cursor.getInt(cursor.getColumnIndex("bill_id"));
+                int account_id=cursor.getInt(cursor.getColumnIndex("account_id"));
+                int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+                int type=cursor.getInt(cursor.getColumnIndex("type"));
+                String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
+                long bill_date=cursor.getLong(cursor.getColumnIndex("bill_date"));
+                double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
+                int state=cursor.getInt(cursor.getColumnIndex("state"));
+                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+
+                bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
+                list.add(bill);
+
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public Long getMaxAnchor() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        long anchor=0;
+        Cursor cursor = db.query("bill",null,null,null,null,null,"anchor desc");
+
+        if (cursor.moveToFirst())
+        {
+            anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+        }
+        cursor.close();
+
+        return anchor;
     }
 }

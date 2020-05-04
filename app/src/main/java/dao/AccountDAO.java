@@ -10,5 +10,9 @@ public interface AccountDAO {
 
     void insertAccount(Account account);
 
+    List<Account> getAyncAccount();
+
+    Long getMaxAnchor();
+
 
 }

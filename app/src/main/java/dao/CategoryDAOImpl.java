@@ -72,4 +72,65 @@ public class CategoryDAOImpl implements CategoryDAO {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         db.delete("category","category_id = ?",new String[]{""+id});
     }
+
+    @Override
+    public Category getCategoryById(int id) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Category category=null;
+        Cursor cursor = db.query("category",null,"category_id = ?",new String[]{""+id},null,null,null);
+        if (cursor.moveToFirst())
+        {
+                int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+                String category_name=cursor.getString(cursor.getColumnIndex("category_name"));
+                int type=cursor.getInt(cursor.getColumnIndex("type"));
+                int state=cursor.getInt(cursor.getColumnIndex("state"));
+                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+
+                category=new Category(category_id,user_id,category_name,type,state,anchor);
+        }
+        cursor.close();
+        return category;
+    }
+
+    @Override
+    public List<Category> getAyncCategory() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Category category=null;
+        List<Category> list=new ArrayList<>();
+
+        Cursor cursor = db.query("category",null,"state != ?",new String[]{"9"},null,null,null);
+        if (cursor.moveToFirst())
+        {
+            do {
+                int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+                String category_name=cursor.getString(cursor.getColumnIndex("category_name"));
+                int type=cursor.getInt(cursor.getColumnIndex("type"));
+                int state=cursor.getInt(cursor.getColumnIndex("state"));
+                long anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+
+                category=new Category(category_id,user_id,category_name,type,state,anchor);
+                list.add(category);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public Long getMaxAnchor() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        long anchor=0;
+        Cursor cursor = db.query("category",null,null,null,null,null,"anchor desc");
+
+        if (cursor.moveToFirst())
+        {
+            anchor=cursor.getLong(cursor.getColumnIndex("anchor"));
+        }
+        cursor.close();
+
+        return anchor;
+    }
 }

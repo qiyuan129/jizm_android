@@ -23,5 +23,10 @@ public interface BillDAO {
 
     Map<Integer, Double> getCategoryChartData(Date begin,Date end,int type);
 
+    double getAllmoney(Date begin,Date end,int type);
+
+    List<Bill> getAyncBill();
+
+    Long getMaxAnchor();
 
 }

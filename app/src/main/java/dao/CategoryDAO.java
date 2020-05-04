@@ -15,7 +15,11 @@ public interface CategoryDAO {
 
     void deleteCategory(int id);
 
+    Category getCategoryById(int id);
 
+    List<Category> getAyncCategory();
+
+    Long getMaxAnchor();
 
 
 }
