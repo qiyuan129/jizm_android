@@ -169,7 +169,6 @@ public class Fragment1_2 extends Fragment
         int i;
         String categoryname;
         double allmoney;
-        //Float percent;
         float percent;
         List<CategoryChartItem> mcategoryChart = new ArrayList<>();
         BillDAOImpl billDAO = new BillDAOImpl();
@@ -253,14 +252,14 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            /*if(i>0)
+            if(i>0)
             {
                 Bill c1 = dbDataOut.get(i-1);
                 categoryname = categoryDAO.getCategoryById(c1.getCategory_id()).getCategory_name();
                 dateString = df.format(c1.getBill_date());
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
-            }*/
-            mcategoryList.add(new CategoryListItem(i,"支出测试",20,"支出测试"));
+            }
+            //mcategoryList.add(new CategoryListItem(i,"支出测试",20,"支出测试"));
         }
         else {
             i=0;
@@ -272,14 +271,14 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            /*if(i>0)
+            if(i>0)
             {
                 Bill c1 = dbDataOut.get(i-1);
                 categoryname = categoryDAO.getCategoryById(c1.getCategory_id()).getCategory_name();
                 dateString = df.format(c1.getBill_date());
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
-            }*/
-            mcategoryList.add(new CategoryListItem(i,"收入测试",20,"收入测试"));
+            }
+            //mcategoryList.add(new CategoryListItem(i,"收入测试",20,"收入测试"));
         }
         return mcategoryList;
     }
@@ -324,7 +323,7 @@ public class Fragment1_2 extends Fragment
         }
         dataSet.setColors(mColorList);
         PieData pieData = new PieData(dataSet);
-        // 设置描述，我设置了不显示，因为不好看，你也可以试试让它显示，真的不好看
+        // 设置描述
         Description description = new Description();
         description.setEnabled(false);
         pieChart.setDescription(description);
