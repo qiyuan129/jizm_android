@@ -1,4 +1,8 @@
 package com.myapplication;
+import dao.BillDAOImpl;
+import dao.CategoryDAOImpl;
+import pojo.Bill;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -41,8 +46,9 @@ import java.util.Map;
 
 public class Fragment1_2 extends Fragment
 {
-    boolean OutcomeFlag = false;
-    boolean IncomeFlag = true;
+    boolean OutcomeFlag = false; //0
+    boolean IncomeFlag = true;  //1
+    private String allmoneystring;
     private View mView;
     private ImageButton refresh;
     private PieChart mPieChart;
@@ -61,10 +67,11 @@ public class Fragment1_2 extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, 1);
         strbeginDate =  new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        //strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date(2020-1900,5,6));
 
 
         if (mView == null) {
@@ -156,47 +163,135 @@ public class Fragment1_2 extends Fragment
         return mView;
     }
 
-    //比较两个yyyy-mm-dd格式的时间，d1<=d2返回true
-    public boolean compareDate(String d1,String d2)
-    {
-        boolean flag=false;
-        try {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            Date dt1 = df.parse(d1);
-            Date dt2 = df.parse(d2);
-            //dt1在dt2后
-            if (dt1.getTime() <= dt2.getTime()) {
-                flag=true;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return flag;
-    }
-
-    //加载数据用于饼图展示  后续可能加入 dadte事件 使用接口获取数据
+    //加载数据用于饼图展示  String categoryname,Float percent    true/1/收入   false/0/支出
     public List<CategoryChartItem> loadcategoryChart(String begindate,String enddate,boolean typeflag)
     {
         int i;
+        String categoryname;
+        double allmoney;
+        float percent;
         List<CategoryChartItem> mcategoryChart = new ArrayList<>();
-        if (typeflag == OutcomeFlag) {
-            for (i = 0; i < 5; i++) {
-                CategoryChartItem c1 = new CategoryChartItem("火锅",15F);
-                mcategoryChart.add(c1);
-                CategoryChartItem c2 = new CategoryChartItem("购物",5F);
-                mcategoryChart.add(c2);
+        BillDAOImpl billDAO = new BillDAOImpl();
+        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+
+        Date begin=new Date();
+        Date end = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            begin= df.parse(begindate);
+            end= df.parse(enddate);
+        }
+        catch (ParseException pe) {
+            System.out.println(pe.getMessage());
+        }
+
+        if (typeflag == OutcomeFlag)
+        {
+            i=0;
+            allmoney = billDAO.getAllmoney(begin,end,0);
+            allmoneystring = String.valueOf(allmoney);
+            Map<Integer, Double> dbChartData = billDAO.getCategoryChartData(begin,end,0);
+            for (Integer id : dbChartData.keySet())
+            {
+                if(dbChartData.get(id)!=0)
+                {
+                    categoryname = categoryDAO.getCategoryById(id).getCategory_name();
+                    percent = (float)((double)dbChartData.get(id)/allmoney);
+                    CategoryChartItem c1 = new CategoryChartItem(categoryname,percent*100);
+                    mcategoryChart.add(c1);
+                }
             }
+            //mcategoryChart.add(new CategoryChartItem("测试",10F));
         }
 
         else {
-            for (i = 0; i < 5; i++) {
-                CategoryChartItem c1 = new CategoryChartItem("工资",10F);
-                mcategoryChart.add(c1);
-                CategoryChartItem c2 = new CategoryChartItem("奖金",10F);
-                mcategoryChart.add(c2);
+            allmoney = billDAO.getAllmoney(begin,end,1);
+            allmoneystring = String.valueOf(allmoney);
+            Map<Integer, Double> dbChartData = billDAO.getCategoryChartData(begin,end,1);
+            for (Integer id : dbChartData.keySet())
+            {
+                if(dbChartData.get(id)!=0)
+                {
+                    categoryname = categoryDAO.getCategoryById(id).getCategory_name();
+                    percent = (float)((double)dbChartData.get(id)/allmoney);
+                    CategoryChartItem c1 = new CategoryChartItem(categoryname,percent*100);
+                    mcategoryChart.add(c1);
+                }
             }
         }
         return mcategoryChart;
+    }
+
+    //展示前10
+    public List<CategoryListItem> loadcategoryList(String begindate,String enddate,boolean typeflag) {
+        int i;
+        String categoryname;
+        String dateString;
+        List<CategoryListItem> mcategoryList = new ArrayList<>();
+        BillDAOImpl billDAO = new BillDAOImpl();
+        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+
+        Date begin=new Date();
+        Date end = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            begin= df.parse(begindate);
+            end= df.parse(enddate);
+        }
+        catch (ParseException pe) {
+            System.out.println(pe.getMessage());
+        }
+
+        if (typeflag == OutcomeFlag) {
+            i=0;
+            List<Bill> dbDataOut = billDAO.top10(begin,end,0) ;
+            for(Bill c:dbDataOut)
+            {
+                categoryname = categoryDAO.getCategoryById(c.getCategory_id()).getCategory_name();
+                dateString = df.format(c.getBill_date());
+                mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
+                i++;
+            }
+            if(i>0)
+            {
+                Bill c1 = dbDataOut.get(i-1);
+                categoryname = categoryDAO.getCategoryById(c1.getCategory_id()).getCategory_name();
+                dateString = df.format(c1.getBill_date());
+                mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
+            }
+            //mcategoryList.add(new CategoryListItem(i,"支出测试",20,"支出测试"));
+        }
+        else {
+            i=0;
+            List<Bill> dbDataOut = billDAO.top10(begin,end,1) ;
+            for(Bill c:dbDataOut)
+            {
+                categoryname = categoryDAO.getCategoryById(c.getCategory_id()).getCategory_name();
+                dateString = df.format(c.getBill_date());
+                mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
+                i++;
+            }
+            if(i>0)
+            {
+                Bill c1 = dbDataOut.get(i-1);
+                categoryname = categoryDAO.getCategoryById(c1.getCategory_id()).getCategory_name();
+                dateString = df.format(c1.getBill_date());
+                mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
+            }
+            //mcategoryList.add(new CategoryListItem(i,"收入测试",20,"收入测试"));
+        }
+        return mcategoryList;
+    }
+
+    public void RefreshData(String begindate,String enddate,boolean flag)
+    {
+        categoryList.clear();
+        categoryList.addAll(loadcategoryList(begindate,enddate,flag));
+        adapter.notifyDataSetChanged();
+        lview.setAdapter(adapter);
+        categoryChart.clear();
+        categoryChart.addAll(loadcategoryChart(begindate,enddate,flag));
+        ShowPieChart(mPieChart, setPieChartData(categoryChart), flag);
     }
 
     private List<PieEntry> setPieChartData(List<CategoryChartItem> chartdata) {
@@ -228,10 +323,10 @@ public class Fragment1_2 extends Fragment
         }
         dataSet.setColors(mColorList);
         PieData pieData = new PieData(dataSet);
-        // 设置描述，我设置了不显示，因为不好看，你也可以试试让它显示，真的不好看
-        //Description description = new Description();
-        //description.setEnabled(false);
-        // pieChart.setDescription(description);
+        // 设置描述
+        Description description = new Description();
+        description.setEnabled(false);
+        pieChart.setDescription(description);
         //设置半透明圆环的半径, 0为透明
         pieChart.setTransparentCircleRadius(0f);
         //设置初始旋转角度
@@ -239,7 +334,7 @@ public class Fragment1_2 extends Fragment
         //数据连接线距图形片内部边界的距离，为百分数
         dataSet.setValueLinePart1OffsetPercentage(80f);
         //设置连接线的颜色
-        dataSet.setValueLineColor(Color.LTGRAY);
+        dataSet.setValueLineColor(Color.rgb(77,76,125));
         // 连接线在饼状图外面
         dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         // 设置饼块之间的间隔
@@ -248,6 +343,12 @@ public class Fragment1_2 extends Fragment
         // 显示图例
         Legend legend = pieChart.getLegend();
         legend.setEnabled(true);
+        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);  //左边显示
+        legend.setFormSize(12f);//比例块字体大小
+        legend.setXEntrySpace(2f);//设置距离饼图的距离，防止与饼图重合
+        legend.setYEntrySpace(2f);
+        legend.setWordWrapEnabled(true); //比例块换行
+        legend.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
         // 和四周相隔一段距离,显示数据
         pieChart.setExtraOffsets(26, 5, 26, 5);
         // 设置pieChart图表是否可以手动旋转
@@ -261,13 +362,14 @@ public class Fragment1_2 extends Fragment
         //是否绘制PieChart内部中心文本
         pieChart.setDrawCenterText(true);
         if (typeflag == OutcomeFlag)
-            pieChart.setCenterText("支出比例");
+            pieChart.setCenterText("总支出"+allmoneystring+"元");
         else
-            pieChart.setCenterText("收入比例");
+            pieChart.setCenterText("总收入"+allmoneystring+"元");
         pieChart.setCenterTextColor(Color.DKGRAY);//中间的文字颜色
         pieChart.setCenterTextSize(12);//中间的文字字体大小
         // 绘制内容value，设置字体颜色大小
         pieData.setDrawValues(true);
+        pieChart.setUsePercentValues(true);
         pieData.setValueFormatter(new PercentFormatter());
         pieData.setValueTextSize(10f);
         pieData.setValueTextColor(Color.DKGRAY);
@@ -275,41 +377,23 @@ public class Fragment1_2 extends Fragment
         // 更新 piechart 视图
         pieChart.postInvalidate();
     }
-    //加载获取数据源 用于列表展示  后续可能加入 dadte事件 使用接口获取数据
-    public List<CategoryListItem> loadcategoryList(String begindate,String enddate,boolean typeflag) {
-        int i;
-        List<CategoryListItem> mcategoryList = new ArrayList<>();
-        if (typeflag == OutcomeFlag) {
-            for (i = 0; i < 5; i++) {
-                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "出行", 1234.00, "2020-2-7");
-                mcategoryList.add(c1);
-                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "饮食", 123451.00, "2020-2-7");
-                mcategoryList.add(c2);
-            }
-            CategoryListItem c2 = new CategoryListItem(i * 2 + 1, "房租", 123451.00, "2020-2-7");
-            mcategoryList.add(c2);
-        } else {
-            for (i = 0; i < 5; i++) {
-                CategoryListItem c1 = new CategoryListItem(i * 2 + 1, "工资", 12, "2020-2-7");
-                mcategoryList.add(c1);
-                CategoryListItem c2 = new CategoryListItem(i * 2 + 2, "奖金", 12, "2020-2-7");
-                mcategoryList.add(c2);
-            }
-            CategoryListItem c2 = new CategoryListItem(i * 2 + 1, "红包", 12, "2020-2-7");
-            mcategoryList.add(c2);
-        }
-        return mcategoryList;
-    }
 
-    public void RefreshData(String begindate,String enddate,boolean flag)
-    {
-        categoryList.clear();
-        categoryList.addAll(loadcategoryList(begindate,enddate,flag));
-        adapter.notifyDataSetChanged();
-        lview.setAdapter(adapter);
-        categoryChart.clear();
-        categoryChart.addAll(loadcategoryChart(begindate,enddate,flag));
-        ShowPieChart(mPieChart, setPieChartData(categoryChart), flag);
+
+    //比较两个yyyy-mm-dd格式的时间，d1<=d2返回true
+    public boolean compareDate(String d1,String d2) {
+        boolean flag=false;
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            Date dt1 = df.parse(d1);
+            Date dt2 = df.parse(d2);
+            //dt1在dt2后
+            if (dt1.getTime() <= dt2.getTime()) {
+                flag=true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 
     private void initStartTimePicker1() {
@@ -432,55 +516,55 @@ class CategoryListItem
 
 class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
 {
-     private int id;
-     public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects)
-     {
-         super(context, textid, objects);
-         id = textid;
-     }
+    private int id;
+    public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects)
+    {
+        super(context, textid, objects);
+        id = textid;
+    }
 
-     @Override
-     public View getView(int position, View convertView, ViewGroup parent)
-     {
-         CategoryListItem categoryListItem = getItem(position);
-         View view = LayoutInflater.from(getContext()).inflate(id, parent, false);
-         TextView month = (TextView) view.findViewById(R.id.order);
-         TextView income = (TextView) view.findViewById(R.id.categoryname);
-         TextView outcome = (TextView) view.findViewById(R.id.money);
-         TextView balance = (TextView) view.findViewById(R.id.date);
-         month.setText(String.valueOf(categoryListItem.getOrder()));
-         income.setText(categoryListItem.getCategoryname());
-         outcome.setText(String.valueOf(categoryListItem.getMoney()));
-         balance.setText(String.valueOf(categoryListItem.getDate()));
-         return view;
-     }
- }
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        CategoryListItem categoryListItem = getItem(position);
+        View view = LayoutInflater.from(getContext()).inflate(id, parent, false);
+        TextView month = (TextView) view.findViewById(R.id.order);
+        TextView income = (TextView) view.findViewById(R.id.categoryname);
+        TextView outcome = (TextView) view.findViewById(R.id.money);
+        TextView balance = (TextView) view.findViewById(R.id.date);
+        month.setText(String.valueOf(categoryListItem.getOrder()));
+        income.setText(categoryListItem.getCategoryname());
+        outcome.setText(String.valueOf(categoryListItem.getMoney()));
+        balance.setText(String.valueOf(categoryListItem.getDate()));
+        return view;
+    }
+}
 
 class CategoryChartItem
 {
-     private String categoryname;
-     private Float precent;
-     private double money;
-     public CategoryChartItem(String categoryname,Float precent)
-     {
-         this.categoryname=categoryname;
-         this.precent=precent;
-     }
-     public CategoryChartItem(String categoryname,Float precent,Float money)
-     {
-         this.categoryname=categoryname;
-         this.precent=precent;
-         this.money=money;
-     }
-     public String getCategoryname() {
-         return categoryname;
-     }
+    private String categoryname;
+    private Float precent;
+    private double money;
+    public CategoryChartItem(String categoryname,Float precent)
+    {
+        this.categoryname=categoryname;
+        this.precent=precent;
+    }
+    public CategoryChartItem(String categoryname,Float precent,Float money)
+    {
+        this.categoryname=categoryname;
+        this.precent=precent;
+        this.money=money;
+    }
+    public String getCategoryname() {
+        return categoryname;
+    }
 
-     public Float getPrecent() {
-         return precent;
-     }
+    public Float getPrecent() {
+        return precent;
+    }
 
-     public double getMoney() {
-         return money;
-     }
- }
+    public double getMoney() {
+        return money;
+    }
+}

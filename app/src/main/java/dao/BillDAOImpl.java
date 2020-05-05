@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -266,10 +267,15 @@ public class BillDAOImpl implements BillDAO {
 
     @Override
     public List<Bill> top10(Date begin, Date end, int type1) {
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(end);
+        calendar.add(Calendar.DAY_OF_MONTH,1);
+        Date dayAfterEnd=calendar.getTime();
+
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Bill bill=null;
         List<Bill> list=new ArrayList<>();
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type1},null,null,"bill_money desc");
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type1},null,null,"bill_money desc");
         int i=0;
 
         if (cursor.moveToFirst())
@@ -297,6 +303,11 @@ public class BillDAOImpl implements BillDAO {
 
     @Override
     public Map<Integer, Double> getCategoryChartData(Date begin, Date end, int type) {
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(end);
+        calendar.add(Calendar.DAY_OF_MONTH,1);
+        Date dayAfterEnd=calendar.getTime();
+
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Bill bill=null;
         CategoryDAO categoryDAO=new CategoryDAOImpl();
@@ -305,7 +316,7 @@ public class BillDAOImpl implements BillDAO {
         for (Category category : categoryList){
             map.put(category.getCategory_id(),0.0);
         }
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type},null,null,"bill_money desc");
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type},null,null,"bill_money desc");
         if (cursor.moveToFirst())
         {
             do {
@@ -324,9 +335,14 @@ public class BillDAOImpl implements BillDAO {
 
     @Override
     public double getAllmoney(Date begin, Date end, int type) {
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(end);
+        calendar.add(Calendar.DAY_OF_MONTH,1);
+        Date dayAfterEnd=calendar.getTime();
+
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         double sum=0;
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+end.getTime(),""+type},null,null,"bill_money desc");
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type},null,null,"bill_money desc");
 
         if (cursor.moveToFirst())
         {

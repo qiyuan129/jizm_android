@@ -26,6 +26,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.MarkerView;
@@ -124,12 +125,14 @@ public class Fragment1_1 extends Fragment {
         int i=0;
         List<IncomeLineItem> incomeChart = new ArrayList<>();
         List<Double> dbData = billDAO.monthlyIncome(myear);
+        incomeChart.add(new IncomeLineItem(dbData.get(0),1));
         for(double c:dbData) {
             incomeChart.add(new IncomeLineItem(c,i+1));
             i++;
         }
-        incomeChart.add(new IncomeLineItem(dbData.get(i-1),i-1));
-        incomeChart.add(new IncomeLineItem(110,i));
+//        if(i>0)
+//            incomeChart.add(new IncomeLineItem(dbData.get(i-1),i-1));
+//        incomeChart.add(new IncomeLineItem(110,i));
         return incomeChart;
     }
 
@@ -139,47 +142,18 @@ public class Fragment1_1 extends Fragment {
         int i=0;
         List<OutcomeLineItem> outcomeChart = new ArrayList<>();
         List<Double> dbData = billDAO.monthlyOutcome(myear);
+        outcomeChart.add(new OutcomeLineItem(dbData.get(0),1));
         for(double c:dbData) {
             outcomeChart.add(new OutcomeLineItem(c,i+1));
             i++;
         }
-        outcomeChart.add(new OutcomeLineItem(dbData.get(i-1),i-1));
-        outcomeChart.add(new OutcomeLineItem(220,i));
-        //outcomeChart.add(new OutcomeLineItem(90,i));
-        /*
-        for(i=0;i<dbData.size();i++) {
-            outcomeChart.add(new OutcomeLineItem(dbData.get(i),i+1));
-        }
-        i=i-1;
-        outcomeChart.add(new OutcomeLineItem(dbData.get(i),i++));
-        outcomeChart.add(new OutcomeLineItem(220,i++));*/
-        /*if (year == 2020)
-        {
-            for (i = 0; i < 13; i++)
-            {
-                outcomeChart.add(new OutcomeLineItem(15*i,i));
-            }
-
-        }
-        else
-        {
-            for (i = 0; i < 5; i++)
-            {
-                OutcomeLineItem c1 = new OutcomeLineItem(82,i*2+1);
-                outcomeChart.add(c1);
-                OutcomeLineItem c2 = new OutcomeLineItem(64,i*2+2);
-                outcomeChart.add(c2);
-            }
-            OutcomeLineItem c2 = new OutcomeLineItem(102,i*2+2);
-            outcomeChart.add(c2);
-        }*/
         return outcomeChart;
     }
 
     public List<TrendListItem> loadtrendList(int myear)
     {
         BillDAOImpl billDAO = new BillDAOImpl();
-        int i;
+        int i=0;
         double in,out;
         TrendListItem t1;
         List<TrendListItem> trendList = new ArrayList<>();
@@ -192,9 +166,14 @@ public class Fragment1_1 extends Fragment {
             t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i+1),String.valueOf(in), String.valueOf(out), String.valueOf(in-out));
             trendList.add(t1);
         }
-        t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i-1), String.valueOf(dbDataIncome.get(i-1)),
+        //TrendListItem tt = new TrendListItem("测试"+String.format("%02d",i+1),"1111", "1111", "1111");
+        //trendList.add(tt);
+        if(i>0)
+        {
+            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
                 String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
-        trendList.add(t1);
+            trendList.add(t1);
+        }
         return trendList;
     }
     public void RefreshData(int year)
@@ -216,8 +195,7 @@ public class Fragment1_1 extends Fragment {
 
 
 
-    public int getYear(String stryear)
-    {
+    public int getYear(String stryear) {
         int year = 0;
         try {
 
@@ -229,6 +207,7 @@ public class Fragment1_1 extends Fragment {
         }
         return year;
     }
+
      private void initChart(LineChart lineChart)
      {
            /***图表设置***/
@@ -243,7 +222,10 @@ public class Fragment1_1 extends Fragment {
           //设置XY轴动画效果
           lineChart.animateY(2500);
           lineChart.animateX(1500);
-
+          // 设置描述
+         Description description = new Description();
+         description.setEnabled(false);
+         lineChart.setDescription(description);
 
           /***XY轴的设置***/
           xAxis = lineChart.getXAxis();
@@ -357,7 +339,7 @@ public class Fragment1_1 extends Fragment {
           setMarkerView();
       }
 
-    private void initStartTimePicker() {
+    public void initStartTimePicker() {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
         //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
         Calendar selectedDate = Calendar.getInstance();
@@ -398,6 +380,8 @@ public class Fragment1_1 extends Fragment {
                 .setDate(selectedDate)//设置选中的日期
                 .build();
     }
+
+
 
 }
 

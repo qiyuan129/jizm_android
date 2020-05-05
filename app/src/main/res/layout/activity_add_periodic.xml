@@ -65,6 +65,7 @@
         android:background="#090808"/>
 
     <EditText
+        android:id="@+id/add_periodic_name_edit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
@@ -74,6 +75,7 @@
         android:singleLine="true"
         android:textColorHint="#0E171D" />
     <EditText
+        android:id="@+id/add_periodic_money_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
@@ -97,6 +99,20 @@
     </TextView>
 
     <Spinner android:id="@+id/Spinner01"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+
+
+    <TextView android:id="@+id/account_spinnerText"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <Spinner android:id="@+id/account_Spinner01"
         android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -204,23 +220,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="每月" />
-
-
-
-        <RadioButton
-            android:id="@+id/per_season_RB"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="每季度" />
-
-        <RadioButton
-            android:id="@+id/per_year_RB"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="每年" />
-
 
 
 

@@ -107,7 +107,6 @@ public class AccountDAOImpl implements AccountDAO {
                 Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
                 account=new Account(account_id,user_id,account_name,money,state,anchor);
                 list.add(account);
-
             } while (cursor.moveToNext());
         }
         cursor.close();

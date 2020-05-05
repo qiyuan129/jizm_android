@@ -50,7 +50,7 @@
 
         <RadioButton
             android:id="@+id/outcome_RB_update"
-            android:layout_toRightOf="@+id/income_RB_update"
+            android:layout_toRightOf="@id/income_RB_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出" />
@@ -103,6 +103,27 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </Spinner>
+
+
+
+
+    <TextView android:id="@+id/account_spinnerText_update"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <Spinner android:id="@+id/account_Spinner_update"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+
+
+
+
+
 
 
     <View
@@ -207,17 +228,7 @@
 
 
 
-        <RadioButton
-            android:id="@+id/per_season_RB_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="每季度" />
 
-        <RadioButton
-            android:id="@+id/per_year_RB_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="每年" />
 
 
     </RadioGroup>
