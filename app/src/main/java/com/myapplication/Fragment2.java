@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,16 +32,22 @@ import java.util.List;
 
 import dao.AccountDAO;
 import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import pojo.Account;
+import pojo.Bill;
 import pojo.Category;
 import util.MyDatabaseHelper;
+import util.User;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
     private CategoryChooseAdapter categoryChooseAdapter;
+
+    private User user;
 
     private List<Category> categoryList = new ArrayList<>();
     private List<Account> accountList = new ArrayList<>();
@@ -50,13 +58,16 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
 
+    //属性
     private int category_id = 1;
     private int user_id = 1;
-    private int type = 1;
+    private int bill_id = 1;
+    private int account_id = 1;
+    private Date bill_date = new Date();
     private int state = 1;
     private Date anchor= new Date();
-
-    public boolean isOutcome = true;
+    //记录类别（收入/支出）
+    public int isIncome = 0;
 
     private RecyclerView recyclerView;
     private Button incomeTv;        //收入按钮
@@ -86,8 +97,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     //选择器
     protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
-   // protected List<String> cardItems;
-    protected int selectedPayinfoIndex = 0;      //选择的支付方式序号
 
     //选择时间
     protected String days;
@@ -200,7 +209,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.income_tv:
-                isOutcome = false;
+                isIncome = 1;
                 initCategory();
                 categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
                 categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
@@ -216,7 +225,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 Log.d("Fragment","收入");
                 break;
             case R.id.outcome_tv:
-                isOutcome = true;
+                isIncome = 0;
                 initCategory();
                 categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
                 categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
@@ -313,12 +322,21 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     //显示支付账户选择器
     public void showPayAccount() {
+        //获取账户名称
         AccountDAO accountDAO = new AccountDAOImpl();
         accountList=accountDAO.listAccount();
+        List<String> accoutNameList = new ArrayList<>();
+        List<Integer> accountIdList = new ArrayList<>();
+        for (int j = 0; j < accountList.size(); j++) {
+            Account account = (Account) accountList.get(j);
+            accoutNameList.add(account.getAccount_name());
+            accountIdList.add(account.getAccount_id());
+        }
+
         new MaterialDialog.Builder(getActivity())
                 .title("请选择支付账户")
                 .titleGravity(GravityEnum.CENTER)
-                .items(accountList)
+                .items(accoutNameList)
                 .positiveText("确定")
                 .negativeText("取消")
                 .canceledOnTouchOutside(false)
@@ -326,6 +344,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         cashTv.setText(text);
+                        account_id = accountIdList.get(which);
                         return true;
                     }
                 })
@@ -433,41 +452,73 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
         String categorySelect = String.valueOf(sortTv.getText());
         String accountText = String.valueOf(cashTv.getText());
-        String dateText = String.valueOf(dateTv.getText());
         String remark = remarkInput;
-        Float money = Float.valueOf(num + dotNum);
+        Double bill_money = Double.valueOf(num + dotNum);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date = String.valueOf(dateTv.getText());
+            bill_date = sdf.parse(date);
+        } catch (Exception e) {
+            //TODO:handle excepton
+        }
         Log.d("Fragment", categorySelect);
         Log.d("Fragment", accountText);
-        Log.d("Fragment", dateText);
         Log.d("Fragment", remark);
+
+        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, remark, bill_date, bill_money, state, anchor);
+        BillDAO billDAO = new BillDAOImpl();
+        billDAO.insertBill(bill);
 
     }
 
     private void initCategory() {
-//        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        //取出分类名称、id
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        categoryList = categoryDAO.listCategory();
+        List<String> outcome_category = new ArrayList<>();
+        List<String> income_category = new ArrayList<>();
+
+        List<Integer> outcome_category_id = new ArrayList<>();
+        List<Integer> income_category_id = new ArrayList<>();
+
+        for (int j = 0; j < categoryList.size(); j++) {
+            Category category = (Category)categoryList.get(j);
+            if (category.getType() == 0) {
+                outcome_category.add(category.getCategory_name());
+                outcome_category_id.add(category.getCategory_id());
+            } else {
+                income_category.add(category.getCategory_name());
+                income_category_id.add(category.getCategory_id());
+            }
+        }
+
         if (categoryList != null) {
             categoryList.clear();
-//            categoryList=categoryDAO.listCategory();
-            if (isOutcome) {
-                for(int i = 0; i < category_outcome.length; i++){
-                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+            if (isIncome == 0) {
+                for(int i = 0; i < outcome_category.size(); i++){
+                    category_id = outcome_category_id.get(i);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             } else {
-                for(int i = 0; i < category_income.length; i++){
-                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                for(int i = 0; i < income_category.size(); i++){
+                    category_id = income_category_id.get(i);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             }
         } else {
-            if (isOutcome) {
-                for(int i = 0; i < category_outcome.length; i++){
-                    Category category = new Category(category_id,user_id, category_outcome[i],type,state,anchor);
+            if (isIncome == 0) {
+                for(int i = 0; i < outcome_category.size(); i++){
+                    category_id = outcome_category_id.get(i);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             } else {
-                for(int i = 0; i < category_income.length; i++){
-                    Category category = new Category(category_id,user_id, category_income[i],type,state,anchor);
+                for(int i = 0; i < income_category.size(); i++){
+                    category_id = income_category_id.get(i);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             }

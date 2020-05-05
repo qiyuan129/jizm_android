@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
@@ -53,7 +54,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
 
     private int category_id = 1;
     private int user_id = 1;
-    private int isOutcome = 1;
+    private int isIncome = 0;
     private int state = 0;
     private Date anchor = new Date();
 
@@ -98,8 +99,9 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                 if (direction == ItemTouchHelper.END) {
                     categoryList.remove(index);
                     categoryAdapter.notifyItemRemoved(index);
-                    //在数据库中删除
-
+                    //在数据库中删除,待完善
+                    CategoryDAO categoryDAO = new CategoryDAOImpl();
+                    categoryDAO.deleteCategory(category_id);
                 }
             }
 
@@ -125,11 +127,11 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                 showContentDialog();
                 break;
             case R.id.tb_note_income:
-                isOutcome = 0;
+                isIncome = 1;
                 initCategory();
                 break;
             case R.id.tb_note_outcome:
-                isOutcome = 1;
+                isIncome = 0;
                 initCategory();
                 break;
         }
@@ -146,9 +148,10 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                         Toast.makeText(mContext, "内容不能为空！" + input, Toast.LENGTH_SHORT).show();
                     } else {
                         //添加新分类
-                        Category category = new Category(1, 1, input.toString(), isOutcome, state, anchor);
+                        Category category = new Category(1, 1, input.toString(), isIncome, state, anchor);
                         CategoryDAO categoryDAO = new CategoryDAOImpl();
                         categoryDAO.insertCategory(category);
+                        initCategory();
                         Log.d("CategoryEditActivity","添加新分类");
                     }
                 })
@@ -157,27 +160,36 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initCategory() {
-
-//        CategoryDAO categoryDAO = new CategoryDAOImpl();
-//        categoryList=categoryDAO.listCategory();
-//        Category category = new Category(category_id,user_id, categoryList,isOutcome,state,anchor);
-//
-//        if (categoryList != null) {
-//            categoryList.clear();
-//            if (isOutcome == 1) {
-//                for (int i = 0; i < )
-//            }
+        //取出分类名称
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        categoryList = categoryDAO.listCategory();
+        List<String> outcome_category = new ArrayList<>();
+        List<String> income_category = new ArrayList<>();
+        List<Integer> outcome_category_id = new ArrayList<>();
+        List<Integer> income_category_id = new ArrayList<>();
+        for (int j = 0; j < categoryList.size(); j++) {
+            Category category = (Category)categoryList.get(j);
+            if (category.getType() == 0) {
+                outcome_category.add(category.getCategory_name());
+                outcome_category_id.add(category.getCategory_id());
+            } else {
+                income_category.add(category.getCategory_name());
+                income_category_id.add(category.getCategory_id());
+            }
+        }
 
         if (categoryList != null) {
             categoryList.clear();
-            if (isOutcome == 1) {
-                for(int i = 0; i < category_outcome.length; i++){
-                    Category category = new Category(category_id,user_id, category_outcome[i],isOutcome,state,anchor);
+            if (isIncome == 0) {
+                for(int i = 0; i < outcome_category.size(); i++){
+                    category_id = outcome_category_id.get(i);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             } else {
-                for(int i = 0; i < category_income.length; i++){
-                    Category category = new Category(category_id,user_id, category_income[i],isOutcome,state,anchor);
+                for(int i = 0; i < income_category.size(); i++){
+                    category_id = income_category_id.get(i);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             }
@@ -188,14 +200,16 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             adapter.notifyDataSetChanged();
             mRecycleView.setAdapter(adapter);
         } else {
-            if (isOutcome == 1) {
-                for(int i = 0; i < category_outcome.length; i++){
-                    Category category = new Category(category_id,user_id, category_outcome[i],isOutcome,state,anchor);
+            if (isIncome == 0) {
+                for(int i = 0; i < outcome_category.size(); i++){
+                    category_id = outcome_category_id.get(i);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             } else {
-                for(int i = 0; i < category_income.length; i++){
-                    Category category = new Category(category_id,user_id, category_income[i],isOutcome,state,anchor);
+                for(int i = 0; i < income_category.size(); i++){
+                    category_id = income_category_id.get(i);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
                 }
             }

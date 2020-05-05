@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 //        accountDAO.insertAccount(account);
 //        account=new Account(2,1,"支付宝",800,1,date);
 //        accountDAO.insertAccount(account);
+//        account=new Account(3,1,"现金",1000,1,date);
+//        accountDAO.insertAccount(account);
 //        bill=new Bill(1,1,1,1,0,"早餐",date,5,1,date);
 //        billDAO.insertBill(bill);
 //        bill=new Bill(2,1,1,1,0,"午饭",date,10,1,date);
