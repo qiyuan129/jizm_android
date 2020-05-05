@@ -236,14 +236,17 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         String tmpId=getIntent().getStringExtra("periodicId");
         int id = Integer.parseInt(tmpId);
 
-        /*
+
          PeriodicDAO perDao = new PeriodicDAOImpl();
-         Periodic periodic= perDao.getById(id);
-         */
+         //id是对的，但是没有取到这个periodic
+
+        periodic= perDao.getPeriodicById(id);
 
 
+       /* //实验用，后面删除
         periodic = new Periodic(1,2,1,3,1,"shopping"+String.valueOf(2),
-                1,new Date(3838737),new Date(25785872),50,3,null);
+                1,new Date(3838737),new Date(25785872),50,3,null);*/
+
 
 
         //设置收入支出类别
@@ -265,10 +268,11 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         /*//设置类别值
 
           CategoryDAO categoryDAO=new CategoryDAOImpl();
-          categories=categoryDAO.getList();
+          categories=(ArrayList<Category>) categoryDAO.listCategory();
           for(Category cat:categories){
               listData.add(cat.getCategory_name());
           }*/
+
 
         listData.add("学习用品");
         listData.add("生活用品");
@@ -298,7 +302,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
-        /*//获取当前年，月，日
+        //获取当前年，月，日
         Calendar calendar = Calendar.getInstance();
         //开始时间
         startYear = calendar.get(Calendar.YEAR);
@@ -309,7 +313,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         endMonth = calendar.get(Calendar.MONTH);
         endDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-        //设置当前时间
+
+       /* //设置当前时间
         myStartDay = new StringBuffer().append(startYear).append("-").append( startMonth + 1).append("-").append(startDay).toString();
         startDate.setText(myStartDay);
 
@@ -318,11 +323,15 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         endDate.setText(myEndDay);*/
 
 
+
+
         //设置开始结束时间
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String satrtDateString = formatter.format(periodic.getStart());
         String endDateString = formatter.format(periodic.getEnd());
 
+        myStartDay=satrtDateString;
+        myEndDay=endDateString;
         startDate.setText(satrtDateString);
         endDate.setText(endDateString);
 
@@ -482,9 +491,9 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         periodic.setCategory_id(categoryId);
         periodic.setAccount_id(accountId);
 
-        /*//存入数据库
+        //存入数据库
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
-        periodicDAO.updatePeriodic(periodic);*/
+        periodicDAO.updatePeriodic(periodic);
 
 
 
@@ -506,13 +515,15 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
             case R.id.store_periodic_update:
-                savePeriodic();
-                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
-                //把值periodicId传回上一个界面
-                Intent intent = new Intent();
-                intent.putExtra("id_return_per",String.valueOf(periodic.getPeriodic_id()));
-                setResult(RESULT_OK,intent);
-                this.finish();
+                if(savePeriodic()){
+                    Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                    //把值periodicId传回上一个界面
+                    Intent intent = new Intent();
+                    intent.putExtra("id_return_per",String.valueOf(periodic.getPeriodic_id()));
+                    setResult(RESULT_OK,intent);
+                    this.finish();
+                }
+
                 break;
 
 

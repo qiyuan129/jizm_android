@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,8 +29,11 @@ import dao.AccountDAO;
 import dao.AccountDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
 import pojo.Account;
 import pojo.Category;
+import pojo.Periodic;
 
 public class AddPeriodicActivity extends AppCompatActivity implements View.OnClickListener{
     ArrayList<Category> categories;
@@ -92,13 +96,14 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     //辅助变量
     String periodicName;
     double money;
-    long start;
-    long end;
-    long anchor;
+    Date start;
+    Date end;
+    Date anchor;
     int recycleId;
     int typeId;
     int categoryId;
     int accountId;
+    int state=0;
 
 
 
@@ -224,6 +229,8 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
     public void setData(){
+
+        /*//后面把注释消除
         //设置种类
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
@@ -237,7 +244,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         accounts = (ArrayList<Account>) accountDAO.listAccount();
         for(Account act:accounts){
             listData.add(act.getAccount_name());
-        }
+        }*/
 
 
 
@@ -258,6 +265,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         }
 
         if(listAccount==null){
+            listAccount=new ArrayList<String>();
             listAccount.add("支付宝账户");
             listAccount.add("微信账户");
             listAccount.add("银行账户");
@@ -290,7 +298,12 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             case R.id.store_periodic:
                 //Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
                 savePeriodic();
-                AddPeriodicActivity.this.finish();
+
+                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                //告诉上一个界面添加成功
+                Intent intent = new Intent();
+                setResult(RESULT_OK,intent);
+                this.finish();
                 break;
 
 
@@ -355,13 +368,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
         try {
-            Date startDate= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
-            Date endDate= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
-            Date now = new Date();
+            start= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
+            end= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
 
-            start=startDate.getTime();
-            end=endDate.getTime();
-            anchor=now.getTime();
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -369,10 +378,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
         //存入数据库，暂时不做，因为缺少一些信息，比如Periodic.id需要沟通一下
+        //id是随便填的
+        Periodic periodic=new Periodic(0,accountId,categoryId,1,
+                typeId,periodicName,recycleId,start,end,money,state,new Date());
 
-      /*  Periodic periodic=new Periodic();
+
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();
-        periodicDAO.addPeriodic(periodic);*/
+        periodicDAO.addPeriodic(periodic);
 
 
         Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show();

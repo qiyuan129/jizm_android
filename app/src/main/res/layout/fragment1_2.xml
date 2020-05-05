@@ -36,25 +36,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView"
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="330dp"
             android:layout_height="45dp"
-            android:layout_marginTop="290dp"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center"
-            android:textSize="15sp"
-            android:text="Top          类别              金额               时间       "
+            android:layout_marginTop="300dp"
+            android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.532"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="TOP"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="类别"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="价格"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="时间"/>
+        </android.support.v7.widget.LinearLayoutCompat>
         <com.myapplication.MyListview
             android:id="@+id/CategoryList"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="335dp"
+            android:layout_marginTop="345dp"
             android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
