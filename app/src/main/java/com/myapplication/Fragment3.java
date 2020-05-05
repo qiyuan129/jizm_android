@@ -96,13 +96,10 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //获取点击到的Periodic
                 Periodic tmp=(Periodic)tmpadapter.getItem(position);
-
-
                 Toast.makeText(getActivity(), "点击的是第" + position + "项:"+tmp.getPeriodic_name(), Toast.LENGTH_SHORT).show();
 
-
                 //这里构造的periodic没有id,先写一个
-                tmp.setPeriodic_id(4);//设置一下id
+                //tmp.setPeriodic_id(4);//设置一下id
 
                 //查看和修改账单,后续添加
                 Intent intent1 = new Intent(getContext(),UpdatePeriodicActivity.class);
@@ -188,12 +185,33 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
                 break;
 
+            case 1210:
+                if(resultCode==RESULT_OK){
+                    Log.i("添加了数据，需要更新数据  ","开始");
+                    updatePeriodicList();
+                    Log.i("更新数据  : ","结束");
+                }
+
 
             default:
                 break;
         }
     }
 
+
+
+    public void updatePeriodicList(){
+        PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+        List<Periodic> tmpList = periodicDAO.listPeriodic();
+
+       tmpadapter.clearAll();
+       for(Periodic item:tmpList){
+           tmpadapter.addItem(item);
+       }
+
+       tmpadapter.notifyDataSetChanged();
+
+    }
 
 
 
@@ -241,7 +259,9 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         switch (view.getId()){
             case R.id.add_periodic:
                 Intent intent1 = new Intent(getActivity(), AddPeriodicActivity.class);
-                startActivity(intent1);
+                startActivityForResult(intent1,1210);//设置请求码为1210
+
+                //startActivity(intent1);
 
                // Log.d("add_periodic","添加事件");
                 //Toast.makeText(getActivity(), "功能尚未编写", Toast.LENGTH_SHORT).show();
@@ -267,18 +287,20 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
 
     private void initPeriodics(){
-       /*
-       实际代码
-       调用DAO代码获得周期事件数组
-        */
+       //实际代码
+       //调用DAO代码获得周期事件数组
 
-        //实验用，后面删除
+       PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+       periodics = periodicDAO.listPeriodic();
+
+
+        /*//实验用，后面删除
         periodics = new ArrayList<>();
         for(int i=0;i<=20;i++){
            Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
                    6,new Date(45236+i),new Date(99954+i),50,3,null);
            periodics.add(periodic);
-        }
+        }*/
 
 
     }
@@ -410,9 +432,17 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
         return 0;
     }
 
+    public  void addItem(Periodic obj){
+        data.add(obj);
+    }
 
     public void removeItem(int index){
         data.remove(index);
+    }
+
+
+    public void clearAll(){
+       data.clear();
     }
 
 
