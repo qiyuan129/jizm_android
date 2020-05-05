@@ -105,6 +105,27 @@
     </Spinner>
 
 
+
+
+    <TextView android:id="@+id/account_spinnerText_update"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <Spinner android:id="@+id/account_Spinner_update"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+
+
+
+
+
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp"

@@ -19,6 +19,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
 import pojo.Periodic;
+
+import static android.app.Activity.RESULT_OK;
 
 public class Fragment3 extends Fragment implements View.OnClickListener{
 
@@ -98,11 +101,18 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity(), "点击的是第" + position + "项:"+tmp.getPeriodic_name(), Toast.LENGTH_SHORT).show();
 
 
+                //这里构造的periodic没有id,先写一个
+                tmp.setPeriodic_id(4);//设置一下id
+
                 //查看和修改账单,后续添加
                 Intent intent1 = new Intent(getContext(),UpdatePeriodicActivity.class);
-                tmp.setPeriodic_id(45);//设置一下id
                 intent1.putExtra("periodicId",Integer.toString(tmp.getPeriodic_id()));
-                startActivity(intent1);
+
+                startActivityForResult(intent1,1010);//设置请求码为1010
+
+               // startActivity(intent1);
+
+
 
                 //应该要从数据库重新查询更新列表，因为数据可能已经 修改了
 
@@ -120,6 +130,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 Log.i("list:",String.valueOf(periodics.get(position).getPeriodic_id()));
                 //删除这个周期事件
                 deletePeriodic(position);
+                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -163,6 +174,69 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
 
     @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent Tdata){
+        switch (requestCode){
+            case 1010 :
+                if(resultCode==RESULT_OK){
+
+                    Log.i("更新修改的数据  ","开始");
+                    String reId = Tdata.getStringExtra("id_return_per");
+                    updateItem(Integer.valueOf(reId));
+                    Log.i("更新修改的数据  : ","结束");
+
+                }
+
+                break;
+
+
+            default:
+                break;
+        }
+    }
+
+
+
+
+    public void updateItem(int periodicId){
+        Log.i("更新periodic id 为  : ",String.valueOf(periodicId));
+
+
+       /* PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+        Periodic temp = periodicDAO.getPeriodicById(periodicId);
+
+        for(Periodic per:periodics){
+            if(per.getPeriodic_id()==temp.getPeriodic_id()){
+                per.setAccount_id(temp.getAccount_id());
+                per.setCategory_id(temp.getCategory_id());
+                per.setUser_id(temp.getUser_id());
+                per.setType(temp.getType());
+                per.setPeriodic_name(temp.getPeriodic_name());
+                per.setCycle(temp.getCycle());
+                per.setStart(temp.getStart());
+                per.setEnd(temp.getEnd());
+                per.setPeriodic_money(temp.getPeriodic_money());
+                per.setState(temp.getState());
+                per.setAnchor(temp.getAnchor());
+
+                break;
+            }
+        }*/
+
+
+        //通知适配器数据改变
+        tmpadapter.notifyDataSetChanged();
+
+
+
+    }
+
+
+
+
+
+
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.add_periodic:
@@ -200,11 +274,11 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
         //实验用，后面删除
         periodics = new ArrayList<>();
-//        for(int i=0;i<=20;i++){
-//           Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
-//                   6,45236+i,99954+i,50,3,425575);
-//           periodics.add(periodic);
-//        }
+        for(int i=0;i<=20;i++){
+           Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
+                   6,new Date(45236+i),new Date(99954+i),50,3,null);
+           periodics.add(periodic);
+        }
 
 
     }
@@ -216,12 +290,19 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     id: 周期事件id
      */
     private boolean deletePeriodic(int id){
+        Periodic delPeriodic = periodics.get(id);
 
+        //从数据库里删除
+        PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+        periodicDAO.deletePeriodic(delPeriodic.getPeriodic_id());
 
+        //periodics与tmpadapter里的数据是绑定的，因此periodics不用重复删除
+        tmpadapter.removeItem(id);
+        tmpadapter.notifyDataSetChanged();
+
+        Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
-
-
 
 
 
@@ -298,9 +379,7 @@ class PeriodicListAdapter extends ArrayAdapter<Periodic> {
 
 
 /**
- * @author 郑明亮   @email 1072307340@qq.com
- * @version 1.0
- * @time 2016/7/29 18:28
+ 数据适配器
  *
  */
 class RecomendAdapter extends BaseAdapter implements Filterable {
@@ -330,6 +409,12 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
     public long getItemId(int i) {
         return 0;
     }
+
+
+    public void removeItem(int index){
+        data.remove(index);
+    }
+
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
@@ -370,6 +455,10 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
         }
         return mFilter;
     }
+
+
+
+
     //我们需要定义一个过滤器的类来定义过滤规则
     class MyFilter extends Filter{
         //我们在performFiltering(CharSequence charSequence)这个方法中定义过滤规则

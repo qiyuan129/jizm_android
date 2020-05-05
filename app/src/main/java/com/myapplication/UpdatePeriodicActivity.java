@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,22 +25,56 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import dao.PeriodicDAO;
 import dao.PeriodicDAOImpl;
+import pojo.Account;
 import pojo.Category;
 import pojo.Periodic;
 
 public class UpdatePeriodicActivity extends AppCompatActivity implements View.OnClickListener{
 
-    ArrayList<Category> categories;
     public Periodic periodic;
+
+    ArrayList<Category> categories;
+    ArrayList<Account> accounts;
+
+
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
     public ArrayList<String> listData=new  ArrayList<String>();
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
+
+
+
+
+    public ArrayList<String> listAccount=new  ArrayList<String>();
+    private TextView accountView ;
+    private Spinner accountSpinner;
+    private ArrayAdapter<String> accountAdapter;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //收入支出单选button组
     private RadioGroup RBGroup;
@@ -80,14 +115,15 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
     //辅助变量
-    String name;
-    double money;
-    long start;
-    long end;
-    long anchor;
-    int recycleId;
-    int typeId;
-    int categoryId;
+    public String name;
+    public double money;
+    public Date start;
+    public Date end;
+    //Date anchor;
+    public int recycleId;
+    public int typeId;
+    public int categoryId;
+    public int accountId;
 
 
 
@@ -103,22 +139,30 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listData);
+        accountAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listAccount);
 
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //将adapter 添加到spinner中
         spinner.setAdapter(adapter);
+        accountSpinner.setAdapter(accountAdapter);
+
 
         //spinner数据加载完，设置一下默认选中的值
         setDefaultPsinnerItem();
+        setDefaultAccountItem();
 
 
         //添加事件Spinner事件监听
         spinner.setOnItemSelectedListener(new SpinnerSelectedListenerUp());
+        accountSpinner.setOnItemSelectedListener(new AccountSelectedListenerUp());
+
 
         //设置默认值
         spinner.setVisibility(View.VISIBLE);
+        accountSpinner.setVisibility(View.VISIBLE);
 
 
         //注意是给RadioGroup绑定监视器
@@ -154,6 +198,38 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
+    public void setDefaultAccountItem(){
+       /* //dao的代码还没好，先注释掉
+        int actId = periodic.getAccount_id();
+        //CategoryDAO catDAO = new CategoryDAOImpl();
+        AccountDAO actDAO = new AccountDAOImpl();
+        //Category category = catDAO.getById(catId);
+        Account account = actDAO.getAccountById(actId);
+       // String categoryName = category.getCategory_name();
+        String accountName = account.getAccount_name();
+
+      //  for(int i=0;i<listData.size();i++){
+          //  if(categoryName.equals(listData.get(i))){
+           //     spinner.setSelection(i);
+           //     break;
+          //  }
+        //}
+
+
+        for(int i=0;i<listAccount.size();i++){
+            if(accountName.equals(listAccount.get(i))){
+                accountSpinner.setSelection(i);
+                break;
+            }
+        }
+*/
+
+
+        //后面删除
+        accountSpinner.setSelection(1);
+    }
+
+
 
 
     public void setData(){
@@ -166,8 +242,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
          */
 
 
-//        periodic = new Periodic(1,2,1,3,1,"shopping"+String.valueOf(2),
-//                1,3838737,25785872,50,3,21288);
+        periodic = new Periodic(1,2,1,3,1,"shopping"+String.valueOf(2),
+                1,new Date(3838737),new Date(25785872),50,3,null);
 
 
         //设置收入支出类别
@@ -186,7 +262,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
-       /* //设置类别值
+        /*//设置类别值
 
           CategoryDAO categoryDAO=new CategoryDAOImpl();
           categories=categoryDAO.getList();
@@ -200,6 +276,22 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         listData.add("买菜");
         listData.add("旅游");
         listData.add("其他");
+
+
+
+       /* //设置账户值
+
+          AccountDAO accountDAO=new AccountDAOImpl();
+          accounts = (ArrayList<Account>) accountDAO.listAccount();
+          for(Account act:accounts){
+              listData.add(act.getAccount_name());
+          }
+          */
+
+
+        listAccount.add("支付宝账户");
+        listAccount.add("微信账户");
+        listAccount.add("银行账户");
 
 
 
@@ -265,7 +357,9 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
     public void init(){
         view = (TextView) findViewById(R.id.spinnerText_update);
+        accountView=(TextView)findViewById(R.id.account_spinnerText_update);
         spinner = (Spinner) findViewById(R.id.Spinner_update);
+        accountSpinner=(Spinner)findViewById(R.id.account_Spinner_update);
 
         //收入支出单选
         RBGroup = (RadioGroup) findViewById(R.id.rg_type_update);
@@ -360,6 +454,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
         //categoryId在SpinnerSelectedListenerUp里面设置了
+        //accountId在AccountSpinnerSelectedListenerUp里面设置了
         //recycleId;  setRecycle()里面
         //typeId; MyRadioButtonListenerUp   按钮事件监听里面
 
@@ -367,13 +462,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
         try {
-            Date startDate= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
-            Date endDate= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
-            Date now = new Date();
-
-            start=startDate.getTime();
-            end=endDate.getTime();
-            anchor=now.getTime();
+            start= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
+            end= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -384,12 +474,13 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         //更新事件的值
         periodic.setPeriodic_name(name);
         periodic.setPeriodic_money(money);
-        periodic.setStart(new Date(start));
-        periodic.setEnd(new Date(end));
-        periodic.setAnchor(new Date(anchor));
+        periodic.setStart(start);
+        periodic.setEnd(end);
+        //periodic.setAnchor(anchor);
         periodic.setCycle(recycleId);
         periodic.setType(typeId);
         periodic.setCategory_id(categoryId);
+        periodic.setAccount_id(accountId);
 
         /*//存入数据库
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
@@ -414,9 +505,16 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 break;
 
 
-            case R.id.store_periodic:
-                Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
+            case R.id.store_periodic_update:
+                savePeriodic();
+                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                //把值periodicId传回上一个界面
+                Intent intent = new Intent();
+                intent.putExtra("id_return_per",String.valueOf(periodic.getPeriodic_id()));
+                setResult(RESULT_OK,intent);
+                this.finish();
                 break;
+
 
 
             default:
@@ -432,7 +530,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     class SpinnerSelectedListenerUp implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            view.setText("你的选择是："+ listData.get(arg2));
 
 
 
@@ -448,6 +546,32 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
+
+
+
+    //内部类，下拉列表监听者，使用数组形式操作
+    class AccountSelectedListenerUp implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            accountView.setText("你的选择是："+ listData.get(arg2));
+
+
+
+            //设置Account_id 记得去掉注释
+          //  accountId = accounts.get(arg2).getAccount_id();
+
+
+            //测试用，后面删除
+            accountId=0;
+
+
+        }
+
+        public void onNothingSelected(AdapterView<?> arg0) {
+        }
+    }
+
+
 
 
 

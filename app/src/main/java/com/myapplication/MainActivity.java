@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         dbHelper=new MyDatabaseHelper(this,"JiZM",null,1);
 
-//        Date date=new Date();
+//        Date date=new Date("2020/12/2");
 //        Date date1= new Date(2020-1900, 1, 1);
 //        Date date2= new Date(2020-1900, 11, 1);
 //        Account account=null;
@@ -104,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
 //        periodicDAO.addPeriodic(periodic);
 //        periodic=new Periodic(2,1,2,1,0,"打车",2,date1,date2,6.2,1,date);
 //        periodicDAO.addPeriodic(periodic);
-
-
 
     }
 

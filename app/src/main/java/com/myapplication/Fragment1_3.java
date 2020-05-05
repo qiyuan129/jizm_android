@@ -17,9 +17,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
+
+import static android.app.Activity.RESULT_OK;
 
 public class Fragment1_3 extends Fragment {
 
@@ -37,7 +41,7 @@ public class Fragment1_3 extends Fragment {
         }
 
         //初始化数据数组
-        initBills("学习用品");
+        initBills();
         //创建listView的数据适配器
         adapter = new BillListAdapter(getActivity(),R.layout.bill_list_item,billList);
 
@@ -56,7 +60,10 @@ public class Fragment1_3 extends Fragment {
                 Bill tempBill = billList.get(position);
                 Intent intent1 = new Intent(getActivity(),UpdateBillActivity.class);
                 intent1.putExtra("billId",String.valueOf(tempBill.getBill_id()));
-                startActivity(intent1);
+
+                startActivityForResult(intent1,1110);//设置请求码为1010
+
+                //startActivity(intent1);
             }
         });
 
@@ -84,20 +91,87 @@ public class Fragment1_3 extends Fragment {
 
 
 
-    private void initBills(String category){
-       /*
-       实际代码
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent Tdata){
+        switch (requestCode){
+            case 1110 :
+                if(resultCode==RESULT_OK){
+
+                    Log.i("更新修改的bill数据  ","开始");
+                    String billId = Tdata.getStringExtra("id_return_bill");
+                    updateItem(Integer.valueOf(billId));
+                    Log.i("更新修改的bill数据  : ","结束");
+
+                }
+
+                break;
+
+
+            default:
+                break;
+        }
+    }
+
+
+
+
+
+    public void updateItem(int billId){
+        Log.i("更新periodic id 为  : ",String.valueOf(billId));
+
+
+      /*  BillDAO billDAO=new BillDAOImpl();
+        Bill tmp = billDAO.getBillById(billId);
+
+        for(Bill item:billList){
+            if(item.getBill_id()==tmp.getBill_id()){
+                item.setAccount_id(tmp.getAccount_id());
+                item.setCategory_id(tmp.getCategory_id());
+                item.setUser_id(tmp.getUser_id());
+                item.setType(tmp.getType());
+                item.setBill_name(tmp.getBill_name());
+                item.setBill_date(tmp.getBill_date());
+                item.setBill_money(tmp.getBill_money());
+                item.setState(tmp.getState());
+                item.setAnchor(tmp.getAnchor());
+
+                break;
+            }
+        }*/
+
+
+        //通知适配器数据改变
+        //  tmpadapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    private void initBills(){
+
+      /* //实际代码
         BillDAO billDao = new BillDAOImpl();
-        billList=billDao.listByCategory(category);
-        */
+        billList=billDao.listBill();*/
+
 
         //实验用，后面删除
         billList = new ArrayList<>();
-//        for(int i=0;i<=20;i++){
-//            Bill bill = new Bill(i,23,2,25,
-//                    1,"学习用品:"+i,546524,36.5,2,254625);
-//            billList.add(bill);
-//        }
+        for(int i=0;i<=20;i++){
+            Bill bill = new Bill(i,23,2,25,
+                    1,"学习用品:"+i,new Date(546524),36.5,2,null);
+            billList.add(bill);
+        }
 
 
     }
@@ -109,7 +183,23 @@ public class Fragment1_3 extends Fragment {
      */
     private boolean deleteBill(int id){
 
+        Bill delBill = billList.get(id);
+        //从数据库中删除
+        BillDAO billDAO = new BillDAOImpl();
+        billDAO.deleteBill(delBill.getBill_id());
 
+        //从适配器里删除
+        adapter.remove(delBill);
+        adapter.notifyDataSetChanged();
+        //本地list与adapter绑定的，因此本地的list不用处理
+
+
+
+
+
+
+
+        Toast.makeText(getActivity(), "账单删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
 

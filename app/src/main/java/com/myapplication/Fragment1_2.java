@@ -25,6 +25,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -66,10 +67,11 @@ public class Fragment1_2 extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, 1);
         strbeginDate =  new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        //strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date(2020-1900,5,6));
 
 
         if (mView == null) {
@@ -167,7 +169,7 @@ public class Fragment1_2 extends Fragment
         int i;
         String categoryname;
         double allmoney;
-        Float percent;
+        float percent;
         List<CategoryChartItem> mcategoryChart = new ArrayList<>();
         BillDAOImpl billDAO = new BillDAOImpl();
         CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
@@ -183,7 +185,6 @@ public class Fragment1_2 extends Fragment
             System.out.println(pe.getMessage());
         }
 
-
         if (typeflag == OutcomeFlag)
         {
             i=0;
@@ -192,13 +193,15 @@ public class Fragment1_2 extends Fragment
             Map<Integer, Double> dbChartData = billDAO.getCategoryChartData(begin,end,0);
             for (Integer id : dbChartData.keySet())
             {
-                categoryname = categoryDAO.getCategoryById(id).getCategory_name();
-                //double p = (double)dbChartData.get(id);
-                percent = Float.valueOf((float)(double)dbChartData.get(id));
-                CategoryChartItem c1 = new CategoryChartItem(categoryname,percent);
-                mcategoryChart.add(c1);
+                if(dbChartData.get(id)!=0)
+                {
+                    categoryname = categoryDAO.getCategoryById(id).getCategory_name();
+                    percent = (float)((double)dbChartData.get(id)/allmoney);
+                    CategoryChartItem c1 = new CategoryChartItem(categoryname,percent*100);
+                    mcategoryChart.add(c1);
+                }
             }
-            mcategoryChart.add(new CategoryChartItem("测试",10F));
+            //mcategoryChart.add(new CategoryChartItem("测试",10F));
         }
 
         else {
@@ -207,11 +210,13 @@ public class Fragment1_2 extends Fragment
             Map<Integer, Double> dbChartData = billDAO.getCategoryChartData(begin,end,1);
             for (Integer id : dbChartData.keySet())
             {
-                categoryname = categoryDAO.getCategoryById(id).getCategory_name();
-                //double p = (double)dbChartData.get(id);
-                percent = Float.valueOf((float)(double)dbChartData.get(id));
-                CategoryChartItem c1 = new CategoryChartItem(categoryname,percent);
-                mcategoryChart.add(c1);
+                if(dbChartData.get(id)!=0)
+                {
+                    categoryname = categoryDAO.getCategoryById(id).getCategory_name();
+                    percent = (float)((double)dbChartData.get(id)/allmoney);
+                    CategoryChartItem c1 = new CategoryChartItem(categoryname,percent*100);
+                    mcategoryChart.add(c1);
+                }
             }
         }
         return mcategoryChart;
@@ -237,7 +242,6 @@ public class Fragment1_2 extends Fragment
             System.out.println(pe.getMessage());
         }
 
-
         if (typeflag == OutcomeFlag) {
             i=0;
             List<Bill> dbDataOut = billDAO.top10(begin,end,0) ;
@@ -255,7 +259,7 @@ public class Fragment1_2 extends Fragment
                 dateString = df.format(c1.getBill_date());
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
             }
-            mcategoryList.add(new CategoryListItem(i,"支出测试",20,"支出测试"));
+            //mcategoryList.add(new CategoryListItem(i,"支出测试",20,"支出测试"));
         }
         else {
             i=0;
@@ -274,7 +278,7 @@ public class Fragment1_2 extends Fragment
                 dateString = df.format(c1.getBill_date());
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
             }
-            mcategoryList.add(new CategoryListItem(i,"收入测试",20,"收入测试"));
+            //mcategoryList.add(new CategoryListItem(i,"收入测试",20,"收入测试"));
         }
         return mcategoryList;
     }
@@ -319,10 +323,10 @@ public class Fragment1_2 extends Fragment
         }
         dataSet.setColors(mColorList);
         PieData pieData = new PieData(dataSet);
-        // 设置描述，我设置了不显示，因为不好看，你也可以试试让它显示，真的不好看
-        //Description description = new Description();
-        //description.setEnabled(false);
-        // pieChart.setDescription(description);
+        // 设置描述
+        Description description = new Description();
+        description.setEnabled(false);
+        pieChart.setDescription(description);
         //设置半透明圆环的半径, 0为透明
         pieChart.setTransparentCircleRadius(0f);
         //设置初始旋转角度
@@ -330,7 +334,7 @@ public class Fragment1_2 extends Fragment
         //数据连接线距图形片内部边界的距离，为百分数
         dataSet.setValueLinePart1OffsetPercentage(80f);
         //设置连接线的颜色
-        dataSet.setValueLineColor(Color.LTGRAY);
+        dataSet.setValueLineColor(Color.rgb(77,76,125));
         // 连接线在饼状图外面
         dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         // 设置饼块之间的间隔
@@ -339,6 +343,12 @@ public class Fragment1_2 extends Fragment
         // 显示图例
         Legend legend = pieChart.getLegend();
         legend.setEnabled(true);
+        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);  //左边显示
+        legend.setFormSize(12f);//比例块字体大小
+        legend.setXEntrySpace(2f);//设置距离饼图的距离，防止与饼图重合
+        legend.setYEntrySpace(2f);
+        legend.setWordWrapEnabled(true); //比例块换行
+        legend.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
         // 和四周相隔一段距离,显示数据
         pieChart.setExtraOffsets(26, 5, 26, 5);
         // 设置pieChart图表是否可以手动旋转
@@ -359,6 +369,7 @@ public class Fragment1_2 extends Fragment
         pieChart.setCenterTextSize(12);//中间的文字字体大小
         // 绘制内容value，设置字体颜色大小
         pieData.setDrawValues(true);
+        pieChart.setUsePercentValues(true);
         pieData.setValueFormatter(new PercentFormatter());
         pieData.setValueTextSize(10f);
         pieData.setValueTextColor(Color.DKGRAY);
