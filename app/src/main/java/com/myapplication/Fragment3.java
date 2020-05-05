@@ -170,6 +170,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     }
 
 
+
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent Tdata){
         switch (requestCode){
@@ -219,7 +220,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         Log.i("更新periodic id 为  : ",String.valueOf(periodicId));
 
 
-       /* PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
         Periodic temp = periodicDAO.getPeriodicById(periodicId);
 
         for(Periodic per:periodics){
@@ -238,7 +239,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
                 break;
             }
-        }*/
+        }
 
 
         //通知适配器数据改变
