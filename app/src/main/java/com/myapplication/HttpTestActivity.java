@@ -179,6 +179,7 @@ public class HttpTestActivity extends AppCompatActivity {
 //                            }
                             //resultText.setText(responseBody.string());
                             System.out.println(responseBody.string());
+                            SyncUtil.processUploadResult(JSONObject.parseObject(responseBody.string()));
                         }
                     }
                 });
