@@ -41,7 +41,7 @@
             android:id="@+id/TrendList"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="335dp"
+            android:layout_marginTop="345dp"
             android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,18 +57,49 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_popup_sync" />
 
-        <TextView
-            android:id="@+id/textView2"
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="330dp"
             android:layout_height="45dp"
-            android:layout_marginTop="290dp"
-            android:gravity="center"
-            android:textSize="15sp"
-            android:textColor="@color/colorPrimary"
-            android:text="  月份            收入                支出               结余       "
+            android:layout_marginTop="300dp"
+            android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="月份"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="收入"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="支出"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:text="结余"/>
+        </android.support.v7.widget.LinearLayoutCompat>
+
+
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

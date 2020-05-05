@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ import util.User;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
+    private Context mContext;
     private CategoryChooseAdapter categoryChooseAdapter;
 
     private User user;
@@ -139,10 +141,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
 
-        categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
-        categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
-        recyclerView.setAdapter(categoryChooseAdapter);
-
         categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
@@ -211,10 +209,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.income_tv:
                 isIncome = 1;
                 initCategory();
-                categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
-                categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
-                recyclerView.setAdapter(categoryChooseAdapter);
-
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
@@ -227,10 +221,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.outcome_tv:
                 isIncome = 0;
                 initCategory();
-                categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
-                categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
-                recyclerView.setAdapter(categoryChooseAdapter);
-
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
@@ -478,7 +468,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         categoryList = categoryDAO.listCategory();
         List<String> outcome_category = new ArrayList<>();
         List<String> income_category = new ArrayList<>();
-
         List<Integer> outcome_category_id = new ArrayList<>();
         List<Integer> income_category_id = new ArrayList<>();
 
@@ -523,5 +512,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 }
             }
         }
+        categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+        categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
+        recyclerView.setAdapter(categoryChooseAdapter);
     }
 }

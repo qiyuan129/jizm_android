@@ -4,6 +4,7 @@ package com.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
@@ -34,17 +36,17 @@ import pojo.Category;
 public class CategoryEditActivity extends AppCompatActivity implements View.OnClickListener {
     private View mView;
     private Context mContext;
-    private CategoryAdapter categoryAdapter;
+    public CategoryChooseAdapter categoryChooseAdapter;
 
     private List<Category> categoryList = new ArrayList<>();
 
-    private RecyclerView mRecycleView;
+    private RecyclerView recycleView;
     private TextView incomeTv;   //收入按钮
     private TextView outcomeTv;  //支出按钮
     private ImageView backIv;      //返回键
     private ImageView addIv;      //添加按钮
 
-   // public boolean isOutcome = true;
+    private String edit_category_name = "";
 
     private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
             "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
@@ -75,45 +77,74 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         addIv = (ImageView) findViewById(R.id.add_btn);
         addIv.setOnClickListener(this);
 
+        recycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recycleView.setLayoutManager(layoutManager);
+
         initCategory();
 
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
             @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                //首先回调的方法 返回int表示是否监听该方向
-                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;//拖拽
-                int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;//侧滑删除
-                return makeMovementFlags(dragFlags, swipeFlags);
-            }
+            public void onClick(int position) {
+                CategoryDAO categoryDAO = new CategoryDAOImpl();
+                categoryList = categoryDAO.listCategory();
+                List<Integer> outcome_category_id1 = new ArrayList<>();
+                List<Integer> income_category_id1 = new ArrayList<>();
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView,
-                                  RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int index = viewHolder.getAdapterPosition();
-                //侧滑事件
-                if (direction == ItemTouchHelper.END) {
-                    categoryList.remove(index);
-                    categoryAdapter.notifyItemRemoved(index);
-                    //在数据库中删除,待完善
-                    CategoryDAO categoryDAO = new CategoryDAOImpl();
-                    categoryDAO.deleteCategory(category_id);
+                for (int j = 0; j < categoryList.size(); j++) {
+                    Category category = (Category)categoryList.get(j);
+                    if (category.getType() == 0) {
+                        outcome_category_id1.add(category.getCategory_id());
+                    } else {
+                        income_category_id1.add(category.getCategory_id());
+                    }
                 }
-            }
 
-            @Override
-            public boolean isLongPressDragEnabled() {
-                //是否可拖拽
-                return false;
+                Category category = categoryList.get(position);
+                if (isIncome == 0) {
+                    category_id = outcome_category_id1.get(position);
+                } else {
+                    category_id = income_category_id1.get(position);
+                }
+                new MaterialDialog.Builder(CategoryEditActivity.this)
+                        .title("修改分类")
+                        .input(category.getCategory_name(), edit_category_name, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                edit_category_name = input.toString();
+                            }
+                        })
+                        .positiveText("确认修改")
+                        .negativeText("取消")
+                        .neutralText("删除该分类")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                //修改分类名称
+                                Category category = new Category(category_id, 1, edit_category_name, isIncome, state, anchor);
+                                CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                categoryDAO.updateCategory(category);
+                                initCategory();
+                            }
+                        })
+                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                //删除该分类
+                                CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                categoryDAO.deleteCategory(category_id);
+                                initCategory();
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                //取消
+                            }
+                        })
+                        .show();
             }
         });
-
-        helper.attachToRecyclerView(mRecycleView);
-
     }
 
     @Override
@@ -129,10 +160,129 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
+
+                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                        categoryList = categoryDAO.listCategory();
+                        List<Integer> outcome_category_id2 = new ArrayList<>();
+                        List<Integer> income_category_id2 = new ArrayList<>();
+
+                        for (int j = 0; j < categoryList.size(); j++) {
+                            Category category = (Category)categoryList.get(j);
+                            if (category.getType() == 0) {
+                                outcome_category_id2.add(category.getCategory_id());
+                            } else {
+                                income_category_id2.add(category.getCategory_id());
+                            }
+                        }
+
+                        Category category = categoryList.get(position);
+                        category_id = income_category_id2.get(position);
+                        new MaterialDialog.Builder(CategoryEditActivity.this)
+                                .title("修改分类")
+                                .input(category.getCategory_name(), edit_category_name, new MaterialDialog.InputCallback() {
+                                    @Override
+                                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                        edit_category_name = input.toString();
+                                    }
+                                })
+                                .positiveText("确认修改")
+                                .negativeText("取消")
+                                .neutralText("删除该分类")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //修改分类名称
+                                        Category category = new Category(category_id, 1, edit_category_name, isIncome, state, anchor);
+                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                        categoryDAO.updateCategory(category);
+                                        initCategory();
+                                    }
+                                })
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //删除该分类
+                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                        categoryDAO.deleteCategory(category_id);
+                                        initCategory();
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //取消
+                                    }
+                                })
+                                .show();
+
+                    }
+                });
                 break;
             case R.id.tb_note_outcome:
                 isIncome = 0;
                 initCategory();
+
+                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                        categoryList = categoryDAO.listCategory();
+                        List<Integer> outcome_category_id3 = new ArrayList<>();
+                        List<Integer> income_category_id3 = new ArrayList<>();
+
+                        for (int j = 0; j < categoryList.size(); j++) {
+                            Category category = (Category)categoryList.get(j);
+                            if (category.getType() == 0) {
+                                outcome_category_id3.add(category.getCategory_id());
+                            } else {
+                                income_category_id3.add(category.getCategory_id());
+                            }
+                        }
+
+                        Category category = categoryList.get(position);
+                        category_id = outcome_category_id3.get(position);
+                        new MaterialDialog.Builder(CategoryEditActivity.this)
+                                .title("修改分类")
+                                .input(category.getCategory_name(), edit_category_name, new MaterialDialog.InputCallback() {
+                                    @Override
+                                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                        edit_category_name = input.toString();
+                                    }
+                                })
+                                .positiveText("确认修改")
+                                .negativeText("取消")
+                                .neutralText("删除该分类")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //修改分类名称
+                                        Category category = new Category(category_id, 1, edit_category_name, isIncome, state, anchor);
+                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                        categoryDAO.updateCategory(category);
+                                        initCategory();
+                                    }
+                                })
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //删除该分类
+                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                        categoryDAO.deleteCategory(category_id);
+                                        initCategory();
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //取消
+                                    }
+                                })
+                                .show();
+                    }
+                });
                 break;
         }
     }
@@ -156,17 +306,24 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                     }
                 })
                 .positiveText("确定")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Toast.makeText(CategoryEditActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .show();
     }
 
     private void initCategory() {
-        //取出分类名称
+        //取出分类名称、id
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categoryList = categoryDAO.listCategory();
         List<String> outcome_category = new ArrayList<>();
         List<String> income_category = new ArrayList<>();
         List<Integer> outcome_category_id = new ArrayList<>();
         List<Integer> income_category_id = new ArrayList<>();
+
         for (int j = 0; j < categoryList.size(); j++) {
             Category category = (Category)categoryList.get(j);
             if (category.getType() == 0) {
@@ -193,12 +350,6 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                     categoryList.add(category);
                 }
             }
-            mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            mRecycleView.setLayoutManager(layoutManager);
-            CategoryAdapter adapter = new CategoryAdapter(categoryList);
-            adapter.notifyDataSetChanged();
-            mRecycleView.setAdapter(adapter);
         } else {
             if (isIncome == 0) {
                 for(int i = 0; i < outcome_category.size(); i++){
@@ -213,12 +364,9 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                     categoryList.add(category);
                 }
             }
-            mRecycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            mRecycleView.setLayoutManager(layoutManager);
-            CategoryAdapter adapter = new CategoryAdapter(categoryList);
-            adapter.notifyDataSetChanged();
-            mRecycleView.setAdapter(adapter);
         }
+        categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
+        categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
+        recycleView.setAdapter(categoryChooseAdapter);
     }
 }
