@@ -217,12 +217,15 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     id: 周期事件id
      */
     private boolean deletePeriodic(int id){
+        Periodic delPeriodic = periodics.get(id);
+
         //从数据库里删除
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
-        periodicDAO.deletePeriodic(id);
+        periodicDAO.deletePeriodic(delPeriodic.getPeriodic_id());
 
-        //从list里删除
-        periodics.remove(id);
+        //periodics与tmpadapter里的数据是绑定的，因此periodics不用重复删除
+        tmpadapter.removeItem(id);
+        tmpadapter.notifyDataSetChanged();
 
         Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
         return true;
@@ -303,9 +306,7 @@ class PeriodicListAdapter extends ArrayAdapter<Periodic> {
 
 
 /**
- * @author 郑明亮   @email 1072307340@qq.com
- * @version 1.0
- * @time 2016/7/29 18:28
+ 数据适配器
  *
  */
 class RecomendAdapter extends BaseAdapter implements Filterable {
@@ -335,6 +336,12 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
     public long getItemId(int i) {
         return 0;
     }
+
+
+    public void removeItem(int index){
+        data.remove(index);
+    }
+
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
@@ -375,6 +382,10 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
         }
         return mFilter;
     }
+
+
+
+
     //我们需要定义一个过滤器的类来定义过滤规则
     class MyFilter extends Filter{
         //我们在performFiltering(CharSequence charSequence)这个方法中定义过滤规则

@@ -165,7 +165,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     public void setDefaultPsinnerItem(){
         //dao的代码还没好，先注释掉
         //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
-        int catId = bill.getCategory_id();
+       /* int catId = bill.getCategory_id();
         CategoryDAO catDAO = new CategoryDAOImpl();
         Category category = catDAO.getCategoryById(catId);
         String categoryName = category.getCategory_name();
@@ -174,10 +174,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 spinner.setSelection(i);
                 break;
             }
-        }
+        }*/
 
 
-       // spinner.setSelection(1);
+        spinner.setSelection(1);
 
 
     }
