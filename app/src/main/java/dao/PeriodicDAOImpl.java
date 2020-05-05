@@ -98,7 +98,7 @@ public class PeriodicDAOImpl implements PeriodicDAO {
     public Periodic getPeriodicById(int id) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Periodic periodic=null;
-        Cursor cursor = db.query("category",null,"category_id = ?",new String[]{""+id},null,null,null);
+        Cursor cursor = db.query("periodic",null,"periodic_id = ?",new String[]{""+id},null,null,null);
         if (cursor.moveToFirst())
         {
             int periodic_id=cursor.getInt(cursor.getColumnIndex("periodic_id"));
