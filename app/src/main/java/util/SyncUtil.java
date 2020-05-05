@@ -1,6 +1,8 @@
 package util;
 
 
+import android.widget.Toast;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -243,11 +245,11 @@ public class SyncUtil {
         return finalResult;
     }
 
-    public static void processUploadResult(JSONObject resultJson){
-        JSONObject accountSyncRecords=resultJson.getJSONObject("Account");
-        JSONObject billSyncRecords=resultJson.getJSONObject("Bill");
-        JSONObject categorySyncRecords=resultJson.getJSONObject("Category");
-        JSONObject periodicSyncRecords=resultJson.getJSONObject("Periodic");
+    public static void processUploadResult(JSONObject dataJson){
+        JSONObject accountSyncRecords=dataJson.getJSONObject("Account");
+        JSONObject billSyncRecords=dataJson.getJSONObject("Bill");
+        JSONObject categorySyncRecords=dataJson.getJSONObject("Category");
+        JSONObject periodicSyncRecords=dataJson.getJSONObject("Periodic");
 
         AccountDAO accountDAO = new AccountDAOImpl();
         BillDAO billDAO = new BillDAOImpl();
@@ -255,7 +257,7 @@ public class SyncUtil {
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();
 
         if(accountSyncRecords.getBoolean("needSync")==true){
-            JSONArray accounts=accountSyncRecords.getJSONArray("recordsList");
+            JSONArray accounts=accountSyncRecords.getJSONArray("recordList");
             for(int i=0;i<accounts.size();i++){
                 JSONObject account=accounts.getJSONObject(i);
                 //更新记录的同步状态和对应的服务器记录更新时间
@@ -264,7 +266,7 @@ public class SyncUtil {
             }
         }
         if(billSyncRecords.getBoolean("needSync")==true){
-            JSONArray bills=billSyncRecords.getJSONArray("recordsList");
+            JSONArray bills=billSyncRecords.getJSONArray("recordList");
             for(int i=0;i<bills.size();i++){
                 JSONObject bill=bills.getJSONObject(i);
                 billDAO.setStateAndAnchor(bill.getInteger("localId"),
@@ -272,7 +274,7 @@ public class SyncUtil {
             }
         }
         if(categorySyncRecords.getBoolean("needSync")==true){
-            JSONArray categories=categorySyncRecords.getJSONArray("recordsList");
+            JSONArray categories=categorySyncRecords.getJSONArray("recordList");
             for(int i=0;i<categories.size();i++){
                 JSONObject category=categories.getJSONObject(i);
                 categoryDAO.setStateAndAnchor(category.getInteger("localId"),
@@ -280,13 +282,13 @@ public class SyncUtil {
             }
         }
         if(periodicSyncRecords.getBoolean("needSync")==true){
-            JSONArray periodics=periodicSyncRecords.getJSONArray("recordsList");
+            JSONArray periodics=periodicSyncRecords.getJSONArray("recordList");
             for(int i=0;i<periodics.size();i++){
                 JSONObject periodic=periodics.getJSONObject(i);
                 periodicDAO.setStateAndAnchor(periodic.getInteger("localId"),
                         9,periodic.getDate("modified"));
             }
         }
-
+        System.out.println("处理上传结果响应成功");
     }
 }
