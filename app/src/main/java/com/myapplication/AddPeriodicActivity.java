@@ -24,18 +24,34 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
+import pojo.Account;
 import pojo.Category;
 
 public class AddPeriodicActivity extends AppCompatActivity implements View.OnClickListener{
     ArrayList<Category> categories;
+    ArrayList<Account> accounts;
 
-    //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
+
+    //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic
     public ArrayList<String> listData;
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
+
+
+
+    public ArrayList<String> listAccount;
+    private TextView accountView ;
+    private Spinner accountSpinner;
+    private ArrayAdapter<String> accountAdapter;
+
+
+
+
 
     //收入支出单选button组
     private RadioGroup RBGroup;
@@ -82,6 +98,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     int recycleId;
     int typeId;
     int categoryId;
+    int accountId;
 
 
 
@@ -100,22 +117,30 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listData);
+        accountAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listAccount);
 
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //将adapter 添加到spinner中
         spinner.setAdapter(adapter);
+        accountSpinner.setAdapter(accountAdapter);
+
 
         //添加事件Spinner事件监听
         spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+        accountSpinner.setOnItemSelectedListener(new AccountSpinnerSelectedListener());
+
 
         //设置默认值
         spinner.setVisibility(View.VISIBLE);
+        accountSpinner.setVisibility(View.VISIBLE);
 
 
         //设置默认选中的下拉列表项，需要在spinner填充数据之后
         spinner.setSelection(0,true);
+        accountSpinner.setSelection(0,true);
 
 
         //注意是给RadioGroup绑定监视器
@@ -128,7 +153,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
     public void init(){
         view = (TextView) findViewById(R.id.spinnerText);
+        accountView= (TextView) findViewById(R.id.account_spinnerText);
         spinner = (Spinner) findViewById(R.id.Spinner01);
+        accountSpinner=(Spinner)findViewById(R.id.account_Spinner01);
+
 
         //收入支出单选
         RBGroup = (RadioGroup) findViewById(R.id.rg_type);
@@ -204,6 +232,15 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         }
 
 
+        //设置账户
+        AccountDAO accountDAO = new AccountDAOImpl();
+        accounts = (ArrayList<Account>) accountDAO.listAccount();
+        for(Account act:accounts){
+            listData.add(act.getAccount_name());
+        }
+
+
+
 
         //测试用，后面删除
         if(categories==null){
@@ -215,6 +252,17 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             listData.add("生活用品");
         }
 
+
+        if(accounts==null){
+            accounts=new ArrayList<Account>();
+        }
+
+        if(listAccount==null){
+            listAccount.add("支付宝账户");
+            listAccount.add("微信账户");
+            listAccount.add("银行账户");
+
+        }
 
 
 
@@ -342,6 +390,26 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
             //测试用，后面删除
             categoryId=0;
+
+
+        }
+
+        public void onNothingSelected(AdapterView<?> arg0) {
+        }
+    }
+
+
+    //内部类，下拉列表监听者，使用数组形式操作
+    class AccountSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+
+            //设置Account_id 记得去掉注释
+           // accountId=accounts.get(arg2).getAccount_id();
+
+            //测试用，后面删除
+            accountId=0;
 
 
         }

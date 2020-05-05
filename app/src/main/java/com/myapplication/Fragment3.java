@@ -120,6 +120,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 Log.i("list:",String.valueOf(periodics.get(position).getPeriodic_id()));
                 //删除这个周期事件
                 deletePeriodic(position);
+                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -202,7 +203,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         periodics = new ArrayList<>();
         for(int i=0;i<=20;i++){
            Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
-                   6,45236+i,99954+i,50,3,425575);
+                   6,new Date(45236+i),new Date(99954+i),50,3,null);
            periodics.add(periodic);
         }
 
@@ -216,12 +217,16 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     id: 周期事件id
      */
     private boolean deletePeriodic(int id){
+        //从数据库里删除
+        PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+        periodicDAO.deletePeriodic(id);
 
+        //从list里删除
+        periodics.remove(id);
 
+        Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
-
-
 
 
 

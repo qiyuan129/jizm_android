@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
@@ -95,7 +97,7 @@ public class Fragment1_3 extends Fragment {
         billList = new ArrayList<>();
         for(int i=0;i<=20;i++){
             Bill bill = new Bill(i,23,2,25,
-                    1,"学习用品:"+i,546524,36.5,2,254625);
+                    1,"学习用品:"+i,new Date(546524),36.5,2,null);
             billList.add(bill);
         }
 
@@ -108,8 +110,14 @@ public class Fragment1_3 extends Fragment {
     id: 账单id
      */
     private boolean deleteBill(int id){
+        //从数据库中删除
+        BillDAO billDAO = new BillDAOImpl();
+        billDAO.deleteBill(id);
 
+        //从list里删除
+        billList.remove(id);
 
+        Toast.makeText(getActivity(), "账单删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
 

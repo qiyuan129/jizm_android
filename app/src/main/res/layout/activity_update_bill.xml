@@ -114,6 +114,25 @@
     </Spinner>
 
 
+
+
+    <TextView android:id="@+id/bill_account_spinnerText"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <Spinner android:id="@+id/bill_account_spinner"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+
+
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
