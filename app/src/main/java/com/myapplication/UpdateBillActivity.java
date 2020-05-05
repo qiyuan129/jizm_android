@@ -20,8 +20,11 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import pojo.Account;
@@ -223,15 +226,15 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
     public void setData(){
 
-       /* String tmpId=getIntent().getStringExtra("periodicId");
+        String tmpId=getIntent().getStringExtra("billId");
         int id = Integer.parseInt(tmpId);
 
         BillDAO billDAO = new BillDAOImpl();
-        bill= billDAO.getById(id);*/
+        bill= billDAO.getBillById(id);
 
 
        //实验用，后面删除
-        bill = new Bill(1,3,1,5,1,"早餐",new Date(12457244),32.2,2, null);
+       // bill = new Bill(1,3,1,5,1,"早餐",new Date(12457244),32.2,2, null);
 
 
         //设置开始结束时间
@@ -240,6 +243,19 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         days = formatter.format(bill.getBill_date());
 
         billUpdateTime.setText(days);
+
+
+
+
+        //获取当前年，月，日
+        Calendar calendar = Calendar.getInstance();
+        //开始时间
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDays = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+
 
 
 
@@ -317,14 +333,15 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.save_bill_update:
-                saveBill();
-                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
 
-                //把值periodicId传回上一个界面
-                Intent intent = new Intent();
-                intent.putExtra("id_return_bill",String.valueOf(bill.getBill_id()));
-                setResult(RESULT_OK,intent);
-                this.finish();
+                if(saveBill()){
+                    Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                    //把值periodicId传回上一个界面
+                    Intent intent = new Intent();
+                    intent.putExtra("id_return_bill",String.valueOf(bill.getBill_id()));
+                    setResult(RESULT_OK,intent);
+                    this.finish();
+                }
 
                 break;
 
@@ -493,10 +510,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    public void saveBill(){
+    public boolean saveBill(){
 
         if(!review()){ //检查是否有为空的数据，不合法的数据等,不合法则直接返回
-            return;
+            return false;
         }
 
        //设置名称和金额
@@ -534,11 +551,12 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
         //存入数据库 暂时注解掉
-        //BillDAO billDAO = new BillDAOImpl();
-        //billDAO.updateBill(bill);
+        BillDAO billDAO = new BillDAOImpl();
+        billDAO.updateBill(bill);
 
 
 
+        return true;
     }
 
 

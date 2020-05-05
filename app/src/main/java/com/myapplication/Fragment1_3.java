@@ -17,11 +17,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.BillDAO;
 import dao.BillDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
 import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
+import pojo.Account;
 import pojo.Bill;
+import pojo.Category;
+import pojo.Periodic;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -39,6 +48,49 @@ public class Fragment1_3 extends Fragment {
         if(mView == null) {
             mView = inflater.inflate(R.layout.fragment1_3,container,false);
         }
+
+
+
+       /* //初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
+        Date date=new Date();
+        Date date1= new Date(2020-1900, 3, 1);
+        Date date2= new Date(2020-1900, 11, 1);
+        Account account=null;
+        Bill bill=null;
+        Category category=null;
+        Periodic periodic=null;
+        AccountDAO accountDAO=new AccountDAOImpl();
+        BillDAO billDAO=new BillDAOImpl();
+        CategoryDAO categoryDAO=new CategoryDAOImpl();
+        PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+        account=new Account(1,1,"微信",500,1,date);
+        accountDAO.insertAccount(account);
+        account=new Account(2,1,"支付宝",800,1,date);
+        accountDAO.insertAccount(account);
+        bill=new Bill(1,1,1,1,0,"早餐",date,5,1,date);
+        billDAO.insertBill(bill);
+        bill=new Bill(2,1,1,1,0,"午饭",date,10,1,date);
+        billDAO.insertBill(bill);
+        bill=new Bill(3,2,2,1,0,"滴滴",date,22,1,date);
+        billDAO.insertBill(bill);
+        bill=new Bill(4,2,3,1,1,"工资",date,6000,1,date);
+        billDAO.insertBill(bill);
+        bill=new Bill(5,1,3,1,1,"分红",date,3000,1,date);
+        billDAO.insertBill(bill);
+        category=new Category(1,1,"饮食",0,1,date);
+        categoryDAO.insertCategory(category);
+        category=new Category(2,1,"出行",0,1,date);
+        categoryDAO.insertCategory(category);
+        category=new Category(3,1,"收入",1,1,date);
+        categoryDAO.insertCategory(category);
+        periodic=new Periodic(1,1,1,1,0,"吃饭",1,date1,date2,6.2,1,date);
+        periodicDAO.addPeriodic(periodic);
+        periodic=new Periodic(2,1,2,1,0,"打车",2,date1,date2,6.2,1,date);
+        periodicDAO.addPeriodic(periodic);
+
+        /////////////////*/
+
+
 
         //初始化数据数组
         initBills();
@@ -117,10 +169,10 @@ public class Fragment1_3 extends Fragment {
 
 
     public void updateItem(int billId){
-        Log.i("更新periodic id 为  : ",String.valueOf(billId));
+        Log.i("更新bill id 为  : ",String.valueOf(billId));
 
 
-      /*  BillDAO billDAO=new BillDAOImpl();
+        BillDAO billDAO=new BillDAOImpl();
         Bill tmp = billDAO.getBillById(billId);
 
         for(Bill item:billList){
@@ -137,11 +189,12 @@ public class Fragment1_3 extends Fragment {
 
                 break;
             }
-        }*/
+        }
+
+
 
 
         //通知适配器数据改变
-        //  tmpadapter.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
 
 
@@ -160,18 +213,20 @@ public class Fragment1_3 extends Fragment {
 
     private void initBills(){
 
-      /* //实际代码
+       //实际代码
         BillDAO billDao = new BillDAOImpl();
-        billList=billDao.listBill();*/
+        billList=billDao.listBill();
 
 
-        //实验用，后面删除
+      /*  //实验用，后面删除
         billList = new ArrayList<>();
         for(int i=0;i<=20;i++){
             Bill bill = new Bill(i,23,2,25,
                     1,"学习用品:"+i,new Date(546524),36.5,2,null);
             billList.add(bill);
-        }
+        }*/
+
+
 
 
     }
