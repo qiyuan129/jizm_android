@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -504,9 +505,16 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 break;
 
 
-            case R.id.store_periodic:
-                Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
+            case R.id.store_periodic_update:
+                savePeriodic();
+                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                //把值periodicId传回上一个界面
+                Intent intent = new Intent();
+                intent.putExtra("id_return_per",String.valueOf(periodic.getPeriodic_id()));
+                setResult(RESULT_OK,intent);
+                this.finish();
                 break;
+
 
 
             default:
@@ -522,7 +530,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     class SpinnerSelectedListenerUp implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            view.setText("你的选择是："+ listData.get(arg2));
 
 
 
@@ -545,7 +553,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     class AccountSelectedListenerUp implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            accountView.setText("你的选择是："+ listData.get(arg2));
 
 
 

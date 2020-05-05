@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -316,6 +318,14 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.save_bill_update:
                 saveBill();
+                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+
+                //把值periodicId传回上一个界面
+                Intent intent = new Intent();
+                intent.putExtra("id_return_bill",String.valueOf(bill.getBill_id()));
+                setResult(RESULT_OK,intent);
+                this.finish();
+
                 break;
 
 
@@ -331,7 +341,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     class SpinnerSelectedListenerBup implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            view.setText("你的选择是："+ listData.get(arg2));
             //设置类别
             //adapter和listData顺序应该是一样的吧
 
@@ -355,7 +365,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     class BillAccountSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            accountView.setText("你的选择是："+ listAccount.get(arg2));
 
 
 
@@ -372,6 +382,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
+
 
 
 
@@ -525,6 +536,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         //存入数据库 暂时注解掉
         //BillDAO billDAO = new BillDAOImpl();
         //billDAO.updateBill(bill);
+
 
 
     }
