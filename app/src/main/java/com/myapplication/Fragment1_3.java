@@ -110,12 +110,22 @@ public class Fragment1_3 extends Fragment {
     id: 账单id
      */
     private boolean deleteBill(int id){
+
+        Bill delBill = billList.get(id);
         //从数据库中删除
         BillDAO billDAO = new BillDAOImpl();
-        billDAO.deleteBill(id);
+        billDAO.deleteBill(delBill.getBill_id());
 
-        //从list里删除
-        billList.remove(id);
+        //从适配器里删除
+        adapter.remove(delBill);
+        adapter.notifyDataSetChanged();
+        //本地list与adapter绑定的，因此本地的list不用处理
+
+
+
+
+
+
 
         Toast.makeText(getActivity(), "账单删除成功", Toast.LENGTH_SHORT).show();
         return true;
