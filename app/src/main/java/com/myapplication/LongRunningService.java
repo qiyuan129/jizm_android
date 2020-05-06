@@ -9,10 +9,14 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
+import pojo.Account;
 import pojo.Periodic;
 
 public class LongRunningService extends Service {
@@ -34,14 +38,14 @@ public class LongRunningService extends Service {
             AccountDAO accountDAO;
             @Override
             public void run() {
-                /*//执行事物逻辑
+                //执行事物逻辑
 
                 init();
 
                 //Date time = new Date();
                 for(Periodic item:periodics){
                     check(item);
-                }*/
+                }
 
                 //Log.i("执行周期事件 "," 开始"+time.toString());
 
@@ -51,7 +55,6 @@ public class LongRunningService extends Service {
 
             }
 
-/*
             public void init(){
                 periodicDAO = new PeriodicDAOImpl();
                 accountDAO = new AccountDAOImpl();
@@ -142,7 +145,7 @@ public class LongRunningService extends Service {
                 obj.setState(-1);
                 periodicDAO.deletePeriodic(obj.getPeriodic_id());
 
-            }*/
+            }
 
 
 
@@ -150,7 +153,7 @@ public class LongRunningService extends Service {
         }).start();
 
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long Hours = 24*60 * 60 * 1000; // 这是一小时的毫秒数
+        long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
         //long triggerAtTime = SystemClock.elapsedRealtime() + Hours;
         long triggerAtTime = SystemClock.elapsedRealtime() + 4*1000;//定时到这个时间点执行这项任务
 
