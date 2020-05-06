@@ -1,8 +1,10 @@
 package com.myapplication;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,24 +17,39 @@ import dao.PeriodicDAOImpl;
 import pojo.Account;
 import pojo.Periodic;
 
-public class DoPeriodicActivity extends AppCompatActivity {
+public class DoPeriodicService extends Service {
     ArrayList<Periodic> periodics;
     PeriodicDAO periodicDAO;
     AccountDAO accountDAO;
+    public DoPeriodicService() {
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+
         init();
 
         Date time = new Date();
         Log.i("执行周期事件 "," 开始"+time.toString());
         for(Periodic item:periodics){
-           check(item);
+            check(item);
         }
 
         Log.i("执行周期事件 "," 结束");
 
+
     }
+
+
+
 
     public void init(){
         periodicDAO = new PeriodicDAOImpl();
@@ -74,7 +91,7 @@ public class DoPeriodicActivity extends AppCompatActivity {
                     }
 
 
-                        break;
+                    break;
 
                 case 2://月
                     if(nowDay==startDay){//时间差不到一小时,则执行
@@ -124,6 +141,7 @@ public class DoPeriodicActivity extends AppCompatActivity {
         periodicDAO.deletePeriodic(obj.getPeriodic_id());
 
     }
+
 
 
 

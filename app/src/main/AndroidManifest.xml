@@ -13,7 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DoPeriodicActivity"></activity>
+        <service
+            android:name=".DoPeriodicService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".AlarmService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".DoPeriodicActivity" />
         <activity android:name=".AlarmActivity" />
         <activity android:name=".UpdatePeriodicActivity" />
         <activity android:name=".AddPeriodicActivity" />

@@ -41,14 +41,14 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic
-    public ArrayList<String> listData;
+    public ArrayList<String> listData = new ArrayList<String>();
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
 
 
 
-    public ArrayList<String> listAccount;
+    public ArrayList<String> listAccount=new ArrayList<String>();
     private TextView accountView ;
     private Spinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
@@ -118,6 +118,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         init();
         setData();
+
+
+        ////   启动服务
+
+        Intent intent1 = new Intent(this, AlarmService.class);
+        startService(intent1);
+        ////
 
 
         //将可选内容与ArrayAdapter连接起来
@@ -230,7 +237,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
     public void setData(){
 
-        /*//后面把注释消除
+        //后面把注释消除
         //设置种类
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
@@ -243,13 +250,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         AccountDAO accountDAO = new AccountDAOImpl();
         accounts = (ArrayList<Account>) accountDAO.listAccount();
         for(Account act:accounts){
-            listData.add(act.getAccount_name());
-        }*/
+            listAccount.add(act.getAccount_name());
+        }
 
 
 
 
-        //测试用，后面删除
+       /* //测试用，后面删除
         if(categories==null){
             categories = new ArrayList<Category>();
         }
@@ -270,7 +277,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             listAccount.add("微信账户");
             listAccount.add("银行账户");
 
-        }
+        }*/
 
 
 
@@ -398,10 +405,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
 
             //设置Category_id 记得去掉注释
-            //categoryId = categories.get(arg2).getCategory_id();
+            categoryId = categories.get(arg2).getCategory_id();
 
             //测试用，后面删除
-            categoryId=0;
+           // categoryId=0;
 
 
         }
@@ -418,10 +425,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
 
             //设置Account_id 记得去掉注释
-           // accountId=accounts.get(arg2).getAccount_id();
+            accountId=accounts.get(arg2).getAccount_id();
 
             //测试用，后面删除
-            accountId=0;
+            //accountId=0;
 
 
         }
@@ -557,7 +564,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
          */
         public void setRecycleId(int id){
           /*
-          将周期设为多少天就可以了
+          将周期id
            */
 
          Log.i("周期id将被设置为： ",String.valueOf(id));
