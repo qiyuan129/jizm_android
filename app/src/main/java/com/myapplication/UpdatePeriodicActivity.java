@@ -178,10 +178,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
      */
     public void setDefaultPsinnerItem(){
         //dao的代码还没好，先注释掉
-       /* //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
+        //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
         int catId = periodic.getCategory_id();
         CategoryDAO catDAO = new CategoryDAOImpl();
-        Category category = catDAO.getById(catId);
+        Category category = catDAO.getCategoryById(catId);
 
         String categoryName = category.getCategory_name();
         for(int i=0;i<listData.size();i++){
@@ -190,8 +190,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 break;
             }
         }
-        */
-        spinner.setSelection(1);
+        //spinner.setSelection(1);
 
 
     }
@@ -199,21 +198,11 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
     public void setDefaultAccountItem(){
-       /* //dao的代码还没好，先注释掉
+        //dao的代码还没好，先注释掉
         int actId = periodic.getAccount_id();
-        //CategoryDAO catDAO = new CategoryDAOImpl();
         AccountDAO actDAO = new AccountDAOImpl();
-        //Category category = catDAO.getById(catId);
         Account account = actDAO.getAccountById(actId);
-       // String categoryName = category.getCategory_name();
         String accountName = account.getAccount_name();
-
-      //  for(int i=0;i<listData.size();i++){
-          //  if(categoryName.equals(listData.get(i))){
-           //     spinner.setSelection(i);
-           //     break;
-          //  }
-        //}
 
 
         for(int i=0;i<listAccount.size();i++){
@@ -222,11 +211,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 break;
             }
         }
-*/
 
 
         //后面删除
-        accountSpinner.setSelection(1);
+       // accountSpinner.setSelection(1);
     }
 
 
@@ -265,37 +253,36 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
-        /*//设置类别值
+        //设置类别值
 
           CategoryDAO categoryDAO=new CategoryDAOImpl();
           categories=(ArrayList<Category>) categoryDAO.listCategory();
           for(Category cat:categories){
               listData.add(cat.getCategory_name());
-          }*/
+          }
 
 
-        listData.add("学习用品");
+       /* listData.add("学习用品");
         listData.add("生活用品");
         listData.add("娱乐消费");
         listData.add("买菜");
         listData.add("旅游");
-        listData.add("其他");
+        listData.add("其他");*/
 
 
 
-       /* //设置账户值
+        //设置账户值
 
           AccountDAO accountDAO=new AccountDAOImpl();
           accounts = (ArrayList<Account>) accountDAO.listAccount();
           for(Account act:accounts){
-              listData.add(act.getAccount_name());
+              listAccount.add(act.getAccount_name());
           }
-          */
 
 
-        listAccount.add("支付宝账户");
+       /* listAccount.add("支付宝账户");
         listAccount.add("微信账户");
-        listAccount.add("银行账户");
+        listAccount.add("银行账户");*/
 
 
 
