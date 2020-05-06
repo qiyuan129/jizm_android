@@ -292,7 +292,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
           AccountDAO accountDAO=new AccountDAOImpl();
           accounts = (ArrayList<Account>) accountDAO.listAccount();
           for(Account act:accounts){
-              listData.add(act.getAccount_name());
+              listAccount.add(act.getAccount_name());
           }
 
 
@@ -463,8 +463,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         builder.setPositiveButton("是" ,  null );
 
         //输入框为空
-        if(TextUtils.isEmpty(BillMoneyEdit.getText())||
-               TextUtils.isEmpty(BillMoneyEdit.getText())){
+        if(TextUtils.isEmpty(BillMoneyEdit.getText())|| TextUtils.isEmpty(BillNameEdit.getText())){
             builder.show();
             return false;
        }

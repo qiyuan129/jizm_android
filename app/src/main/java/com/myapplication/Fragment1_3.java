@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class Fragment1_3 extends Fragment {
 
 
 
-        /*//初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
+       /* //初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
         Date date=new Date();
         Date date1= new Date(2020-1900, 3, 1);
         Date date2= new Date(2020-1900, 11, 1);
@@ -92,8 +93,8 @@ public class Fragment1_3 extends Fragment {
         periodic=new Periodic(2,1,2,1,0,"打车",2,date1,date2,6.2,1,date);
         periodicDAO.addPeriodic(periodic);
 
-        /////////////////*/
-
+        /////////////////
+*/
 
 
         //初始化数据数组
@@ -286,12 +287,14 @@ class BillListAdapter extends ArrayAdapter<Bill> {
         Bill  billItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
         TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date = formatter.format(billItem.getBill_date());
 
 
         /*
         设置bill项目的值，信息
          */
-        textView.setText(billItem.getBill_name()+"  "+billItem.getBill_money());
+        textView.setText(billItem.getBill_name()+"      "+billItem.getBill_money()+"      "+date);
         return view;
     }
 

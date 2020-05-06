@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <TextView
         android:id="@+id/bill_item_text"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="账单内容 fjvnnk"/>
+        android:background="#F0FFF0"
+        android:textSize="17sp"
+        android:text="账单内容"/>
+
+   <!-- <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:orientation="horizontal"
+        android:rowCount="6" />-->
+
+
+
+
 
 
 
