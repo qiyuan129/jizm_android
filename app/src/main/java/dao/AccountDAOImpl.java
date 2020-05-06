@@ -76,14 +76,14 @@ public class AccountDAOImpl implements AccountDAO {
         Cursor cursor = db.query("account",null,"account_id = ?",new String[]{""+id},null,null,null);
         if (cursor.moveToFirst())
         {
-            int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+            int account_id=cursor.getInt(cursor.getColumnIndex("account_id"));
             int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
-            String category_name=cursor.getString(cursor.getColumnIndex("category_name"));
-            int type=cursor.getInt(cursor.getColumnIndex("type"));
+            String account_name=cursor.getString(cursor.getColumnIndex("account_name"));
+            double money=cursor.getDouble(cursor.getColumnIndex("money"));
             int state=cursor.getInt(cursor.getColumnIndex("state"));
             Date anchor=new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
+            account=new Account(account_id,user_id,account_name,money,state,anchor);
 
-            account=new Account(category_id,user_id,category_name,type,state,anchor);
         }
         cursor.close();
         return account;
