@@ -39,11 +39,11 @@ public class AlarmActivity extends Activity {
         long timeDistance = getDistance();
 
         //实际使用，晚上12点开始，每天12点运行一次
-        //aManager.setRepeating(AlarmManager.RTC_WAKEUP,timeDistance,24*60*60*1000,pi);
+        aManager.setRepeating(AlarmManager.RTC_WAKEUP,timeDistance,24*60*60*1000,pi);
 
 
         //实验用，后面删除   当前开始，每隔三分钟运行一次
-        aManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+1000,24*60*60*1000,pi);
+        //aManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+1000,24*60*60*1000,pi);
 
 
     }
@@ -53,7 +53,7 @@ public class AlarmActivity extends Activity {
    获取当前时间到今晚24点的毫秒数
     */
     public long getDistance(){
-        long distance=0;
+        long distance;
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
