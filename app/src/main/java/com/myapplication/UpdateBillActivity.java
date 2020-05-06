@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.BillDAO;
 import dao.BillDAOImpl;
 import dao.CategoryDAO;
@@ -170,7 +172,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     public void setDefaultPsinnerItem(){
         //dao的代码还没好，先注释掉
         //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
-       /* int catId = bill.getCategory_id();
+        int catId = bill.getCategory_id();
         CategoryDAO catDAO = new CategoryDAOImpl();
         Category category = catDAO.getCategoryById(catId);
         String categoryName = category.getCategory_name();
@@ -179,10 +181,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 spinner.setSelection(i);
                 break;
             }
-        }*/
+        }
 
 
-        spinner.setSelection(1);
+        //spinner.setSelection(1);
 
 
     }
@@ -190,22 +192,11 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
     public void setDefaultAccountItem(){
-       /* //dao的代码还没好，先注释掉
-        int actId = periodic.getAccount_id();
-        //CategoryDAO catDAO = new CategoryDAOImpl();
+        //dao的代码还没好，先注释掉
+        int actId = bill.getAccount_id();
         AccountDAO actDAO = new AccountDAOImpl();
-        //Category category = catDAO.getById(catId);
         Account account = actDAO.getAccountById(actId);
-       // String categoryName = category.getCategory_name();
         String accountName = account.getAccount_name();
-
-      //  for(int i=0;i<listData.size();i++){
-          //  if(categoryName.equals(listData.get(i))){
-           //     spinner.setSelection(i);
-           //     break;
-          //  }
-        //}
-
 
         for(int i=0;i<listAccount.size();i++){
             if(accountName.equals(listAccount.get(i))){
@@ -213,11 +204,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 break;
             }
         }
-*/
 
 
         //后面删除
-        accountSpinner.setSelection(1);
+        //accountSpinner.setSelection(1);
     }
 
 
@@ -279,35 +269,36 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
 
-       /* //设置类别值
+        //设置类别值
 
         CategoryDAO categoryDAO=new CategoryDAOImpl();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
         for(Category cat:categories){
             listData.add(cat.getCategory_name());
         }
-*/
 
-        listData.add("学习用品");
+
+        /*listData.add("学习用品");
         listData.add("生活用品");
         listData.add("娱乐消费");
         listData.add("买菜");
         listData.add("旅游");
-        listData.add("其他");
+        listData.add("其他");*/
 
 
 
-          /*//设置账户值
+          //设置账户值
 
           AccountDAO accountDAO=new AccountDAOImpl();
           accounts = (ArrayList<Account>) accountDAO.listAccount();
           for(Account act:accounts){
               listData.add(act.getAccount_name());
-          }*/
+          }
 
-        listAccount.add("支付宝账户");
+
+      /*  listAccount.add("支付宝账户");
         listAccount.add("微信账户");
-        listAccount.add("银行账户");
+        listAccount.add("银行账户");*/
 
 
 
@@ -359,14 +350,13 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             view.setText("你的选择是："+ listData.get(arg2));
-            //设置类别
-            //adapter和listData顺序应该是一样的吧
+
 
             //设置Category_id 记得去掉注释
-            //categoryId = categories.get(arg2).getCategory_id();
+            categoryId = categories.get(arg2).getCategory_id();
 
             //测试用，后面删除
-            categoryId=0;
+            //categoryId=0;
 
 
         }
@@ -384,14 +374,12 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             accountView.setText("你的选择是："+ listAccount.get(arg2));
 
-
-
             //设置Account_id 记得去掉注释
-            //  accountId = accounts.get(arg2).getAccount_id();
+            accountId = accounts.get(arg2).getAccount_id();
 
 
             //测试用，后面删除
-            accountId=0;
+            //accountId=0;
 
 
         }

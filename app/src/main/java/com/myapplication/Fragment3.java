@@ -314,6 +314,8 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
      */
     private boolean deletePeriodic(int id){
         Periodic delPeriodic = periodics.get(id);
+        //标记为删除
+        delPeriodic.setState(-1);
 
         //从数据库里删除
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();

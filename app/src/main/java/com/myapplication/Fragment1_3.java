@@ -51,7 +51,7 @@ public class Fragment1_3 extends Fragment {
 
 
 
-       /* //初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
+        /*//初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
         Date date=new Date();
         Date date1= new Date(2020-1900, 3, 1);
         Date date2= new Date(2020-1900, 11, 1);
@@ -63,10 +63,12 @@ public class Fragment1_3 extends Fragment {
         BillDAO billDAO=new BillDAOImpl();
         CategoryDAO categoryDAO=new CategoryDAOImpl();
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+
         account=new Account(1,1,"微信",500,1,date);
         accountDAO.insertAccount(account);
         account=new Account(2,1,"支付宝",800,1,date);
         accountDAO.insertAccount(account);
+
         bill=new Bill(1,1,1,1,0,"早餐",date,5,1,date);
         billDAO.insertBill(bill);
         bill=new Bill(2,1,1,1,0,"午饭",date,10,1,date);
@@ -77,12 +79,14 @@ public class Fragment1_3 extends Fragment {
         billDAO.insertBill(bill);
         bill=new Bill(5,1,3,1,1,"分红",date,3000,1,date);
         billDAO.insertBill(bill);
+
         category=new Category(1,1,"饮食",0,1,date);
         categoryDAO.insertCategory(category);
         category=new Category(2,1,"出行",0,1,date);
         categoryDAO.insertCategory(category);
         category=new Category(3,1,"收入",1,1,date);
         categoryDAO.insertCategory(category);
+
         periodic=new Periodic(1,1,1,1,0,"吃饭",1,date1,date2,6.2,1,date);
         periodicDAO.addPeriodic(periodic);
         periodic=new Periodic(2,1,2,1,0,"打车",2,date1,date2,6.2,1,date);
@@ -239,6 +243,8 @@ public class Fragment1_3 extends Fragment {
     private boolean deleteBill(int id){
 
         Bill delBill = billList.get(id);
+        //标记为删除
+        delBill.setState(-1);
         //从数据库中删除
         BillDAO billDAO = new BillDAOImpl();
         billDAO.deleteBill(delBill.getBill_id());
