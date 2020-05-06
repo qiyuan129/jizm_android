@@ -46,10 +46,7 @@ import util.User;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
-    private Context mContext;
     private CategoryChooseAdapter categoryChooseAdapter;
-
-    private User user;
 
     private List<Category> categoryList = new ArrayList<>();
     private List<Account> accountList = new ArrayList<>();
@@ -140,12 +137,40 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         initCategory();
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
+        initsortTv();
+
+//        //分类文本初始化
+//        CategoryDAO categoryDAO = new CategoryDAOImpl();
+//        categoryList = categoryDAO.listCategory();
+//        List<String> init_outcome_category_name = new ArrayList<>();
+//        List<String> init_income_category_name = new ArrayList<>();
+//        List<Integer> init_outcome_category_id = new ArrayList<>();
+//        List<Integer> init_income_category_id = new ArrayList<>();
+//
+//        for (int j = 0; j < categoryList.size(); j++) {
+//            Category category = (Category)categoryList.get(j);
+//            if (category.getType() == 0) {
+//                init_outcome_category_name.add(category.getCategory_name());
+//                init_outcome_category_id.add(category.getCategory_id());
+//            } else {
+//                init_income_category_name.add(category.getCategory_name());
+//                init_income_category_id.add(category.getCategory_id());
+//            }
+//        }
+//        if (isIncome == 0) {
+//            sortTv.setText(init_outcome_category_name.get(0));
+//            category_id = init_outcome_category_id.get(0);
+//        } else {
+//            sortTv.setText(init_income_category_name.get(0));
+//            category_id = init_income_category_id.get(0);
+//        }
 
         categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                Category categorytest = categoryList.get(position);
-                sortTv.setText(categorytest.getCategory_name());
+                Category category = categoryList.get(position);
+                sortTv.setText(category.getCategory_name());
+                category_id = category.getCategory_id();
             }
         });
 
@@ -209,11 +234,13 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.income_tv:
                 isIncome = 1;
                 initCategory();
+                initsortTv();
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
                         Category category = categoryList.get(position);
                         sortTv.setText(category.getCategory_name());
+                        category_id = category.getCategory_id();
                     }
                 });
                 Log.d("Fragment","收入");
@@ -221,11 +248,13 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             case R.id.outcome_tv:
                 isIncome = 0;
                 initCategory();
+                initsortTv();
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
                         Category category = categoryList.get(position);
                         sortTv.setText(category.getCategory_name());
+                        category_id = category.getCategory_id();
                     }
                 });
                 Log.d("Fragment","支出");
@@ -377,7 +406,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
                 .input("备注", remarkInput, (dialog, input) -> {
                     if (input.equals("")) {
-                        Toast.makeText(getContext(), "内容不能为空！" + input,
+                        Toast.makeText(getActivity(), "内容不能为空！" + input,
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         remarkInput = input.toString();
@@ -460,6 +489,15 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         BillDAO billDAO = new BillDAOImpl();
         billDAO.insertBill(bill);
 
+        Toast.makeText(getActivity(), "添加成功！", Toast.LENGTH_SHORT).show();
+
+        //页面数据清空
+        num = "0";
+        dotNum = ".00";
+        moneyTv.setText("0.00");
+        remarkInput = "";
+        initsortTv();
+        cashTv.setText("现金");
     }
 
     private void initCategory() {
@@ -516,4 +554,33 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
         recyclerView.setAdapter(categoryChooseAdapter);
     }
+
+    //分类文本初始化
+    private void initsortTv() {
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        categoryList = categoryDAO.listCategory();
+        List<String> init_outcome_category_name = new ArrayList<>();
+        List<String> init_income_category_name = new ArrayList<>();
+        List<Integer> init_outcome_category_id = new ArrayList<>();
+        List<Integer> init_income_category_id = new ArrayList<>();
+
+        for (int j = 0; j < categoryList.size(); j++) {
+            Category category = (Category)categoryList.get(j);
+            if (category.getType() == 0) {
+                init_outcome_category_name.add(category.getCategory_name());
+                init_outcome_category_id.add(category.getCategory_id());
+            } else {
+                init_income_category_name.add(category.getCategory_name());
+                init_income_category_id.add(category.getCategory_id());
+            }
+        }
+        if (isIncome == 0) {
+            sortTv.setText(init_outcome_category_name.get(0));
+            category_id = init_outcome_category_id.get(0);
+        } else {
+            sortTv.setText(init_income_category_name.get(0));
+            category_id = init_income_category_id.get(0);
+        }
+    }
+
 }
