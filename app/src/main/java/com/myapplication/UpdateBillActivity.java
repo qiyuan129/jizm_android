@@ -531,6 +531,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         bill.setBill_date(date);
 
 
+        //设置章台为本地更新
+        bill.setState(1);
+
+
         Log.i("bill_name: ",bill.getBill_name());
         Log.i("bill_money: ",String.valueOf(bill.getBill_money()));
         Log.i("bill_type: ",String.valueOf(bill.getType()));

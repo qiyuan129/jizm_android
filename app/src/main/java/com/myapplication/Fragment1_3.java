@@ -243,6 +243,8 @@ public class Fragment1_3 extends Fragment {
     private boolean deleteBill(int id){
 
         Bill delBill = billList.get(id);
+        //标记为删除
+        delBill.setState(-1);
         //从数据库中删除
         BillDAO billDAO = new BillDAOImpl();
         billDAO.deleteBill(delBill.getBill_id());

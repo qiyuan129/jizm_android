@@ -103,7 +103,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     int typeId;
     int categoryId;
     int accountId;
-    int state=0;
+    int state=0;//本地新增
 
 
 

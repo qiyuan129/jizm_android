@@ -477,6 +477,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         periodic.setType(typeId);
         periodic.setCategory_id(categoryId);
         periodic.setAccount_id(accountId);
+        periodic.setState(1);
 
         //存入数据库
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
