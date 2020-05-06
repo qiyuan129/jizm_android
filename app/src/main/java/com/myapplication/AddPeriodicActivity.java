@@ -48,7 +48,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
 
-    public ArrayList<String> listAccount=new ArrayList<String>();
+    public ArrayList<String> listAccount = new ArrayList<String>();
     private TextView accountView ;
     private Spinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
@@ -118,13 +118,6 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         init();
         setData();
-
-
-        ////   启动服务
-
-        Intent intent1 = new Intent(this, AlarmService.class);
-        startService(intent1);
-        ////
 
 
         //将可选内容与ArrayAdapter连接起来
@@ -256,7 +249,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
 
-       /* //测试用，后面删除
+        //测试用，后面删除
         if(categories==null){
             categories = new ArrayList<Category>();
         }
@@ -277,7 +270,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             listAccount.add("微信账户");
             listAccount.add("银行账户");
 
-        }*/
+        }
 
 
 
@@ -564,7 +557,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
          */
         public void setRecycleId(int id){
           /*
-          将周期id
+          将周期设为多少天就可以了
            */
 
          Log.i("周期id将被设置为： ",String.valueOf(id));

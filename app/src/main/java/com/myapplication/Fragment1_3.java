@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.content.Intent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,9 +93,6 @@ public class Fragment1_3 extends Fragment {
         periodicDAO.addPeriodic(periodic);
 
         /////////////////*/
-
-
-
 
 
 
