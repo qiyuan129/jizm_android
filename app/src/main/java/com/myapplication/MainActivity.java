@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         //Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
         //startService(intent1);
 
-//        Date date=new Date("2020/12/2");
+//        Date date=new Date("2020/1/2");
 //        Date date1= new Date(2020-1900, 1, 1);
 //        Date date2= new Date(2020-1900, 11, 1);
 //        Account account=null;

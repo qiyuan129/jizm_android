@@ -223,8 +223,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         bill= billDAO.getBillById(id);
 
 
-       //实验用，后面删除
-       // bill = new Bill(1,3,1,5,1,"早餐",new Date(12457244),32.2,2, null);
+
 
 
         //设置开始结束时间
@@ -355,8 +354,6 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             //设置Category_id 记得去掉注释
             categoryId = categories.get(arg2).getCategory_id();
 
-            //测试用，后面删除
-            //categoryId=0;
 
 
         }
@@ -376,10 +373,6 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
             //设置Account_id 记得去掉注释
             accountId = accounts.get(arg2).getAccount_id();
-
-
-            //测试用，后面删除
-            //accountId=0;
 
 
         }
@@ -462,8 +455,12 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         builder.setMessage("账单信息有误，请检查" ) ;
         builder.setPositiveButton("是" ,  null );
 
+        Log.i(BillMoneyEdit.getText().toString()+"  ",BillNameEdit.getText().toString());
         //输入框为空
         if(TextUtils.isEmpty(BillMoneyEdit.getText())|| TextUtils.isEmpty(BillNameEdit.getText())){
+
+            Log.i(BillMoneyEdit.getText().toString()+"  ",BillNameEdit.getText().toString());
+            builder.setMessage("账单信息名称或金额为空！" ) ;
             builder.show();
             return false;
        }
@@ -473,7 +470,8 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         try {
             Date date= new SimpleDateFormat("yyyy-MM-dd").parse(days);
             Date now = new Date();
-            if(date.compareTo(now)==1){//输入事件比当前时间大，错误
+            if(date.compareTo(now)==1){//输入时间比当前时间大，错误
+                builder.setMessage("时间不能大于当前" ) ;
                 builder.show();
                 return false;
             }
