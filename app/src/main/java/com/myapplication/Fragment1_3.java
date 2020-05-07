@@ -286,15 +286,34 @@ class BillListAdapter extends ArrayAdapter<Bill> {
     public View getView(int position, View convertView, ViewGroup parent){
         Bill  billItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-        TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
+
+        TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
+        TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
+        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
+        TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
+
+
+        String billType = null;
+        if(billItem.getType()==0){
+            billType = "支出";
+        }
+        else {
+            billType = "收入";
+        }
+
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String date = formatter.format(billItem.getBill_date());
-
-
+        String dateStr = formatter.format(billItem.getBill_date());
         /*
         设置bill项目的值，信息
          */
-        textView.setText(billItem.getBill_name()+"      "+billItem.getBill_money()+"      "+date);
+
+        nametext.setText(billItem.getBill_name());
+        moneyText.setText(String.valueOf(billItem.getBill_money()));
+        typeText.setText(billType);
+        dateText.setText(dateStr);
+
+
         return view;
     }
 

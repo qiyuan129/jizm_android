@@ -132,13 +132,13 @@ class BillListItemAdapter extends ArrayAdapter<Bill>{
     public View getView(int position, View convertView, ViewGroup parent){
         Bill  billItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-        TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
+        //TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
 
 
         /*
         设置bill项目的值，信息
          */
-        textView.setText(billItem.getBill_name()+"  "+billItem.getBill_money());
+        //textView.setText(billItem.getBill_name()+"  "+billItem.getBill_money());
         return view;
     }
 
