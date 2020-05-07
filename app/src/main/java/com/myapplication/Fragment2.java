@@ -139,32 +139,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
         initsortTv();
 
-//        //分类文本初始化
-//        CategoryDAO categoryDAO = new CategoryDAOImpl();
-//        categoryList = categoryDAO.listCategory();
-//        List<String> init_outcome_category_name = new ArrayList<>();
-//        List<String> init_income_category_name = new ArrayList<>();
-//        List<Integer> init_outcome_category_id = new ArrayList<>();
-//        List<Integer> init_income_category_id = new ArrayList<>();
-//
-//        for (int j = 0; j < categoryList.size(); j++) {
-//            Category category = (Category)categoryList.get(j);
-//            if (category.getType() == 0) {
-//                init_outcome_category_name.add(category.getCategory_name());
-//                init_outcome_category_id.add(category.getCategory_id());
-//            } else {
-//                init_income_category_name.add(category.getCategory_name());
-//                init_income_category_id.add(category.getCategory_id());
-//            }
-//        }
-//        if (isIncome == 0) {
-//            sortTv.setText(init_outcome_category_name.get(0));
-//            category_id = init_outcome_category_id.get(0);
-//        } else {
-//            sortTv.setText(init_income_category_name.get(0));
-//            category_id = init_income_category_id.get(0);
-//        }
-
         categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
@@ -233,8 +207,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         switch (view.getId()) {
             case R.id.income_tv:
                 isIncome = 1;
-                initCategory();
                 initsortTv();
+                initCategory();
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
@@ -247,8 +221,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 break;
             case R.id.outcome_tv:
                 isIncome = 0;
-                initCategory();
                 initsortTv();
+                initCategory();
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {

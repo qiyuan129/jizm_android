@@ -46,11 +46,11 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     private ImageView backIv;      //返回键
     private ImageView addIv;      //添加按钮
 
-    private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
-            "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
-            "酒店旅行", "爱车养车", "其他"};
-
-    private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
+//    private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
+//            "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
+//            "酒店旅行", "爱车养车", "其他"};
+//
+//    private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
 
     private String edit_category_name = "";
 
@@ -118,6 +118,12 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                             @Override
                             public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                 edit_category_name = input.toString();
+                                //修改分类名称
+                                Category category = new Category(category_id, user_id, edit_category_name, isIncome, state, anchor);
+                                CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                categoryDAO.updateCategory(category);
+                                edit_category_name = "";
+                                initCategory();
                             }
                         })
                         .positiveText("确认修改")
@@ -126,12 +132,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                //修改分类名称
-                                Category category = new Category(category_id, 1, edit_category_name, isIncome, state, anchor);
-                                CategoryDAO categoryDAO = new CategoryDAOImpl();
-                                categoryDAO.updateCategory(category);
-                                initCategory();
-                                edit_category_name = "";
+                                Toast.makeText(CategoryEditActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .onNeutral(new MaterialDialog.SingleButtonCallback() {
@@ -167,7 +168,6 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
-
                 categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
@@ -178,13 +178,6 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                         List<Integer> outcome_category_id2 = new ArrayList<>();
                         List<Integer> income_category_id2 = new ArrayList<>();
                         String category_name2;
-
-//                if (outcome_category_id1 != null) {
-//                    outcome_category_id1.clear();
-//                }
-//                if (income_category_id1 != null) {
-//                    income_category_id1.clear();
-//                }
                         for (int j = 0; j < categoryList.size(); j++) {
                             Category category = (Category)categoryList.get(j);
                             if (category.getType() == 0) {
@@ -209,6 +202,12 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                     @Override
                                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                         edit_category_name = input.toString();
+                                        //修改分类名称
+                                        Category category = new Category(category_id, user_id, edit_category_name, isIncome, state, anchor);
+                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                        categoryDAO.updateCategory(category);
+                                        edit_category_name = "";
+                                        initCategory();
                                     }
                                 })
                                 .positiveText("确认修改")
@@ -217,12 +216,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        //修改分类名称
-                                        Category category = new Category(category_id, 1, edit_category_name, isIncome, state, anchor);
-                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
-                                        categoryDAO.updateCategory(category);
-                                        initCategory();
-                                        edit_category_name = "";
+                                        Toast.makeText(CategoryEditActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .onNeutral(new MaterialDialog.SingleButtonCallback() {
@@ -284,6 +278,12 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                     @Override
                                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                         edit_category_name = input.toString();
+                                        //修改分类名称
+                                        Category category = new Category(category_id, user_id, edit_category_name, isIncome, state, anchor);
+                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                        categoryDAO.updateCategory(category);
+                                        edit_category_name = "";
+                                        initCategory();
                                     }
                                 })
                                 .positiveText("确认修改")
@@ -292,12 +292,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        //修改分类名称
-                                        Category category = new Category(category_id, 1, edit_category_name, isIncome, state, anchor);
-                                        CategoryDAO categoryDAO = new CategoryDAOImpl();
-                                        categoryDAO.updateCategory(category);
-                                        initCategory();
-                                        edit_category_name = "";
+                                        Toast.makeText(CategoryEditActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .onNeutral(new MaterialDialog.SingleButtonCallback() {
