@@ -351,7 +351,7 @@ public class Fragment1_1 extends Fragment {
             e.printStackTrace();
         }
         Calendar endDate = Calendar.getInstance();//最大日期是今天
-
+        endDate.set(endDate.get(Calendar.YEAR)+1,11,31);
         //时间选择器
         mStartDatePickerView = new TimePickerBuilder(mView.getContext(), new OnTimeSelectListener() {
             @Override
