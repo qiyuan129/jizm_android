@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         dbHelper=new MyDatabaseHelper(this,"JiZM",null,1);
-        Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
-        startService(intent1);
+        //Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
+        //startService(intent1);
 
 //        Date date=new Date("2020/12/2");
 //        Date date1= new Date(2020-1900, 1, 1);
