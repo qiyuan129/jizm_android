@@ -43,17 +43,25 @@ public class LongRunningService extends Service {
                 init();
 
                 //Date time = new Date();
-                for(Periodic item:periodics){
-                    check(item);
+                if(periodics==null || periodics.size()==0){//无周期事件可执行，直接返回
+                    return;
                 }
+                else {
+                    for(Periodic item:periodics){
+                        check(item);
+                    }
+
+                }
+
 
                 //Log.i("执行周期事件 "," 开始"+time.toString());
 
                 //Log.i("执行周期事件 "," 结束");
 
-                Log.d("LongRunningService", "executed at " + new Date().toString());
+                Log.d("LongRunningService", "成功执行今天的周期事件检查和执行 " + new Date().toString());
 
             }
+
 
             public void init(){
                 periodicDAO = new PeriodicDAOImpl();
@@ -121,20 +129,22 @@ public class LongRunningService extends Service {
                 double money = obj.getPeriodic_money();
                 int accountId = obj.getAccount_id();
                 Account account = accountDAO.getAccountById(accountId);
-                double accountMoney=account.getMoney();
-
-
-                if(accountMoney>=money){//账户余额充足
-                    account.setMoney(accountMoney-money);
-                    accountDAO.updateAccount(account);
+                if(account==null){
+                    return;
                 }
+                else {
+                    double accountMoney=account.getMoney();
 
-                else{//账户余额不足
+                    if(accountMoney>=money){//账户余额充足
+                        account.setMoney(accountMoney-money);
+                        accountDAO.updateAccount(account);
+                    }
 
+                    else{//账户余额不足,放弃执行
+                        Log.d("LongRunningService:", "账户余额不足，周期事件放弃执行" + new Date().toString());
+                        return;
+                    }
                 }
-
-
-
 
             }
 
