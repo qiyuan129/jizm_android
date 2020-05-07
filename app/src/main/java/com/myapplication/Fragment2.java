@@ -51,12 +51,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private List<Category> categoryList = new ArrayList<>();
     private List<Account> accountList = new ArrayList<>();
 
-    private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
-            "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
-            "酒店旅行", "爱车养车", "其他"};
-
-    private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
-
     //属性
     private int category_id = 1;
     private int user_id = 1;
@@ -65,8 +59,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private Date bill_date = new Date();
     private int state = 1;
     private Date anchor= new Date();
-    //记录类别（收入/支出）
-    public int isIncome = 0;
+    public int isIncome = 0;         //记录类别（收入/支出）
 
     private RecyclerView recyclerView;
     private Button incomeTv;        //收入按钮
@@ -76,6 +69,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private TextView moneyTv;       //金额
     private TextView dateTv;        //日期选择
     private TextView cashTv;        //支出账户
+
     //数字键盘
     private TextView num1;
     private TextView num2;
@@ -94,10 +88,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private ImageView remarkIv;        //备注
     private RelativeLayout delect;     //数字键盘回格键
 
-    //选择器
-    protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
-
-    //选择时间
+    //时间选择器
     protected String days;
     protected int mYear;
     protected int mMonth;
@@ -538,23 +529,28 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         List<Integer> init_outcome_category_id = new ArrayList<>();
         List<Integer> init_income_category_id = new ArrayList<>();
 
-        for (int j = 0; j < categoryList.size(); j++) {
-            Category category = (Category)categoryList.get(j);
-            if (category.getType() == 0) {
-                init_outcome_category_name.add(category.getCategory_name());
-                init_outcome_category_id.add(category.getCategory_id());
-            } else {
-                init_income_category_name.add(category.getCategory_name());
-                init_income_category_id.add(category.getCategory_id());
+        if (categoryList.size() != 0){
+            for (int j = 0; j < categoryList.size(); j++) {
+                Category category = (Category)categoryList.get(j);
+                if (category.getType() == 0) {
+                    init_outcome_category_name.add(category.getCategory_name());
+                    init_outcome_category_id.add(category.getCategory_id());
+                } else {
+                    init_income_category_name.add(category.getCategory_name());
+                    init_income_category_id.add(category.getCategory_id());
+                }
+            }
+
+            if (isIncome == 0 && init_outcome_category_name.size() != 0) {
+                sortTv.setText(init_outcome_category_name.get(0));
+                category_id = init_outcome_category_id.get(0);
+            } else if (isIncome == 1 && init_income_category_name.size() != 0){
+                sortTv.setText(init_income_category_name.get(0));
+                category_id = init_income_category_id.get(0);
             }
         }
-        if (isIncome == 0) {
-            sortTv.setText(init_outcome_category_name.get(0));
-            category_id = init_outcome_category_id.get(0);
-        } else {
-            sortTv.setText(init_income_category_name.get(0));
-            category_id = init_income_category_id.get(0);
-        }
+
     }
+
 
 }
