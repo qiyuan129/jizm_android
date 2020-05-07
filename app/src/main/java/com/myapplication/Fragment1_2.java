@@ -254,12 +254,10 @@ public class Fragment1_2 extends Fragment
             }
             if(i>0)
             {
-                Bill c1 = dbDataOut.get(i-1);
-                categoryname = categoryDAO.getCategoryById(c1.getCategory_id()).getCategory_name();
-                dateString = df.format(c1.getBill_date());
-                mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
+                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
+                dateString = df.format(dbDataOut.get(i-1).getBill_date());
+                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
             }
-            //mcategoryList.add(new CategoryListItem(i,"支出测试",20,"支出测试"));
         }
         else {
             i=0;
@@ -273,12 +271,10 @@ public class Fragment1_2 extends Fragment
             }
             if(i>0)
             {
-                Bill c1 = dbDataOut.get(i-1);
-                categoryname = categoryDAO.getCategoryById(c1.getCategory_id()).getCategory_name();
-                dateString = df.format(c1.getBill_date());
-                mcategoryList.add(new CategoryListItem(i+1,categoryname,c1.getBill_money(),dateString));
+                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
+                dateString = df.format(dbDataOut.get(i-1).getBill_date());
+                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
             }
-            //mcategoryList.add(new CategoryListItem(i,"收入测试",20,"收入测试"));
         }
         return mcategoryList;
     }
@@ -403,11 +399,12 @@ public class Fragment1_2 extends Fragment
         //设置最小日期和最大日期
         Calendar startDate = Calendar.getInstance();
         try {
-            startDate.setTime(DateTimeHelper.parseStringToDate("1970-01-01"));//设置为2006年4月28日
+            startDate.setTime(DateTimeHelper.parseStringToDate("2010-01-01"));//设置为2006年4月28日
         } catch (ParseException e) {
             e.printStackTrace();
         }
         Calendar endDate = Calendar.getInstance();//最大日期是今天
+        endDate.set(endDate.get(Calendar.YEAR)+1,11,31);
 
         //时间选择器
         mStartDatePickerView1 = new TimePickerBuilder(mView.getContext(), new OnTimeSelectListener() {
@@ -444,12 +441,13 @@ public class Fragment1_2 extends Fragment
         //设置最小日期和最大日期
         Calendar startDate = Calendar.getInstance();
         try {
-            startDate.setTime(DateTimeHelper.parseStringToDate("1970-01-01"));//设置为2006年4月28日
+            startDate.setTime(DateTimeHelper.parseStringToDate("2010-01-01"));//设置为2006年4月28日
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        //Calendar endDate = Calendar.getInstance();//最大日期是今天
         Calendar endDate = Calendar.getInstance();//最大日期是今天
-
+        endDate.set(endDate.get(Calendar.YEAR)+1,11,31);
         //时间选择器
         mStartDatePickerView2 = new TimePickerBuilder(mView.getContext(), new OnTimeSelectListener() {
             @Override
