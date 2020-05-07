@@ -315,10 +315,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 showStartDateSelector();
                 break;
 
-            case R.id.bill_update_income:
+            case R.id.bill_update_outcome:
                 setBillType(0);//0代表支出
                 break;
-            case R.id.bill_update_outcome:
+            case R.id.bill_update_income:
                 setBillType(1);//1代表收入
                 break;
 
