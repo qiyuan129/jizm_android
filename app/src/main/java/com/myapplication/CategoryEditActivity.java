@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,7 +75,6 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         recycleView.setLayoutManager(layoutManager);
 
         initCategory();
-//        setCategoryChooseAdapter();
     }
 
     @Override
@@ -83,6 +83,8 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.back_btn:
                 setResult(RESULT_OK, new Intent());
                 finish();
+//                Intent intent = new Intent(CategoryEditActivity.this, MainActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.add_btn:
                 showContentDialog();
@@ -90,12 +92,10 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
-//                setCategoryChooseAdapter();
                 break;
             case R.id.tb_note_outcome:
                 isIncome = 0;
                 initCategory();
-//                setCategoryChooseAdapter();
                 break;
         }
     }
@@ -104,25 +104,38 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     public void showContentDialog() {
         new MaterialDialog.Builder(this)
                 .title("添加分类")
-                .inputType(InputType.TYPE_CLASS_TEXT)
+                .canceledOnTouchOutside(false)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
-                .input("分类名称", null, (dialog, input) -> {
-                    if (input.equals("")) {
-                        Toast.makeText(this, "内容不能为空！" + input, Toast.LENGTH_SHORT).show();
-                    } else {
-                        //添加新分类
-                        Category category = new Category(1, 1, input.toString(), isIncome, state, anchor);
-                        CategoryDAO categoryDAO = new CategoryDAOImpl();
-                        categoryDAO.insertCategory(category);
-                        initCategory();
-                        Log.d("CategoryEditActivity","添加新分类");
+                .input("分类名称", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
                     }
                 })
                 .positiveText("确定")
+                .negativeText("取消")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Toast.makeText(CategoryEditActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+                        if (TextUtils.isEmpty(dialog.getInputEditText().getText().toString())) {
+                            Toast.makeText(CategoryEditActivity.this, "您没有输入分类名称", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            dialog = null;
+                            return;
+                        } else {
+                            Category category = new Category(1, 1, dialog.getInputEditText().getText().toString(), isIncome, state, anchor);
+                            CategoryDAO categoryDAO = new CategoryDAOImpl();
+                            categoryDAO.insertCategory(category);
+                            initCategory();
+                            Toast.makeText(CategoryEditActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                        dialog = null;
                     }
                 })
                 .show();
@@ -160,16 +173,11 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                 }
                 new MaterialDialog.Builder(CategoryEditActivity.this)
                         .title("修改分类")
-                        .input(category_name1, null, new MaterialDialog.InputCallback() {
+                        .canceledOnTouchOutside(false)
+                        .input(category_name1, "", new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                edit_category_name = input.toString();
-                                //修改分类名称
-                                Category category = new Category(category_id, user_id, edit_category_name, isIncome, state, anchor);
-                                CategoryDAO categoryDAO = new CategoryDAOImpl();
-                                categoryDAO.updateCategory(category);
-                                edit_category_name = "";
-                                initCategory();
+
                             }
                         })
                         .positiveText("确认修改")
@@ -178,7 +186,21 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                Toast.makeText(CategoryEditActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
+                                if (TextUtils.isEmpty(dialog.getInputEditText().getText().toString())) {
+                                    Toast.makeText(CategoryEditActivity.this, "您没有输入分类名称", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    dialog = null;
+                                    return;
+                                } else {
+                                    //修改分类名称
+                                    edit_category_name = dialog.getInputEditText().getText().toString();
+                                    Category category = new Category(category_id, user_id, edit_category_name, isIncome, state, anchor);
+                                    CategoryDAO categoryDAO = new CategoryDAOImpl();
+                                    categoryDAO.updateCategory(category);
+                                    edit_category_name = "";
+                                    initCategory();
+                                    Toast.makeText(CategoryEditActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         })
                         .onNeutral(new MaterialDialog.SingleButtonCallback() {

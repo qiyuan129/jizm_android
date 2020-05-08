@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -121,14 +124,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
         edittypeTv.setOnClickListener(this);
 
+        sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
+
         recyclerView = (RecyclerView) mView.findViewById(R.id.category_recycle_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
         recyclerView.setLayoutManager(layoutManager);
-        //分类展示
-        initCategory();
 
-        sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
         initsortTv();
+        initCategory();
 
         categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
             @Override
@@ -362,22 +365,43 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         },mYear,mMonth,mDays).show();
     }
 
-    //显示备注内容输入框
+    //显示账单名称输入框
     public void showContentDialog() {
         new MaterialDialog.Builder(getActivity())
-                .title("备注")
+                .title("账单名称")
                 .canceledOnTouchOutside(false)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
-                .input("备注", remarkInput, (dialog, input) -> {
-                    if (input.equals("")) {
-                        Toast.makeText(getActivity(), "内容不能为空！" + input,
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        remarkInput = input.toString();
+                .input("名称", sortTv.getText(), new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
                     }
                 })
                 .positiveText("确定")
+                .negativeText("取消")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (TextUtils.isEmpty(dialog.getInputEditText().getText().toString())) {
+                            Toast.makeText(getActivity(), "您没有输入账单名称", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            dialog = null;
+                            return;
+                        } else {
+                            remarkInput = dialog.getInputEditText().getText().toString();
+                            dialog.dismiss();
+                            dialog = null;
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                        dialog = null;
+                    }
+                })
                 .show();
     }
 
@@ -431,7 +455,11 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     public void doCommit() {
         if ((num + dotNum).equals("0.00")) {
-            Toast.makeText(getActivity(), "请输入金额", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "请输入账单金额", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (remarkInput == "") {
+            Toast.makeText(getActivity(), "请输入账单名称", Toast.LENGTH_SHORT).show();
             return;
         }
         String categorySelect = String.valueOf(sortTv.getText());
@@ -466,7 +494,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initCategory() {
-        //取出分类名称、id
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categoryList = categoryDAO.listCategory();
         List<String> outcome_category = new ArrayList<>();
@@ -549,7 +576,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 category_id = init_income_category_id.get(0);
             }
         }
-
     }
 
 
