@@ -17,7 +17,8 @@ public class CategoryChooseAdapter extends RecyclerView.Adapter<CategoryChooseAd
     public interface OnItemClickListener {
         void onClick(int position);
     }
-    private OnItemClickListener listener;
+
+    public OnItemClickListener listener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView categoryName;
