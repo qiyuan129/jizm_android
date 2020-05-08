@@ -35,7 +35,13 @@ public class LongRunningService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new Thread(new Runnable() {
+        /*
+        现在的实现是每次启动获取当前时间，计算现在到24点的时间间隔，然后定在24点执行周期事件
+         */
+
+
+
+     /*   new Thread(new Runnable() {
             ArrayList<Periodic> periodics;
             PeriodicDAO periodicDAO;
             AccountDAO accountDAO;
@@ -173,10 +179,12 @@ public class LongRunningService extends Service {
 
 
 
-        }).start();
+        }).start();*/
 
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
+        //long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
+        long Hours = getDistance();//当前到24点间隔的毫秒数
+
         //long triggerAtTime = SystemClock.elapsedRealtime() + Hours;
         long triggerAtTime = SystemClock.elapsedRealtime() + Hours;//定时到这个时间点执行这项任务
 
@@ -191,6 +199,26 @@ public class LongRunningService extends Service {
 
 
 
+    /*
+   获取当前时间到今晚24点的毫秒数
+    */
+    public long getDistance(){
+        long distance=0;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date time = calendar.getTime();
+        Date now = new Date();
+        distance=time.getTime()-now.getTime();
+
+        Log.i("当前时间： ",now.toString());
+        Log.i("当前到24点间隔毫秒数： ",String.valueOf(distance));
+
+        return distance;
+    }
 
 
 
