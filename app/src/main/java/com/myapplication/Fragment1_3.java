@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class Fragment1_3 extends Fragment {
 
 
 
-        /*//初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
+       /* //初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
         Date date=new Date();
         Date date1= new Date(2020-1900, 3, 1);
         Date date2= new Date(2020-1900, 11, 1);
@@ -92,8 +93,8 @@ public class Fragment1_3 extends Fragment {
         periodic=new Periodic(2,1,2,1,0,"打车",2,date1,date2,6.2,1,date);
         periodicDAO.addPeriodic(periodic);
 
-        /////////////////*/
-
+        /////////////////
+*/
 
 
         //初始化数据数组
@@ -222,14 +223,6 @@ public class Fragment1_3 extends Fragment {
         billList=billDao.listBill();
 
 
-      /*  //实验用，后面删除
-        billList = new ArrayList<>();
-        for(int i=0;i<=20;i++){
-            Bill bill = new Bill(i,23,2,25,
-                    1,"学习用品:"+i,new Date(546524),36.5,2,null);
-            billList.add(bill);
-        }*/
-
 
 
 
@@ -243,6 +236,8 @@ public class Fragment1_3 extends Fragment {
     private boolean deleteBill(int id){
 
         Bill delBill = billList.get(id);
+        //标记为删除
+        delBill.setState(-1);
         //从数据库中删除
         BillDAO billDAO = new BillDAOImpl();
         billDAO.deleteBill(delBill.getBill_id());
@@ -283,13 +278,34 @@ class BillListAdapter extends ArrayAdapter<Bill> {
     public View getView(int position, View convertView, ViewGroup parent){
         Bill  billItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-        TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
+
+        TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
+        TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
+        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
+        TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
 
 
+        String billType = null;
+        if(billItem.getType()==0){
+            billType = "支出";
+        }
+        else {
+            billType = "收入";
+        }
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = formatter.format(billItem.getBill_date());
         /*
         设置bill项目的值，信息
          */
-        textView.setText(billItem.getBill_name()+"  "+billItem.getBill_money());
+
+        nametext.setText(billItem.getBill_name());
+        moneyText.setText(String.valueOf(billItem.getBill_money()));
+        typeText.setText(billType);
+        dateText.setText(dateStr);
+
+
         return view;
     }
 

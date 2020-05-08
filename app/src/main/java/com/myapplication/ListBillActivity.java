@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
@@ -74,19 +76,9 @@ public class ListBillActivity extends AppCompatActivity {
 
 
     private void initBills(String category){
-       /*
-       实际代码
+       //实际代码
         BillDAO billDao = new BillDAOImpl();
-        billList=billDao.listByCategory(category);
-        */
-
-        //实验用，后面删除
-        billList = new ArrayList<>();
-        for(int i=0;i<=20;i++){
-            Bill bill = new Bill(i,23,2,25,
-                    1,"学习用品:"+i,new Date(2452777),36.5,2,null);
-            billList.add(bill);
-        }
+        billList=billDao.listBill();
 
 
     }
@@ -132,13 +124,13 @@ class BillListItemAdapter extends ArrayAdapter<Bill>{
     public View getView(int position, View convertView, ViewGroup parent){
         Bill  billItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-        TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
+        //TextView textView = (TextView)view.findViewById(R.id.bill_item_text);
 
 
         /*
         设置bill项目的值，信息
          */
-        textView.setText(billItem.getBill_name()+"  "+billItem.getBill_money());
+        //textView.setText(billItem.getBill_name()+"  "+billItem.getBill_money());
         return view;
     }
 

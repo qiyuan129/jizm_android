@@ -213,8 +213,6 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         }
 
 
-        //后面删除
-       // accountSpinner.setSelection(1);
     }
 
 
@@ -231,9 +229,6 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         periodic= perDao.getPeriodicById(id);
 
 
-       /* //实验用，后面删除
-        periodic = new Periodic(1,2,1,3,1,"shopping"+String.valueOf(2),
-                1,new Date(3838737),new Date(25785872),50,3,null);*/
 
 
 
@@ -261,13 +256,6 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
               listData.add(cat.getCategory_name());
           }
 
-
-       /* listData.add("学习用品");
-        listData.add("生活用品");
-        listData.add("娱乐消费");
-        listData.add("买菜");
-        listData.add("旅游");
-        listData.add("其他");*/
 
 
 
@@ -477,6 +465,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         periodic.setType(typeId);
         periodic.setCategory_id(categoryId);
         periodic.setAccount_id(accountId);
+        periodic.setState(1);
 
         //存入数据库
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
@@ -533,10 +522,9 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
             //设置Category_id 记得去掉注释
-            //categoryId = categories.get(arg2).getCategory_id();
+            categoryId = categories.get(arg2).getCategory_id();
 
-            //测试用，后面删除
-            categoryId=0;
+
 
 
         }
@@ -551,16 +539,16 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     class AccountSelectedListenerUp implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你的选择是："+ listData.get(arg2));
+            accountView.setText("你的选择是："+ listAccount.get(arg2));
 
 
 
             //设置Account_id 记得去掉注释
-          //  accountId = accounts.get(arg2).getAccount_id();
+            accountId = accounts.get(arg2).getAccount_id();
 
 
-            //测试用，后面删除
-            accountId=0;
+
+
 
 
         }
@@ -666,15 +654,19 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                     Log.i("income_RB", "当前用户选择"+ outcomeRB.getText().toString());
                     break;
 
-                case R.id.per_day_RB:
+                case R.id.per_day_RB_update:
+                    Log.i("per_day_RB", "当前用户选择"+ perDay.getText().toString());
                     setRecycle(0);
+                    Log.i("per_day_RB", "当前用户选择"+ perDay.getText().toString());
                     break;
 
-                case R.id.per_week_RB:
+                case R.id.per_week_RB_update:
+                    Log.i("per_day_RB", "当前用户选择"+ perWeek.getText().toString());
                     setRecycle(1);
                     break;
 
-                case R.id.per_month_RB:
+                case R.id.per_month_RB_update:
+                    Log.i("per_day_RB", "当前用户选择"+ perMonth.getText().toString());
                     setRecycle(2);
                     break;
 
@@ -683,9 +675,13 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 default:break;
             }
 
-
-
         }
+
+
+
+
+
+
 
 
         /*

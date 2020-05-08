@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -46,19 +49,10 @@ import util.User;
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
     private View mView;
-    private Context mContext;
     private CategoryChooseAdapter categoryChooseAdapter;
-
-    private User user;
 
     private List<Category> categoryList = new ArrayList<>();
     private List<Account> accountList = new ArrayList<>();
-
-    private String[] category_outcome = {"餐饮美食", "服饰美容", "生活日用", "充值缴费",
-            "交通出行", "通讯物流", "休闲娱乐", "医疗保健", "住房物业", "文体教育",
-            "酒店旅行", "爱车养车", "其他"};
-
-    private String[] category_income = {"投资理财", "经营所得", "奖金红包", "工资", "生活费"};
 
     //属性
     private int category_id = 1;
@@ -68,8 +62,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private Date bill_date = new Date();
     private int state = 1;
     private Date anchor= new Date();
-    //记录类别（收入/支出）
-    public int isIncome = 0;
+    public int isIncome = 0;         //记录类别（收入/支出）
 
     private RecyclerView recyclerView;
     private Button incomeTv;        //收入按钮
@@ -79,6 +72,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private TextView moneyTv;       //金额
     private TextView dateTv;        //日期选择
     private TextView cashTv;        //支出账户
+
     //数字键盘
     private TextView num1;
     private TextView num2;
@@ -97,10 +91,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private ImageView remarkIv;        //备注
     private RelativeLayout delect;     //数字键盘回格键
 
-    //选择器
-    protected  String[] account = {"支付宝", "微信", "现金", "信用卡", "银行卡"};
-
-    //选择时间
+    //时间选择器
     protected String days;
     protected int mYear;
     protected int mMonth;
@@ -133,21 +124,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
         edittypeTv.setOnClickListener(this);
 
+        sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
+
         recyclerView = (RecyclerView) mView.findViewById(R.id.category_recycle_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
         recyclerView.setLayoutManager(layoutManager);
-        //分类展示
+
+        initsortTv();
         initCategory();
-
-        sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
-
-        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                Category categorytest = categoryList.get(position);
-                sortTv.setText(categorytest.getCategory_name());
-            }
-        });
 
         moneyTv = (TextView) mView.findViewById(R.id.tb_note_money);
         moneyTv.setText(num+dotNum);
@@ -208,26 +192,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         switch (view.getId()) {
             case R.id.income_tv:
                 isIncome = 1;
+                initsortTv();
                 initCategory();
-                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        Category category = categoryList.get(position);
-                        sortTv.setText(category.getCategory_name());
-                    }
-                });
                 Log.d("Fragment","收入");
                 break;
             case R.id.outcome_tv:
                 isIncome = 0;
+                initsortTv();
                 initCategory();
-                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        Category category = categoryList.get(position);
-                        sortTv.setText(category.getCategory_name());
-                    }
-                });
                 Log.d("Fragment","支出");
                 break;
             case R.id.type_edit:
@@ -368,22 +340,43 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         },mYear,mMonth,mDays).show();
     }
 
-    //显示备注内容输入框
+    //显示账单名称输入框
     public void showContentDialog() {
         new MaterialDialog.Builder(getActivity())
-                .title("备注")
+                .title("账单名称")
                 .canceledOnTouchOutside(false)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
-                .input("备注", remarkInput, (dialog, input) -> {
-                    if (input.equals("")) {
-                        Toast.makeText(getContext(), "内容不能为空！" + input,
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        remarkInput = input.toString();
+                .input("名称", sortTv.getText(), new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
                     }
                 })
                 .positiveText("确定")
+                .negativeText("取消")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (TextUtils.isEmpty(dialog.getInputEditText().getText().toString())) {
+                            Toast.makeText(getActivity(), "您没有输入账单名称", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            dialog = null;
+                            return;
+                        } else {
+                            remarkInput = dialog.getInputEditText().getText().toString();
+                            dialog.dismiss();
+                            dialog = null;
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                        dialog = null;
+                    }
+                })
                 .show();
     }
 
@@ -437,12 +430,17 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
     public void doCommit() {
         if ((num + dotNum).equals("0.00")) {
-            Toast.makeText(getActivity(), "请输入金额", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "请输入账单金额", Toast.LENGTH_SHORT).show();
             return;
         }
+
         String categorySelect = String.valueOf(sortTv.getText());
         String accountText = String.valueOf(cashTv.getText());
-        String remark = remarkInput;
+
+        if (remarkInput == "") {
+            remarkInput = String.valueOf(sortTv.getText());
+        }
+        String bill_name = remarkInput;
         Double bill_money = Double.valueOf(num + dotNum);
 
         try {
@@ -454,16 +452,25 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
         Log.d("Fragment", categorySelect);
         Log.d("Fragment", accountText);
-        Log.d("Fragment", remark);
+        Log.d("Fragment", bill_name);
 
-        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, remark, bill_date, bill_money, state, anchor);
+        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, bill_name, bill_date, bill_money, state, anchor);
         BillDAO billDAO = new BillDAOImpl();
         billDAO.insertBill(bill);
 
+        Toast.makeText(getActivity(), "添加成功！", Toast.LENGTH_SHORT).show();
+
+        //页面数据清空
+        num = "0";
+        dotNum = ".00";
+        moneyTv.setText("0.00");
+        remarkInput = "";
+        initsortTv();
+        initCategory();
+        cashTv.setText("现金");
     }
 
     private void initCategory() {
-        //取出分类名称、id
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categoryList = categoryDAO.listCategory();
         List<String> outcome_category = new ArrayList<>();
@@ -515,5 +522,48 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
         categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
         recyclerView.setAdapter(categoryChooseAdapter);
+
+        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Category category = categoryList.get(position);
+                sortTv.setText(category.getCategory_name());
+                category_id = category.getCategory_id();
+            }
+        });
+
     }
+
+    //分类文本初始化
+    private void initsortTv() {
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        categoryList = categoryDAO.listCategory();
+        List<String> init_outcome_category_name = new ArrayList<>();
+        List<String> init_income_category_name = new ArrayList<>();
+        List<Integer> init_outcome_category_id = new ArrayList<>();
+        List<Integer> init_income_category_id = new ArrayList<>();
+
+        if (categoryList.size() != 0){
+            for (int j = 0; j < categoryList.size(); j++) {
+                Category category = (Category)categoryList.get(j);
+                if (category.getType() == 0) {
+                    init_outcome_category_name.add(category.getCategory_name());
+                    init_outcome_category_id.add(category.getCategory_id());
+                } else {
+                    init_income_category_name.add(category.getCategory_name());
+                    init_income_category_id.add(category.getCategory_id());
+                }
+            }
+
+            if (isIncome == 0 && init_outcome_category_name.size() != 0) {
+                sortTv.setText(init_outcome_category_name.get(0));
+                category_id = init_outcome_category_id.get(0);
+            } else if (isIncome == 1 && init_income_category_name.size() != 0){
+                sortTv.setText(init_income_category_name.get(0));
+                category_id = init_income_category_id.get(0);
+            }
+        }
+    }
+
+
 }

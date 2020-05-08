@@ -295,13 +295,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
        periodics = periodicDAO.listPeriodic();
 
 
-        /*//实验用，后面删除
-        periodics = new ArrayList<>();
-        for(int i=0;i<=20;i++){
-           Periodic periodic = new Periodic(i,i,5,3,6,"eat"+String.valueOf(i),
-                   6,new Date(45236+i),new Date(99954+i),50,3,null);
-           periodics.add(periodic);
-        }*/
+
 
 
     }
@@ -314,6 +308,8 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
      */
     private boolean deletePeriodic(int id){
         Periodic delPeriodic = periodics.get(id);
+        //标记为删除
+        delPeriodic.setState(-1);
 
         //从数据库里删除
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();

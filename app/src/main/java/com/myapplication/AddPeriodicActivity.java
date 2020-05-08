@@ -41,14 +41,14 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic
-    public ArrayList<String> listData;
+    public ArrayList<String> listData = new ArrayList<String>();
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
 
 
 
-    public ArrayList<String> listAccount;
+    public ArrayList<String> listAccount = new ArrayList<String>();
     private TextView accountView ;
     private Spinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
@@ -103,7 +103,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     int typeId;
     int categoryId;
     int accountId;
-    int state=0;
+    int state=0;//本地新增
 
 
 
@@ -230,7 +230,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
     public void setData(){
 
-        /*//后面把注释消除
+        //后面把注释消除
         //设置种类
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
@@ -243,13 +243,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         AccountDAO accountDAO = new AccountDAOImpl();
         accounts = (ArrayList<Account>) accountDAO.listAccount();
         for(Account act:accounts){
-            listData.add(act.getAccount_name());
-        }*/
+            listAccount.add(act.getAccount_name());
+        }
 
 
 
 
-        //测试用，后面删除
+       /* //测试用，后面删除
         if(categories==null){
             categories = new ArrayList<Category>();
         }
@@ -270,7 +270,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             listAccount.add("微信账户");
             listAccount.add("银行账户");
 
-        }
+        }*/
 
 
 
@@ -297,13 +297,16 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
             case R.id.store_periodic:
                 //Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
-                savePeriodic();
 
-                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
-                //告诉上一个界面添加成功
-                Intent intent = new Intent();
-                setResult(RESULT_OK,intent);
-                this.finish();
+                if(savePeriodic()){
+                    Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                    //告诉上一个界面添加成功
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK,intent);
+                    this.finish();
+                }
+
+
                 break;
 
 
@@ -395,13 +398,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            view.setText("你的选择是："+ listData.get(arg2));
 
             //设置Category_id 记得去掉注释
-            //categoryId = categories.get(arg2).getCategory_id();
+            categoryId = categories.get(arg2).getCategory_id();
 
             //测试用，后面删除
-            categoryId=0;
+           // categoryId=0;
 
 
         }
@@ -415,13 +418,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     class AccountSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2)+":"+String.valueOf(arg2));
+            accountView.setText("你的选择是："+ listAccount.get(arg2));
 
             //设置Account_id 记得去掉注释
-           // accountId=accounts.get(arg2).getAccount_id();
+            accountId=accounts.get(arg2).getAccount_id();
 
             //测试用，后面删除
-            accountId=0;
+            //accountId=0;
 
 
         }
