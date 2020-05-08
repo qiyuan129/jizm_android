@@ -74,7 +74,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         recycleView.setLayoutManager(layoutManager);
 
         initCategory();
-        setCategoryChooseAdapter();
+//        setCategoryChooseAdapter();
     }
 
     @Override
@@ -90,12 +90,12 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
-                setCategoryChooseAdapter();
+//                setCategoryChooseAdapter();
                 break;
             case R.id.tb_note_outcome:
                 isIncome = 0;
                 initCategory();
-                setCategoryChooseAdapter();
+//                setCategoryChooseAdapter();
                 break;
         }
     }
@@ -169,6 +169,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                 CategoryDAO categoryDAO = new CategoryDAOImpl();
                                 categoryDAO.updateCategory(category);
                                 edit_category_name = "";
+                                initCategory();
                             }
                         })
                         .positiveText("确认修改")
@@ -186,6 +187,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                 //删除该分类
                                 CategoryDAO categoryDAO = new CategoryDAOImpl();
                                 categoryDAO.deleteCategory(category_id);
+                                initCategory();
                             }
                         })
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -262,5 +264,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
         categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
         recycleView.setAdapter(categoryChooseAdapter);
+
+        setCategoryChooseAdapter();
     }
 }
