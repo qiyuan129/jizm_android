@@ -98,7 +98,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     double money;
     Date start;
     Date end;
-    Date anchor;
+    Date anchor = new Date();
     int recycleId;
     int typeId;
     int categoryId;

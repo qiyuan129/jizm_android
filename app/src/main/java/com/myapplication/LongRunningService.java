@@ -14,9 +14,12 @@ import java.util.Date;
 
 import dao.AccountDAO;
 import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import dao.PeriodicDAO;
 import dao.PeriodicDAOImpl;
 import pojo.Account;
+import pojo.Bill;
 import pojo.Periodic;
 
 public class LongRunningService extends Service {
@@ -135,9 +138,19 @@ public class LongRunningService extends Service {
                 else {
                     double accountMoney=account.getMoney();
 
-                    if(accountMoney>=money){//账户余额充足
+                    if(accountMoney>=money){//账户余额充足，可以执行
                         account.setMoney(accountMoney-money);
                         accountDAO.updateAccount(account);
+
+                        //新建一个账单写入数据库
+                        BillDAO billDAO = new BillDAOImpl();
+                        Bill bill = new Bill(0,obj.getAccount_id(),obj.getCategory_id(),obj.getUser_id(),
+                                obj.getType(),"周期事件："+obj.getPeriodic_name(),
+                                new Date(),obj.getPeriodic_money(),
+                                0,new Date());
+                        billDAO.insertBill(bill);
+
+
                     }
 
                     else{//账户余额不足,放弃执行
