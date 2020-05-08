@@ -133,15 +133,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         initsortTv();
         initCategory();
 
-        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                Category category = categoryList.get(position);
-                sortTv.setText(category.getCategory_name());
-                category_id = category.getCategory_id();
-            }
-        });
-
         moneyTv = (TextView) mView.findViewById(R.id.tb_note_money);
         moneyTv.setText(num+dotNum);
 
@@ -203,28 +194,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 isIncome = 1;
                 initsortTv();
                 initCategory();
-                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        Category category = categoryList.get(position);
-                        sortTv.setText(category.getCategory_name());
-                        category_id = category.getCategory_id();
-                    }
-                });
                 Log.d("Fragment","收入");
                 break;
             case R.id.outcome_tv:
                 isIncome = 0;
                 initsortTv();
                 initCategory();
-                categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        Category category = categoryList.get(position);
-                        sortTv.setText(category.getCategory_name());
-                        category_id = category.getCategory_id();
-                    }
-                });
                 Log.d("Fragment","支出");
                 break;
             case R.id.type_edit:
@@ -458,13 +433,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             Toast.makeText(getActivity(), "请输入账单金额", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (remarkInput == "") {
-            Toast.makeText(getActivity(), "请输入账单名称", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         String categorySelect = String.valueOf(sortTv.getText());
         String accountText = String.valueOf(cashTv.getText());
-        String remark = remarkInput;
+
+        if (remarkInput == "") {
+            remarkInput = String.valueOf(sortTv.getText());
+        }
+        String bill_name = remarkInput;
         Double bill_money = Double.valueOf(num + dotNum);
 
         try {
@@ -476,9 +452,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
         Log.d("Fragment", categorySelect);
         Log.d("Fragment", accountText);
-        Log.d("Fragment", remark);
+        Log.d("Fragment", bill_name);
 
-        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, remark, bill_date, bill_money, state, anchor);
+        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, bill_name, bill_date, bill_money, state, anchor);
         BillDAO billDAO = new BillDAOImpl();
         billDAO.insertBill(bill);
 
@@ -490,6 +466,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         moneyTv.setText("0.00");
         remarkInput = "";
         initsortTv();
+        initCategory();
         cashTv.setText("现金");
     }
 
@@ -545,6 +522,16 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         categoryChooseAdapter = new CategoryChooseAdapter(categoryList);
         categoryChooseAdapter.notifyItemRangeChanged(0, categoryList.size());
         recyclerView.setAdapter(categoryChooseAdapter);
+
+        categoryChooseAdapter.setOnItemClickListener(new CategoryChooseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Category category = categoryList.get(position);
+                sortTv.setText(category.getCategory_name());
+                category_id = category.getCategory_id();
+            }
+        });
+
     }
 
     //分类文本初始化
