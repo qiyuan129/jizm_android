@@ -15,6 +15,8 @@ public interface AccountDAO {
 
     void updateAccount(Account account);
 
+    void deleteAccount(int id);
+
     List<Account> getSyncAccount();
 
     Date getMaxAnchor();
