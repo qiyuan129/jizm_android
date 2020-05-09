@@ -252,7 +252,7 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            if(i>0)
+            if(i>2)
             {
                 categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
                 dateString = df.format(dbDataOut.get(i-1).getBill_date());
@@ -269,7 +269,7 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            if(i>0)
+            if(i>2)
             {
                 categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
                 dateString = df.format(dbDataOut.get(i-1).getBill_date());
