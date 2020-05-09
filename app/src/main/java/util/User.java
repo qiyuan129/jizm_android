@@ -109,14 +109,14 @@ public class User {
             BillDAO billDAO=new BillDAOImpl();
             double sum=billDAO.getAllmoney(date1,date2,0);
 
-            if (sum>=oneThird && sum<twoThird){
-                warning="本月消费"+String.format("%.2f",sum)+"￥，已达到本月预算的1/3";
+            if (sum>oneThird && sum<=twoThird){
+                warning="本月消费"+String.format("%.2f",sum)+"￥，已超出本月预算的1/3";
             }
-            else if (sum>=twoThird && sum<limit){
-                warning="本月消费"+String.format("%.2f",sum)+"￥，已达到本月预算的2/3";
+            else if (sum>twoThird && sum<=limit){
+                warning="本月消费"+String.format("%.2f",sum)+"￥，已超出本月预算的2/3";
             }
-            else if (sum>=limit){
-                warning="本月消费"+String.format("%.2f",sum)+"￥，已达到本月预算";
+            else if (sum>limit){
+                warning="本月消费"+String.format("%.2f",sum)+"￥，已超出本月预算";
             }
         }
 
