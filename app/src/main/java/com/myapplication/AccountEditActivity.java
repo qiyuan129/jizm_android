@@ -206,6 +206,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                                 //删除该分类
                                 AccountDAO accountDAO = new AccountDAOImpl();
                                 accountDAO.deleteAccount(account_id);
+                                Toast.makeText(AccountEditActivity.this, "该分类已删除", Toast.LENGTH_SHORT).show();
                                 initAccount();
                             }
                         })
