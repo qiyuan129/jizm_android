@@ -200,61 +200,17 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                                 dialog = null;
                             }
                         })
+                        .setNeutralButton("删除该分类", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //删除该分类
+                                AccountDAO accountDAO = new AccountDAOImpl();
+                                accountDAO.deleteAccount(account_id);
+                                Toast.makeText(AccountEditActivity.this, "该分类已删除", Toast.LENGTH_SHORT).show();
+                                initAccount();
+                            }
+                        })
                         .show();
-//
-//                new MaterialDialog.Builder(AccountEditActivity.this)
-//                        .title("修改分类")
-//                        .canceledOnTouchOutside(false)
-//                        .input(account_name1, "", new MaterialDialog.InputCallback() {
-//                            @Override
-//                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-//
-//                            }
-//                        })
-//                        .positiveText("确认修改")
-//                        .negativeText("取消")
-//                        .neutralText("删除该分类")
-//                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-//                            @Override
-//                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                if (TextUtils.isEmpty(dialog.getInputEditText().getText().toString())) {
-//                                    Toast.makeText(AccountEditActivity.this, "您没有输入分类名称", Toast.LENGTH_SHORT).show();
-//                                    dialog.dismiss();
-//                                    dialog = null;
-//                                    return;
-//                                } else {
-//                                    //修改分类名称
-//                                    edit_account_name = dialog.getInputEditText().getText().toString();
-//                                    Account account = new Account(account_id, user_id, edit_account_name, money, state, anchor);
-//                                    AccountDAO accountDAO = new AccountDAOImpl();
-//                                    accountDAO.updateAccount(account);
-//                                    edit_account_name = "";
-//                                    initAccount();
-//                                    Toast.makeText(AccountEditActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        })
-//                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
-//                            @Override
-//                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                //删除该分类
-////                                AccountDAO accountDAO = new AccountDAOImpl();
-////                                accountDAO.deleteAccount(category_id);
-////                                initCategory();
-//                            }
-//                        })
-//                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-//                            @Override
-//                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                //取消
-//                                dialog.dismiss();
-//                                dialog = null;
-//                            }
-//                        })
-//                        .show();
-
-
-
             }
         });
     }
