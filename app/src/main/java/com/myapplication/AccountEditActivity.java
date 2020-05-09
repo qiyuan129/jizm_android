@@ -200,7 +200,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                                 dialog = null;
                             }
                         })
-                        .setNeutralButton("删除该分类", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //删除该分类
