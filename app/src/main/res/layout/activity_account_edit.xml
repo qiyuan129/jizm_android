@@ -1,15 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountEditActivity">
+    android:background="#F9F9F9"
+    android:orientation="vertical">
 
-    <TextView
-        android:text="钱包"
+    <RelativeLayout
+        android:id="@+id/layout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="45dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical">
 
+        <RelativeLayout
+            android:id="@+id/back_layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
 
-</android.support.design.widget.CoordinatorLayout>
+            <ImageView
+                android:id="@+id/back_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:onClick="onClick"
+                android:paddingRight="10dp"
+                android:src="@mipmap/ic_back" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/account_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/edit_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_tb_cash"
+                android:text="账户编辑"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/add_btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:paddingLeft="10dp"
+            android:onClick="onClick"
+            android:src="@mipmap/tallybook_note" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/edit_account_recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

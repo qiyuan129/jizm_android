@@ -46,6 +46,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryEditActivity" />
+        <activity android:name=".AccountEditActivity"/>
     </application>
 
 </manifest>
