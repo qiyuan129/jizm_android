@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,7 @@ import pojo.*;
 import dao.*;
 
 import util.MyDatabaseHelper;
+import util.User;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -69,6 +71,21 @@ public class MainActivity extends AppCompatActivity {
         dbHelper=new MyDatabaseHelper(this,"JiZM",null,1);
         Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
         startService(intent1);
+
+
+        User user=new User(getSharedPreferences("user",MODE_PRIVATE));
+        float limit=user.getLimit();
+        String warning=user.earlyWarning();
+        if (warning!=null){
+            Toast.makeText(this,warning,Toast.LENGTH_SHORT).show();
+
+        }
+        else {
+            Toast.makeText(this,"limit为"+limit,Toast.LENGTH_SHORT).show();
+
+        }
+
+
 
  /*
         初始化数据
