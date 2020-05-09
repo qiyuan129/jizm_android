@@ -176,15 +176,17 @@
                 android:paddingLeft="0dp"
                 android:layout_width="50dp"
                 android:layout_height="match_parent" />
+
             <TextView
+                android:id="@+id/syncTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="更新数据"
                 android:textColor="#000000"
-                android:textSize="20dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="12dp"
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:textSize="20dp" />
             <ImageView
                 android:layout_gravity="center_vertical"
                 android:paddingRight="0dp"
