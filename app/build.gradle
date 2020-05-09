@@ -44,4 +44,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation 'com.alibaba:fastjson:1.2.61'
+    debugImplementation 'com.idescout.sql:sqlscout-server:4.1'
+    releaseImplementation 'com.idescout.sql:sqlscout-server-noop:4.1'
 }
