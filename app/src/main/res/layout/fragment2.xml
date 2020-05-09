@@ -104,7 +104,6 @@
             android:layout_gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
-            android:text="类别"
             android:textColor="#333333"
             android:textSize="26sp" />
 
@@ -154,7 +153,6 @@
             android:paddingTop="6dp"
             android:paddingRight="20dp"
             android:paddingBottom="7dp"
-            android:text="现金"
             android:textColor="@color/cardview_light_background"
             android:textSize="15sp" />
 

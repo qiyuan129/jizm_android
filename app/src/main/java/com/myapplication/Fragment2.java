@@ -125,6 +125,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         edittypeTv.setOnClickListener(this);
 
         sortTv = (TextView) mView.findViewById(R.id.item_tb_type_tv);
+        sortTv.setText("");
 
         recyclerView = (RecyclerView) mView.findViewById(R.id.category_recycle_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this.getActivity(),4);
@@ -149,6 +150,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         cashTv = (TextView) mView.findViewById(R.id.tb_note_cash);
         cashTv.setOnClickListener(this);
+        cashTv.setText("");
+        initcashTv();
 
         remarkIv = (ImageView) mView.findViewById(R.id.tb_note_remark);
         remarkIv.setOnClickListener(this);
@@ -347,7 +350,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 .canceledOnTouchOutside(false)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
-                .input("名称", sortTv.getText(), new MaterialDialog.InputCallback() {
+                .input("账单名称", null, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
 
@@ -433,13 +436,21 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             Toast.makeText(getActivity(), "请输入账单金额", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (sortTv.getText().toString() == "") {
+            Toast.makeText(getActivity(), "请选择账单类别", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (cashTv.getText().toString() == "") {
+            Toast.makeText(getActivity(), "请选择账户", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (remarkInput == "") {
+            remarkInput = String.valueOf(sortTv.getText());
+        }
 
         String categorySelect = String.valueOf(sortTv.getText());
         String accountText = String.valueOf(cashTv.getText());
 
-        if (remarkInput == "") {
-            remarkInput = String.valueOf(sortTv.getText());
-        }
         String bill_name = remarkInput;
         Double bill_money = Double.valueOf(num + dotNum);
 
@@ -467,7 +478,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         remarkInput = "";
         initsortTv();
         initCategory();
-        cashTv.setText("现金");
+        initcashTv();
     }
 
     private void initCategory() {
@@ -496,12 +507,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                     category_id = outcome_category_id.get(i);
                     Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
+                    if (outcome_category_id.size() != 0) {
+                        category_id = outcome_category_id.get(0);
+                    }
                 }
             } else {
                 for(int i = 0; i < income_category.size(); i++){
                     category_id = income_category_id.get(i);
                     Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
+                    if (income_category_id.size() != 0) {
+                        category_id = income_category_id.get(0);
+                    }
                 }
             }
         } else {
@@ -510,12 +527,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                     category_id = outcome_category_id.get(i);
                     Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
+                    if (outcome_category_id.size() != 0) {
+                        category_id = outcome_category_id.get(0);
+                    }
                 }
             } else {
                 for(int i = 0; i < income_category.size(); i++){
                     category_id = income_category_id.get(i);
                     Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
                     categoryList.add(category);
+                    if (income_category_id.size() != 0) {
+                        category_id = income_category_id.get(0);
+                    }
                 }
             }
         }
@@ -561,6 +584,26 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             } else if (isIncome == 1 && init_income_category_name.size() != 0){
                 sortTv.setText(init_income_category_name.get(0));
                 category_id = init_income_category_id.get(0);
+            }
+        }
+    }
+
+    //账户文本初始化
+    public void initcashTv () {
+        AccountDAO accountDAO = new AccountDAOImpl();
+        accountList = accountDAO.listAccount();
+        List<String> init_account_name = new ArrayList<>();
+        List<Integer> init_account_id = new ArrayList<>();
+
+        if (accountList.size() != 0) {
+            for (int i = 0; i < accountList.size(); i++) {
+                Account account = (Account)accountList.get(i);
+                init_account_name.add(account.getAccount_name());
+                init_account_id.add(account.getAccount_id());
+                if (init_account_name.size() != 0) {
+                    cashTv.setText(init_account_name.get(0));
+                    account_id = init_account_id.get(0);
+                }
             }
         }
     }
