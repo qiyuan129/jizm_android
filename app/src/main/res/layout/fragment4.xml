@@ -120,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
             <ImageView
-                android:id="@+id/user_Name_i"
+                android:id="@+id/user_account"
                 android:layout_gravity="right"
                 android:paddingRight="0dp"
                 android:layout_width="40dp"

@@ -23,6 +23,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     ImageView imageViewb;
     ImageView imageViewh;
     ImageView personalDateEnter;
+    ImageView userAccount;
     ImageView settingEnter;
     TextView userName;
     TextView userTel;
@@ -54,6 +55,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         imageViewb=(ImageView)mView.findViewById(R.id.h_back) ;
         imageViewh=(ImageView)mView.findViewById(R.id.h_head) ;
         personalDateEnter =(ImageView)mView.findViewById(R.id.personal_enter);
+        userAccount =(ImageView)mView.findViewById(R.id.user_account);
         settingEnter =(ImageView) mView.findViewById(R.id.setting_enter);
 
 
@@ -83,6 +85,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     public void setActionListener(){
         imageViewh.setOnClickListener(this);
         personalDateEnter.setOnClickListener(this);
+        userAccount.setOnClickListener(this);
         settingEnter.setOnClickListener(this);
     }
 
@@ -104,10 +107,14 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 startActivity(intent1);
                 break;
 
+            case R.id.user_account:
+                Intent intent2 = new Intent(getActivity(),AccountEditActivity.class);
+                startActivity(intent2);
+                break;
 
             case R.id.setting_enter:
-                Intent intent2 = new Intent(getActivity(),EditSettingActivity.class);
-                startActivity(intent2);
+                Intent intent3 = new Intent(getActivity(),EditSettingActivity.class);
+                startActivity(intent3);
                 break;
 
 
