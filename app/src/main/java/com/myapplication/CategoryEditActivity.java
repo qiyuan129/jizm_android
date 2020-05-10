@@ -83,8 +83,6 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.back_btn:
                 setResult(RESULT_OK, new Intent());
                 finish();
-//                Intent intent = new Intent(CategoryEditActivity.this, MainActivity.class);
-//                startActivity(intent);
                 break;
             case R.id.add_btn:
                 showContentDialog();

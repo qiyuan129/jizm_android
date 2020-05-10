@@ -70,6 +70,12 @@ public class AccountDAOImpl implements AccountDAO {
     }
 
     @Override
+    public void deleteAccount(int id) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        db.delete("account","account_id = ?",new String[]{""+id});
+    }
+
+    @Override
     public Account getAccountById(int id) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Account account=null;

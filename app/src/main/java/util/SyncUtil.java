@@ -192,7 +192,7 @@ public class SyncUtil {
 
         return periodicSyncRecords;
     }
-    public static JSONObject getAllSyncRecords() {
+    public static JSONObject getAllSyncRecords(){
         JSONObject accountRecordsJson;
         JSONObject billRecordsJson;
         JSONObject categoryRecordsJson;
