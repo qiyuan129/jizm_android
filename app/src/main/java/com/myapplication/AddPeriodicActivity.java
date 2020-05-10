@@ -523,13 +523,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             // 选中状态改变时被触发
             switch (checkedId) {
                 case R.id.outcome_RB:
-                    // 当用户选择收入时
+                    // 当用户选择支出时
                     Log.i("outcome_RB", "当前用户选择"+ outcomeRB.getText().toString());
-                    setType(1);
+                    setType(0);
                     break;
                 case R.id.income_RB:
-                    // 当用户选择支出时
-                    setType(0);
+                    // 当用户选择收入时
+                    setType(1);
                     Log.i("income_RB", "当前用户选择"+ incomeRB.getText().toString());
                     break;
 
