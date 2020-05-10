@@ -3,10 +3,12 @@ package com.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         btn_find.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(LoginActivity.this, FindActivity.class);
+                Intent intent1 = new Intent(LoginActivity.this,FindActivity.class);
                 startActivity(intent1);
             }
         });
@@ -57,6 +59,15 @@ public class LoginActivity extends AppCompatActivity {
         btn_sure.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                //获得用户输入的验证码
+                String pn = et_phonenum.getText().toString().trim().replaceAll("/s","");
+                String pw = et_password.getText().toString().replaceAll("/s","");
+                if (TextUtils.isEmpty(pn)) {//判断手机号是否为空
+                    toast("请输入手机号");
+                }
+                else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
+                    toast("请输入密码");
+                }
                 //写登录的账号密码判断语句 和跳转
 
 
@@ -64,4 +75,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    private void toast(final String str) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LoginActivity.this, str, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
+

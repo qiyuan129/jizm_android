@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,20 +23,20 @@ import java.util.regex.Pattern;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
-import static android.support.v7.app.AlertDialog.Builder;
-import static android.support.v7.app.AlertDialog.OnClickListener;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity{
 
     private TimerTask tt;
     private Timer tm;
     private EditText et_phonenum;
+    private EditText et_userName;
     private Button btn_check;
     private EditText et_checkecode;
     private Button btn_sure;
     private EditText et_password;
     private String password;
     private String userName;
+    private String phoneNum;
     private int TIME = 60;//倒计时60s这里应该多设置些因为mob后台需要60s,我们前端会有差异的建议设置90，100或者120
     public String country="86";//这是中国区号，如果需要其他国家列表，可以使用getSupportedCountries();获得国家区号
     private String phone;
@@ -50,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         SMSSDK.registerEventHandler(eh); //注册短信回调（记得销毁，避免泄露内存）
         et_password =(EditText)findViewById(R.id.reg_et_key) ;
         et_phonenum = (EditText) findViewById(R.id.reg_et_phonenum);
+        et_userName = (EditText) findViewById(R.id.reg_et_userName);
         btn_check = (Button) findViewById(R.id.reg_btn_check);
         et_checkecode = (EditText) findViewById(R.id.reg_et_checkecode);
         btn_sure = (Button) findViewById(R.id.reg_btn_register);
@@ -77,12 +79,45 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         btn_sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //获得用户输入的验证码
+                String name = et_userName.getText().toString().replaceAll("/s","");
                 String code = et_checkecode.getText().toString().replaceAll("/s","");
-                if (!TextUtils.isEmpty(code)) {//判断验证码是否为空
+                String pn = et_phonenum.getText().toString().trim().replaceAll("/s","");
+                String pw = et_password.getText().toString().replaceAll("/s","");
+
+                if (TextUtils.isEmpty(name)) {//判断用户名是否为空
+                    toast("请输入用户名");
+                }
+                else if (!TextUtils.isEmpty(name)) {//用户名非空的情况下判断唯一性
+                    /**
+                     *
+                     *
+                     * 判断填写的用户名(这里的变量是name)是否是唯一的
+                     *
+                     *
+                     */
+                }
+                else if (TextUtils.isEmpty(pn)) {//判断手机号是否为空
+                    toast("请输入手机号");
+                }
+                else if (!TextUtils.isEmpty(pn)) {//手机号非空的情况下判断唯一性
+                    /**
+                     *
+                     *
+                     *
+                     * 判断填写的手机号（这里的变量是pn）是否是唯一的
+                     *
+                     *
+                     */
+                }
+                else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
+                    toast("请输入密码");
+                }
+                else if (!TextUtils.isEmpty(code)) {//判断验证码是否为空
                     //验证
                     SMSSDK.submitVerificationCode( country,  phone,  code);
                 }else{//如果用户输入的内容为空，提醒用户
@@ -114,14 +149,15 @@ public class RegisterActivity extends AppCompatActivity {
         public void afterEvent(int event, int result, Object data) {
             if (result == SMSSDK.RESULT_COMPLETE) {
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                    userName = et_phonenum.getText().toString();
+                    phoneNum = et_phonenum.getText().toString();
                     password = et_password.getText().toString();
+                    userName = et_userName.getText().toString();
                     //
-                    //这里将数据userName password 发送到数据库
+                    //这里将数据userName password phoneNum发送到数据库
                     //
                     //
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    intent.putExtra("phone",userName);
+                    Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
+                    intent.putExtra("phone",phoneNum);
                     startActivity(intent);
                     toast("验证成功");
                 }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){       //获取验证码成功
@@ -150,11 +186,11 @@ public class RegisterActivity extends AppCompatActivity {
     //弹窗确认下发
     private void alterWarning() {
         //构造器
-        Builder builder = new Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提示"); //设置标题
         builder.setMessage("我们将要发送到" + phone + "验证"); //设置内容
         builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
-        builder.setPositiveButton("确定", new OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             //设置确定按钮
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -175,7 +211,7 @@ public class RegisterActivity extends AppCompatActivity {
                 tm.schedule(tt,0,1000);
             }
         });
-        builder.setNegativeButton("取消", new OnClickListener() { //设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

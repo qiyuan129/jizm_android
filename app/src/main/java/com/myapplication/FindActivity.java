@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
-public class FindActivity extends AppCompatActivity {
+public class FindActivity extends AppCompatActivity{
 
     private TimerTask tt;
     private Timer tm;
@@ -80,7 +80,15 @@ public class FindActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //获得用户输入的验证码
                 String code = et_checkecode.getText().toString().replaceAll("/s","");
-                if (!TextUtils.isEmpty(code)) {//判断验证码是否为空
+                String pn = et_phonenum.getText().toString().trim().replaceAll("/s","");
+                String pw = et_password.getText().toString().replaceAll("/s","");
+                if (TextUtils.isEmpty(pn)) {//判断手机号是否为空
+                    toast("请输入手机号");
+                }
+                else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
+                    toast("请输入密码");
+                }
+                else if (!TextUtils.isEmpty(code)) {//判断验证码是否为空
                     //验证
                     SMSSDK.submitVerificationCode( country,  phone,  code);
                 }else{//如果用户输入的内容为空，提醒用户
@@ -118,7 +126,7 @@ public class FindActivity extends AppCompatActivity {
                     //这里将数据userName password 发送到数据库
                     //
                     //
-                    Intent intent = new Intent(FindActivity.this, MainActivity.class);
+                    Intent intent = new Intent(FindActivity.this,MainActivity.class);
                     intent.putExtra("phone",userName);
                     startActivity(intent);
                     toast("验证成功");
