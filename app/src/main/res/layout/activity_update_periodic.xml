@@ -41,19 +41,22 @@
         android:orientation="horizontal" >
 
 
-        <RadioButton
-            android:id="@+id/income_RB_update"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="收入" />
+
 
         <RadioButton
             android:id="@+id/outcome_RB_update"
-            android:layout_toRightOf="@id/income_RB_update"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出" />
+
+
+        <RadioButton
+            android:id="@+id/income_RB_update"
+            android:layout_toRightOf="@id/outcome_RB_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收入" />
 
 
     </RadioGroup>
@@ -161,11 +164,20 @@
             android:textColor="@color/cardview_light_background"
             android:textSize="15sp" />
 
+
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/tmp_text2_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/date_start_update"
             android:textSize="25dp"
             android:text="结束于"/>
 
@@ -183,6 +195,8 @@
             android:text="结束时间"
             android:textColor="@color/cardview_light_background"
             android:textSize="15sp" />
+
+
 
 
     </RelativeLayout>
