@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import util.User;
 
 
 public class RegisterActivity extends AppCompatActivity{
@@ -89,22 +90,10 @@ public class RegisterActivity extends AppCompatActivity{
                 String pn = et_phonenum.getText().toString().trim().replaceAll("/s","");
                 String pw = et_password.getText().toString().replaceAll("/s","");
 
-                if (TextUtils.isEmpty(name)) {//判断用户名是否为空
-                    toast("请输入用户名");
-                }
-                else if (!TextUtils.isEmpty(name)) {//用户名非空的情况下判断唯一性
-                    /**
-                     *
-                     *
-                     * 判断填写的用户名(这里的变量是name)是否是唯一的
-                     *
-                     *
-                     */
-                }
-                else if (TextUtils.isEmpty(pn)) {//判断手机号是否为空
+                if (TextUtils.isEmpty(pn)) {//判断手机号是否为空
                     toast("请输入手机号");
                 }
-                else if (!TextUtils.isEmpty(pn)) {//手机号非空的情况下判断唯一性
+                //else if (!TextUtils.isEmpty(pn)) {//手机号非空的情况下判断唯一性
                     /**
                      *
                      *
@@ -113,7 +102,19 @@ public class RegisterActivity extends AppCompatActivity{
                      *
                      *
                      */
+               // }
+                else if (TextUtils.isEmpty(name)) {//判断用户名是否为空
+                    toast("请输入用户名");
                 }
+                //else if (!TextUtils.isEmpty(name)) {//用户名非空的情况下判断唯一性
+                    /**
+                     *
+                     *
+                     * 判断填写的用户名(这里的变量是name)是否是唯一的
+                     *
+                     *
+                     */
+                //}
                 else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
                     toast("请输入密码");
                 }
@@ -155,11 +156,18 @@ public class RegisterActivity extends AppCompatActivity{
                     //
                     //这里将数据userName password phoneNum发送到数据库
                     //
+                    /**
+                     * 用set和get注册和登录
+                     */
+                    User user = new User(getSharedPreferences("user",MODE_PRIVATE));
+                    user.setPhone(phoneNum);
+                    user.setPassword(password);
+                    user.setEmail(userName);
                     //
-                    Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
                     intent.putExtra("phone",phoneNum);
                     startActivity(intent);
-                    toast("验证成功");
+                    toast("注册成功");
                 }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){       //获取验证码成功
                     toast("获取验证码成功");
                 }else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//如果你调用了获取国家区号类表会在这里回调

@@ -15,12 +15,12 @@
             <TextView
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:text="手机号:"
+                android:text="账   号:"
                 android:textSize="20dp"
                 android:layout_weight="0"/>
 
             <EditText
-                android:inputType="phone"
+                android:inputType="text"
                 android:id="@+id/et_phonenum"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -49,6 +49,16 @@
                 />
 
         </LinearLayout>
+
+ <!--   <CheckBox
+        android:id="@+id/btn_rememberMe"
+        android:layout_marginTop="0dp"
+        android:textColor="#131313"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="记住账号"></CheckBox>
+-->
+
     <Button
         android:background="@color/colorAccent"
         android:id="@+id/btn_sure"

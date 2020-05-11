@@ -71,10 +71,13 @@ public class MainActivity extends AppCompatActivity {
         dbHelper=new MyDatabaseHelper(this,"JiZM",null,1);
         Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
         startService(intent1);
-//        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-//        startActivity(intent);
 
-        User user=new User(getSharedPreferences("user",MODE_PRIVATE));
+        User user = new User(getSharedPreferences("user",MODE_PRIVATE));
+        boolean rememberMe=user.getRemember();
+        if (!rememberMe) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
         float limit=user.getLimit();
         String warning=user.earlyWarning();
         if (warning!=null){
