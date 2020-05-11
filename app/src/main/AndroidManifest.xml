@@ -23,6 +23,9 @@
             android:enabled="true"
             android:exported="true" />
 
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".FindActivity" />
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".UpdatePeriodicActivity" />
         <activity android:name=".AddPeriodicActivity" />
         <activity android:name=".EditSettingActivity" />

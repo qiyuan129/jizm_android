@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
         startService(intent1);
 
-
+        
         User user=new User(getSharedPreferences("user",MODE_PRIVATE));
         float limit=user.getLimit();
         String warning=user.earlyWarning();
