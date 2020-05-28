@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">JiZM</string>
     <string name="title_graph">报表</string>
     <string name="title_account">手动记账</string>
     <string name="title_cycleaccount">周期记账</string>
