@@ -152,7 +152,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
                 // 需要重新获取
                 Request request = new Request.Builder()
-                        .url("http://192.168.0.100:8080/app/synchronization")
+                        .url("http://39.100.48.69:8080/app/synchronization")
                         .post(requestBody)
                         .addHeader("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxIiwiZXhwIjoxNTg4OTMzMjMwfQ.329QAOqCnB6GcqDxwdH9h_Ui7gAwAi4T0MguwnTZ_p8")
                         .build();

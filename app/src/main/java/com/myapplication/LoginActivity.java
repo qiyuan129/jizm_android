@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,6 +10,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import util.SyncUtil;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -20,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private String phone ="";
     private String password ="";
     private Button btn_find;
+
+    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +91,78 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+            }
+        });
+    }
+
+    /**
+     * 发起登录请求
+     * @param phoneNumber
+     * @param password
+     */
+    private void postLoginRequest(String phoneNumber,String password){
+        JSONObject syncRecordsJsonObject= SyncUtil.getAllSyncRecords();
+        RequestBody formBody = new FormBody.Builder()
+                .add("type",Integer.toString(0))
+                .add("account",phoneNumber)
+                .add("password",password)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://39.100.48.69:8080/user/login")    //这里的主机地址要填电脑的ip地址
+                .post(formBody)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e instanceof SocketTimeoutException){//判断超时异常
+                    toast("登录失败:网络链接超时");
+                    e.printStackTrace();
+                }
+                if(e instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+                    toast("登录失败:无法连接到服务器");
+                    e.printStackTrace();
+                }
+                else{
+                    toast("登录失败：其他未知错误，详情请查看控制台");
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onResponse(Call call, Response response)  {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseString=responseBody.string();
+                    JSONObject resultJson=JSONObject.parseObject(responseString);
+                    int statusCode=resultJson.getInteger("code");
+                    String message=resultJson.getString("msg");
+
+                    //如果响应结果状态码为成功的
+                    if(statusCode>=200 && statusCode<400) {
+                        //取出返回的数据；更新本地记录状态
+                        JSONObject dataJson = resultJson.getJSONObject("data");
+
+                        toast("登陆成功！");
+                        //@TODO 用户登录时获得的token，需要保存
+                        String token=dataJson.toString();
+                        //@TODO 在这里添加用户信息的载入跟页面跳转等等
+                        return;
+                    }
+                    //响应结果为失败类型
+                    else{
+                        String errorMessage="状态码："+statusCode+",错误信息："+message+'\n';
+                        toast("登录失败\n"+errorMessage);
+                        return;
+                    }
+                } catch (IOException e) {
+                    toast("登录失败，未知错误，错误信息请查看控制台");
+                    e.printStackTrace();
+                    return;
+                }
             }
         });
     }
