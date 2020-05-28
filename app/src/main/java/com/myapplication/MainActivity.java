@@ -72,8 +72,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
         startService(intent1);
 
-
-        User user=new User(getSharedPreferences("user",MODE_PRIVATE));
+        User user = new User(getSharedPreferences("user",MODE_PRIVATE));
+        boolean rememberMe=user.getRemember();
+        if (!rememberMe) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
         float limit=user.getLimit();
         String warning=user.earlyWarning();
         if (warning!=null){

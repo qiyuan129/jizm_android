@@ -40,7 +40,7 @@
             android:layout_weight="0"/>
 
         <EditText
-            android:inputType="phone"
+            android:inputType="textPassword"
             android:id="@+id/reg_et_key"
             android:layout_weight="1"
             android:layout_width="0dp"
