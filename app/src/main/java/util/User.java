@@ -90,6 +90,15 @@ public class User {
         return limit;
     }
 
+    public void setToken(String token){
+        editor.putString("token",token);
+        editor.apply();
+    }
+    public String getToken(){
+        String token=preferences.getString("token","");
+        return token;
+    }
+
     public String earlyWarning(){
         float limit=getLimit();
         String warning=null;

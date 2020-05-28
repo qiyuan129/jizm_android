@@ -26,6 +26,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import util.SyncUtil;
+import util.User;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         et_phonenum = (EditText) findViewById(R.id.et_phonenum);
         et_password = (EditText) findViewById(R.id.et_key);
         btn_sure = (Button) findViewById(R.id.btn_sure);
@@ -88,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     toast("请输入密码");
                 }
                 //写登录的账号密码判断语句 和跳转
-
+                postLoginRequest(pn,pw);
 
 
             }
@@ -101,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
      * @param password
      */
     private void postLoginRequest(String phoneNumber,String password){
-        JSONObject syncRecordsJsonObject= SyncUtil.getAllSyncRecords();
         RequestBody formBody = new FormBody.Builder()
                 .add("type",Integer.toString(0))
                 .add("account",phoneNumber)
@@ -147,24 +147,41 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject dataJson = resultJson.getJSONObject("data");
 
                         toast("登陆成功！");
-                        //@TODO 用户登录时获得的token，需要保存
-                        String token=dataJson.toString();
-                        //@TODO 在这里添加用户信息的载入跟页面跳转等等
-                        return;
+                        storeUserInfomation(dataJson);     //将用户信息及token存储进文件
+
+                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        startActivity(intent);              //跳转到主界面
                     }
                     //响应结果为失败类型
                     else{
                         String errorMessage="状态码："+statusCode+",错误信息："+message+'\n';
                         toast("登录失败\n"+errorMessage);
-                        return;
                     }
                 } catch (IOException e) {
                     toast("登录失败，未知错误，错误信息请查看控制台");
                     e.printStackTrace();
-                    return;
                 }
             }
         });
+    }
+
+    /**
+     * 将json中的用户数据存储智文件
+     * @param dataJson
+     */
+    private void storeUserInfomation(JSONObject dataJson){
+        String token=dataJson.getString("token");
+        int userId=dataJson.getInteger("userId");
+        String userName=dataJson.getString("userName");
+        String phone=dataJson.getString("phone");
+        String email=dataJson.getString("email");
+
+        User user = new User(getSharedPreferences("user",MODE_PRIVATE));
+        user.setToken(token);
+        user.setUserId(userId);
+        user.setUserName(userName);
+        user.setPhone(phone);
+        user.setEmail(email);
     }
     private void toast(final String str) {
         runOnUiThread(new Runnable() {
