@@ -10,96 +10,91 @@ import java.util.Date;
 import dao.BillDAO;
 import dao.BillDAOImpl;
 
-public class User {
-    private SharedPreferences.Editor editor;
-    private SharedPreferences preferences;
+public class UserUtil {
+    private static SharedPreferences.Editor editor;
+    private static SharedPreferences preferences;
 
-    public User(SharedPreferences preferences) {
 
-        this.preferences = preferences;
-        this.editor = preferences.edit();
-    }
-
-    public void setUserId(int id) {
+    public static void setUserId(int id) {
         editor.putInt("user_id",id);
         editor.apply();
     }
 
-    public int getUserId() {
+    public static int getUserId() {
         int userId=preferences.getInt("user_id",0);
         return userId;
     }
 
-    public void setUserName(String name) {
+    public static void setUserName(String name) {
         editor.putString("user_name",name);
         editor.apply();
     }
 
-    public String getUserName() {
+    public static String getUserName() {
         String name=preferences.getString("user_name","user");
         return name;
     }
 
-    public void setPhone(String phone) {
+    public static void setPhone(String phone) {
         editor.putString("phone",phone);
         editor.apply();
     }
 
-    public String getPhone() {
+    public static String getPhone() {
         String phone=preferences.getString("phone","");
         return phone;
     }
 
-    public void setEmail(String email) {
+    public static void setEmail(String email) {
         editor.putString("email",email);
         editor.apply();
     }
 
-    public String getEmail() {
+    public static String getEmail() {
         String email=preferences.getString("email","");
         return email;
     }
 
-    public void setPassword(String password) {
+    public static void setPassword(String password) {
         editor.putString("password",password);
         editor.apply();
     }
 
-    public String getPassword() {
+    public static String getPassword() {
         String password=preferences.getString("password","");
         return password;
     }
 
-    public void setRemember(boolean remember) {
+    public static void setRemember(boolean remember) {
         editor.putBoolean("remember",remember);
         editor.apply();
     }
 
-    public boolean getRemember() {
+    public static boolean getRemember() {
         boolean remember=preferences.getBoolean("remember",false);
         return remember;
     }
 
-    public void setLimit(float limit) {
+    public static void setLimit(float limit) {
         editor.putFloat("limit",limit);
         editor.apply();
     }
 
-    public float getLimit() {
+    public static float getLimit() {
         float limit=preferences.getFloat("limit",-1f);
         return limit;
     }
 
-    public void setToken(String token){
+    public static void setToken(String token){
         editor.putString("token",token);
         editor.apply();
     }
-    public String getToken(){
+    public static String getToken(){
         String token=preferences.getString("token","");
         return token;
     }
 
-    public String earlyWarning(){
+    public static String earlyWarning(){
         float limit=getLimit();
         String warning=null;
         if (limit>0){
@@ -132,19 +127,12 @@ public class User {
         return warning;
     }
 
-    public SharedPreferences.Editor getEditor() {
-        return editor;
-    }
-
-    public void setEditor(SharedPreferences.Editor editor) {
-        this.editor = editor;
-    }
-
-    public SharedPreferences getPreferences() {
+    public static SharedPreferences getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(SharedPreferences preferences) {
-        this.preferences = preferences;
+    public static void setPreferences(SharedPreferences p) {
+        preferences = p;
+        editor = p.edit();
     }
 }
