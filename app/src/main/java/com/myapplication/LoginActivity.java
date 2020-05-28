@@ -2,7 +2,6 @@ package com.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,8 +24,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import util.SyncUtil;
-import util.User;
+import util.UserUtil;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -176,12 +174,12 @@ public class LoginActivity extends AppCompatActivity {
         String phone=dataJson.getString("phone");
         String email=dataJson.getString("email");
 
-        User user = new User(getSharedPreferences("user",MODE_PRIVATE));
-        user.setToken(token);
-        user.setUserId(userId);
-        user.setUserName(userName);
-        user.setPhone(phone);
-        user.setEmail(email);
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        UserUtil.setToken(token);
+        UserUtil.setUserId(userId);
+        UserUtil.setUserName(userName);
+        UserUtil.setPhone(phone);
+        UserUtil.setEmail(email);
     }
     private void toast(final String str) {
         runOnUiThread(new Runnable() {
