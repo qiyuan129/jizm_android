@@ -78,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/select_layout"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:id="@+id/item_tb_type_tv"
@@ -89,6 +89,7 @@
             android:layout_gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
+            android:text="账单分类"
             android:textColor="#333333"
             android:textSize="26sp" />
 
@@ -119,8 +120,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/view_line"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:background="@color/cardview_light_background"
         android:orientation="horizontal">
@@ -129,15 +130,16 @@
             android:id="@+id/tb_note_cash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="7dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="7dp"
             android:background="@drawable/shape_tb_cash"
-            android:paddingLeft="20dp"
+            android:paddingLeft="15dp"
             android:paddingTop="6dp"
             android:paddingRight="20dp"
             android:paddingBottom="7dp"
+            android:text="账户"
             android:textColor="@color/cardview_light_background"
             android:textSize="15sp" />
 
@@ -164,13 +166,22 @@
                 android:id="@+id/tb_note_remark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@id/tb_note_text"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
-                android:paddingRight="16dp"
+                android:paddingRight="10dp"
                 android:paddingBottom="5dp"
                 android:src="@mipmap/ic_tb_note_remark" />
+
+            <TextView
+                android:id="@+id/tb_note_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="账单名称"/>
         </RelativeLayout>
 
     </LinearLayout>

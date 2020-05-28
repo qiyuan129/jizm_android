@@ -72,6 +72,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private TextView moneyTv;       //金额
     private TextView dateTv;        //日期选择
     private TextView cashTv;        //支出账户
+    private TextView remarkTv;      //账单名称
+    private ImageView clear;        //清空金额
+    private ImageView remarkIv;     //账单名称
+    private RelativeLayout delect;  //数字键盘回格键
 
     //数字键盘
     private TextView num1;
@@ -86,10 +90,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private TextView num0;
     private TextView dot;        //小数点
     private TextView done;       //确认
-
-    private ImageView clear;           //清空金额
-    private ImageView remarkIv;        //备注
-    private RelativeLayout delect;     //数字键盘回格键
 
     //时间选择器
     protected String days;
@@ -152,6 +152,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         cashTv.setOnClickListener(this);
         cashTv.setText("");
         initcashTv();
+
+        remarkTv = (TextView) mView.findViewById(R.id.tb_note_text);
+        remarkTv.setOnClickListener(this);
 
         remarkIv = (ImageView) mView.findViewById(R.id.tb_note_remark);
         remarkIv.setOnClickListener(this);
@@ -219,6 +222,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 Log.d("Fragment","选择日期");
                 break;
             case R.id.tb_note_remark:
+                showContentDialog();
+                Log.d("Fragment","备注");
+                break;
+            case R.id.tb_note_text:
                 showContentDialog();
                 Log.d("Fragment","备注");
                 break;
@@ -350,7 +357,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 .canceledOnTouchOutside(false)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRangeRes(0, 200, R.color.colorPrimaryDark)
-                .input("账单名称", null, new MaterialDialog.InputCallback() {
+                .input("账单名称", remarkInput, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
 
