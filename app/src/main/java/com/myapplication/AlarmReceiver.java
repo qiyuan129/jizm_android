@@ -83,7 +83,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         calendar.setTime(now);
         int nowDay = calendar.get(Calendar.DATE);//获取日
         int nowWeek = calendar.get(Calendar.DAY_OF_WEEK);//星期
-
+        int nowMonth = calendar.get(Calendar.MONTH) + 1;   //获取月份，0表示1月份
+        int nowYear =  calendar.get(Calendar.YEAR);//获取当前年
 
 
         //当前时间大于开始而小于结束
@@ -105,7 +106,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     break;
 
                 case 2://月
-                    if(nowDay==startDay){//时间差不到一小时,则执行
+                    if(judgeDay(startDay,nowYear,nowMonth,nowDay)){//判断日期是否符合，符合则执行
                         doPeriodic(obj);
                     }
 
@@ -122,6 +123,62 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
     }
+
+
+
+    /*
+    判断这个日期的周期时间是否执行
+     */
+    boolean judgeDay(int startDay,int nowYear,int nowMonth,int nowDay){
+        if(nowMonth==2){
+            if(bissextile(nowYear)&&nowDay==29){
+                return true;//闰年的29号，周期事件都要做
+            }
+            else if(!bissextile(nowYear) && nowDay==28){//平年的28号，周期事件都要做
+                return true;
+            }
+            else {
+                if(startDay==nowDay){
+                    return true;
+                }
+            }
+
+
+        }
+
+        else if(nowMonth==4||nowMonth==6||nowMonth==9||nowMonth==11){
+            if(nowDay==30){
+                return true;
+            }
+            else{
+                if(startDay==nowDay){
+                    return true;
+                }
+            }
+
+        }
+
+        else{//1,3,5,7,8,10,12 这几个月有31天，不会错过任何一天，所以无需在31号的时候强行执行这个周期事件
+            if(startDay==nowDay){
+                return true;
+            }
+
+        }
+
+
+        return false;//其他情况，返回false
+    }
+
+
+    boolean bissextile(int year){  //判断闰年
+        if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){  //平闰年判断算法
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
 
     public void doPeriodic(Periodic obj){

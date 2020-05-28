@@ -52,6 +52,8 @@ public class Fragment1_3 extends Fragment {
 
 
 
+
+        //Log.i("创建fragment1_3 view", "刷新数据");
        /* //初始化数据。。。。。。。。。。。。。。。。。。。。。。。。
         Date date=new Date();
         Date date1= new Date(2020-1900, 3, 1);
@@ -150,6 +152,7 @@ public class Fragment1_3 extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent Tdata){
+        //返回数据给上一层
         switch (requestCode){
             case 1110 :
                 if(resultCode==RESULT_OK){
@@ -168,6 +171,49 @@ public class Fragment1_3 extends Fragment {
                 break;
         }
     }
+
+
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("TTPPPPP", "onHiddenChanged  ！hidden刷新数据");
+
+        if(hidden){
+            //TODO now visible to user
+            Log.i("TTP", "onHiddenChanged  hidden刷新数据");
+        } else {
+            //TODO now invisible to user
+            Log.i("TTP", "onHiddenChanged  ！hidden刷新数据");
+        }
+    }
+
+
+
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser)
+    {
+        Log.i("TAG", "---------setUserVisibleHint(" + isVisibleToUser + ")");
+        //到显示状态为true，不可见为false
+        if (isVisibleToUser)
+        {
+
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Fragment ", "----------------------onResume");
+    }
+
 
 
 
