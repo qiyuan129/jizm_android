@@ -63,19 +63,6 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     //收入支出单选button组
     private RadioGroup RBGroup;
     private RadioButton incomeRB, outcomeRB;
@@ -177,7 +164,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     设置下拉列表默认选中的值
      */
     public void setDefaultPsinnerItem(){
-        //dao的代码还没好，先注释掉
+
         //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
         int catId = periodic.getCategory_id();
         CategoryDAO catDAO = new CategoryDAOImpl();
@@ -190,7 +177,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 break;
             }
         }
-        //spinner.setSelection(1);
+
 
 
     }
@@ -235,9 +222,11 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         //设置收入支出类别
         if(periodic.getType()==1){//收入
             RBGroup.check(incomeRB.getId());
+            typeId = 1;
         }
         else {//支出
             RBGroup.check(outcomeRB.getId());
+            typeId = 0;
         }
 
 
@@ -314,11 +303,17 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //设置周期
         switch (periodic.getCycle()){
-          case 0:RecycleRBGroup.check(perDay.getId());
+          case 0:
+              RecycleRBGroup.check(perDay.getId());
+              recycleId=0;//每天
               break;
-          case 1:RecycleRBGroup.check(perWeek.getId());
+          case 1:
+              RecycleRBGroup.check(perWeek.getId());
+              recycleId=1;//每周
               break;
-          case 2:RecycleRBGroup.check(perMonth.getId());
+          case 2:
+              RecycleRBGroup.check(perMonth.getId());
+              recycleId=2;//每月
               break;
 
               default:

@@ -131,13 +131,13 @@ public class AlarmReceiver extends BroadcastReceiver {
      */
     boolean judgeDay(int startDay,int nowYear,int nowMonth,int nowDay){
         if(nowMonth==2){
-            if(bissextile(nowYear)&&nowDay==29){
-                return true;//闰年的29号，周期事件都要做
+            if(bissextile(nowYear) && nowDay==29 && startDay>=29){
+                return true;//闰年的29号，29,30,31号的周期事件都要做
             }
-            else if(!bissextile(nowYear) && nowDay==28){//平年的28号，周期事件都要做
-                return true;
+            else if(!bissextile(nowYear) && nowDay==28 && startDay>=28){
+                return true;//平年的28号，29,30,31的周期事件都要做
             }
-            else {
+            else {//29/28 号之前的日期，不包含29/28
                 if(startDay==nowDay){
                     return true;
                 }
@@ -147,10 +147,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         else if(nowMonth==4||nowMonth==6||nowMonth==9||nowMonth==11){
-            if(nowDay==30){
+            if(nowDay==30 && startDay>=30){//30,31的周期事件都要做
                 return true;
             }
-            else{
+            else{//30号之前的日期，不包含29
                 if(startDay==nowDay){
                     return true;
                 }
@@ -164,7 +164,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
 
         }
-
 
         return false;//其他情况，返回false
     }
@@ -182,7 +181,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
     public void doPeriodic(Periodic obj){
-        double money = obj.getPeriodic_money();
+        double money = obj.getPeriodic_money();//周期事件金额
         int accountId = obj.getAccount_id();
         Account account = accountDAO.getAccountById(accountId);
         if(account==null){
@@ -191,25 +190,50 @@ public class AlarmReceiver extends BroadcastReceiver {
         else {
             double accountMoney=account.getMoney();
 
-            if(accountMoney>=money){//账户余额充足，可以执行
-                account.setMoney(accountMoney-money);
-                accountDAO.updateAccount(account);
+            if(obj.getType()==0){//0 支出
 
+                if(accountMoney>=money){//账户余额充足，可以执行
+                    account.setMoney(accountMoney-money);
+
+                    accountDAO.updateAccount(account);
+                    //新建一个账单写入数据库
+                    BillDAO billDAO = new BillDAOImpl();
+                    Bill bill = new Bill(0,obj.getAccount_id(),obj.getCategory_id(),obj.getUser_id(),
+                            obj.getType(),"周期："+obj.getPeriodic_name(),
+                            new Date(),obj.getPeriodic_money(),
+                            0,new Date());
+                    billDAO.insertBill(bill);
+
+                }
+
+                else{//账户余额不足,放弃执行
+                    Log.d("LongRunningService:", "账户余额不足，周期事件放弃执行" + new Date().toString());
+                    return;
+                }
+
+            }
+
+
+
+            else{//收入
+                account.setMoney(accountMoney+money);
+                accountDAO.updateAccount(account);
                 //新建一个账单写入数据库
                 BillDAO billDAO = new BillDAOImpl();
                 Bill bill = new Bill(0,obj.getAccount_id(),obj.getCategory_id(),obj.getUser_id(),
-                        obj.getType(),"周期事件："+obj.getPeriodic_name(),
+                        obj.getType(),"周期："+obj.getPeriodic_name(),
                         new Date(),obj.getPeriodic_money(),
                         0,new Date());
                 billDAO.insertBill(bill);
 
-
             }
 
-            else{//账户余额不足,放弃执行
-                Log.d("LongRunningService:", "账户余额不足，周期事件放弃执行" + new Date().toString());
-                return;
-            }
+
+
+
+
+
+
         }
 
     }
