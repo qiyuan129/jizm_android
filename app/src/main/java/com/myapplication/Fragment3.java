@@ -140,8 +140,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
             public boolean onQueryTextSubmit(String query) {
                 //提交搜索后的处理逻辑
                 //实际应用中应该在该方法内执行实际查询，此处仅使用Toast显示用户输入的查询内容
-                Toast.makeText(getActivity(), "你输入的选择是：" + query,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "你输入的选择是：" + query, Toast.LENGTH_SHORT).show();
 
                 return false;
             }
@@ -270,7 +269,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 break;
             case R.id.search_periodic:
                 Log.d("search_periodic","查询事件");
-                Toast.makeText(getActivity(), "搜索功能尚未编写", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "搜索功能", Toast.LENGTH_SHORT).show();
                 break;
 
 
@@ -306,8 +305,10 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     删除周期事件
     id: 周期事件id
      */
-    private boolean deletePeriodic(int id){
-        Periodic delPeriodic = periodics.get(id);
+    private boolean deletePeriodic(int index){
+        //Periodic delPeriodic = periodics.get(id);
+        Periodic delPeriodic = (Periodic) tmpadapter.getItem(index);
+
         //标记为删除
         delPeriodic.setState(-1);
 
@@ -316,10 +317,10 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         periodicDAO.deletePeriodic(delPeriodic.getPeriodic_id());
 
         //periodics与tmpadapter里的数据是绑定的，因此periodics不用重复删除
-        tmpadapter.removeItem(id);
+        tmpadapter.removeItem(index);
         tmpadapter.notifyDataSetChanged();
 
-        Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -434,7 +435,11 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
     }
 
     public void removeItem(int index){
+
+        backData.remove(data.get(index));
         data.remove(index);
+
+
     }
 
 
