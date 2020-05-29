@@ -64,10 +64,6 @@ public class Fragment1_1 extends Fragment {
     private LineChart lineChart;
     private TrendListAdapter adapter;
     private XAxis xAxis;                //X轴
-    private YAxis leftYAxis;            //左侧Y轴
-    private YAxis rightYaxis;           //右侧Y轴
-    private Legend legend;              //图例
-    private LimitLine limitLine;        //限制线
 
     private List<TrendListItem> trendList = new ArrayList<>();
     private List<IncomeLineItem> incomeLine = new ArrayList<>();
@@ -192,9 +188,6 @@ public class Fragment1_1 extends Fragment {
     }
 
 
-
-
-
     public int getYear(String stryear) {
         int year = 0;
         try {
@@ -210,7 +203,9 @@ public class Fragment1_1 extends Fragment {
 
      private void initChart(LineChart lineChart)
      {
-           /***图表设置***/
+         YAxis leftYAxis;            //左侧Y轴
+         YAxis rightYaxis;           //右侧Y轴
+           /*图表设置*/
            //是否展示网格线
           lineChart.setDrawGridBackground(false);
             //是否显示边界
@@ -250,7 +245,7 @@ public class Fragment1_1 extends Fragment {
 
           /***折线图例 标签 设置***/
 
-          legend = legend = lineChart.getLegend();
+          Legend legend = lineChart.getLegend();
                 //设置显示类型，LINE CIRCLE SQUARE EMPTY 等等 多种方式，查看LegendForm 即可
           legend.setForm(Legend.LegendForm.LINE);
           legend.setTextSize(12f);
@@ -287,21 +282,6 @@ public class Fragment1_1 extends Fragment {
            }
       }
 
-      private void addLine(List<OutcomeLineItem> dataList, String name, int color)
-      {
-          List<Entry> entries = new ArrayList<>();
-          for (int i = 0; i < dataList.size(); i++) {
-              OutcomeLineItem data = dataList.get(i);
-              Entry entry = new Entry(i, (float) data.getValue());
-              entries.add(entry);
-          }
-          // 每一个LineDataSet代表一条线
-          LineDataSet lineDataSet = new LineDataSet(entries, name);
-          initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
-          lineChart.getLineData().addDataSet(lineDataSet);
-          lineChart.invalidate();
-      }
-
       public void setMarkerView()
       {
           LineChartMarkView mv = new LineChartMarkView(getActivity(), xAxis.getValueFormatter());
@@ -314,9 +294,11 @@ public class Fragment1_1 extends Fragment {
           if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0)
           {
               LineDataSet lineDataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
-              //避免在 initLineDataSet()方法中 设置了 lineDataSet.setDrawFilled(false); 而无法实现效果
               lineDataSet.setDrawFilled(true);
               lineDataSet.setFillDrawable(drawable);
+
+              //避免在 initLineDataSet()方法中 设置了 lineDataSet.setDrawFilled(false); 而无法实现效果
+
               lineChart.invalidate();
           }
       }
@@ -338,6 +320,22 @@ public class Fragment1_1 extends Fragment {
           setChartFillDrawable(drawable);
           setMarkerView();
       }
+    private void addLine(List<OutcomeLineItem> dataList, String name, int color)
+    {
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++) {
+            OutcomeLineItem data = dataList.get(i);
+            Entry entry = new Entry(i, (float) data.getValue());
+            entries.add(entry);
+        }
+        // 每一个LineDataSet代表一条线
+       LineDataSet lineDataSet = new LineDataSet(entries, name);
+        initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
+        lineChart.getLineData().addDataSet(lineDataSet);
+        //Drawable drawable = getResources().getDrawable(R.drawable.outcome_fade);
+        //setChartFillDrawable(drawable);
+        lineChart.invalidate();
+    }
 
     public void initStartTimePicker() {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
