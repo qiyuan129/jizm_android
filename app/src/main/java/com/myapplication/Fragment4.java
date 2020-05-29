@@ -98,13 +98,13 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
 
 
 
-        Glide.with(getActivity()).
-                load(R.drawable.user_back).bitmapTransform(new BlurTransformation(getActivity(), 25), new CenterCrop(getActivity())).
-                into(imageViewb);
-
-        Glide.with(getActivity()).load(R.drawable.user_head)
-                .bitmapTransform(new CropCircleTransformation(getActivity()))
-                .into(imageViewh);
+//        Glide.with(getActivity()).
+//                load(R.drawable.user_back).bitmapTransform(new BlurTransformation(getActivity(), 25), new CenterCrop()).
+//                into(imageViewb);
+//
+//        Glide.with(getActivity()).load(R.drawable.user_head)
+//                .bitmapTransform(new CropCircleTransformation(getActivity()))
+//                .into(imageViewh);
 
         userName.setText("乔大");
         userTel.setText("132546785");
