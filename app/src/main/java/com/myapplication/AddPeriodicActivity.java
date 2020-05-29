@@ -1,6 +1,5 @@
 package com.myapplication;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -35,7 +34,7 @@ import dao.PeriodicDAOImpl;
 import pojo.Account;
 import pojo.Category;
 import pojo.Periodic;
-import util.User;
+import util.UserUtil;
 
 public class AddPeriodicActivity extends AppCompatActivity implements View.OnClickListener{
     ArrayList<Category> categories;
@@ -362,9 +361,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
         //Periodic.数据库自增长，这里随便填一个
-        User user = new User(getSharedPreferences("user",MODE_PRIVATE));
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
 
-        Periodic periodic=new Periodic(0,accountId,categoryId,user.getUserId(),
+        Periodic periodic=new Periodic(0,accountId,categoryId,UserUtil.getUserId(),
                 typeId,periodicName,recycleId,start,end,money,state,new Date());
 
 
