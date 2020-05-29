@@ -43,8 +43,6 @@ import dao.CategoryDAOImpl;
 import pojo.Account;
 import pojo.Bill;
 import pojo.Category;
-import util.MyDatabaseHelper;
-import util.User;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
