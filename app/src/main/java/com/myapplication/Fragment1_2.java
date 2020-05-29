@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -52,7 +53,7 @@ public class Fragment1_2 extends Fragment
     private View mView;
     private ImageButton refresh;
     private PieChart mPieChart;
-    private Switch mChangeType;
+    private Button changeTypeButton;
     private ListView lview;
     private String strbeginDate;
     private String strendDate;
@@ -63,6 +64,8 @@ public class Fragment1_2 extends Fragment
     private List<CategoryChartItem> categoryChart = new ArrayList<>();
     private TimePickerView mStartDatePickerView1;
     private TimePickerView mStartDatePickerView2;
+
+    final int[] typeFlag= {0};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -77,13 +80,13 @@ public class Fragment1_2 extends Fragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment1_2, container, false);
         }
-
         lview = mView.findViewById(R.id.CategoryList);
         mPieChart = mView.findViewById(R.id.PieChart);
-        mChangeType = mView.findViewById(R.id.Switch_In_Out);
         refresh = mView.findViewById(R.id.refresh_category);
         tvBeginDate = mView.findViewById(R.id.beginDate);
         tvEndDate = mView.findViewById(R.id.endDate);
+        changeTypeButton = mView.findViewById(R.id.button2);
+
 
         //设置texeview初始时间，为本月1号——今日
         tvBeginDate.setText(strbeginDate);
@@ -113,21 +116,24 @@ public class Fragment1_2 extends Fragment
         categoryChart = loadcategoryChart(strbeginDate,strendDate,OutcomeFlag);
         ShowPieChart(mPieChart, setPieChartData(categoryChart), OutcomeFlag);
 
-        //收支切换时 refresh数据
-        mChangeType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        ///中心按钮 收支切换时 refresh数据
+        changeTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if (isChecked)
+            public void onClick(View view) {
+                if(typeFlag[0] == 1)
                 {
-                    RefreshData(strbeginDate,strendDate,IncomeFlag);
-                    Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                    typeFlag[0] = 0;
+                    //changeTypeButton.setText("总支出"+allmoneystring+"元");
                     RefreshData(strbeginDate,strendDate,OutcomeFlag);
                     Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+                }
+
+                else if(typeFlag[0] == 0)
+                {
+                    typeFlag[0] = 1;
+                    //changeTypeButton.setText("总收入"+allmoneystring+"元");
+                    RefreshData(strbeginDate,strendDate,IncomeFlag);
+                    Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -140,12 +146,12 @@ public class Fragment1_2 extends Fragment
                 {
                     strbeginDate = tvBeginDate.getText().toString();
                     strendDate = tvEndDate.getText().toString();
-                    if(mChangeType.isChecked())
+                    if(typeFlag[0]==1)
                     {
                         RefreshData(strbeginDate,strendDate,IncomeFlag);
                         Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
                     }
-                    else
+                    else if(typeFlag[0]==0)
                     {
                         RefreshData(strbeginDate,strendDate,OutcomeFlag);
                         Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
@@ -324,7 +330,8 @@ public class Fragment1_2 extends Fragment
         description.setEnabled(false);
         pieChart.setDescription(description);
         //设置半透明圆环的半径, 0为透明
-        pieChart.setTransparentCircleRadius(0f);
+        pieChart.setTransparentCircleRadius(48f);
+        pieChart.setHoleRadius(45f); //半径
         //设置初始旋转角度
         pieChart.setRotationAngle(-15);
         //数据连接线距图形片内部边界的距离，为百分数
@@ -361,6 +368,7 @@ public class Fragment1_2 extends Fragment
             pieChart.setCenterText("总支出"+allmoneystring+"元");
         else
             pieChart.setCenterText("总收入"+allmoneystring+"元");
+
         pieChart.setCenterTextColor(Color.DKGRAY);//中间的文字颜色
         pieChart.setCenterTextSize(12);//中间的文字字体大小
         // 绘制内容value，设置字体颜色大小

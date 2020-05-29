@@ -7,6 +7,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import dao.AccountDAO;
@@ -41,42 +44,12 @@ public class SyncUtil {
 
     private final static OkHttpClient client = new OkHttpClient();
 
-    public static void uploadRecords(){
-        JSONObject syncRecordsJsonObject=SyncUtil.getAllSyncRecords();
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,
-                syncRecordsJsonObject.toJSONString());
-
-        Request request = new Request.Builder()
-                .url("http://192.168.0.100:8080/app/synchronization")    //这里的主机地址要填电脑的ip地址
-                .post(requestBody)
-                .addHeader("token", "emptyToken")
-                .build();
-
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful())
-                        throw new IOException("Unexpected code " + response);
-
-//                            Headers responseHeaders = response.headers();
-//                            for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-//                                System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-//                            }
-                    //resultText.setText(responseBody.string());
-                    System.out.println(responseBody.string());
-                    JSONObject resultJson=JSONObject.parseObject(responseBody.string());
-                    SyncUtil.processUploadResult(resultJson);
-                }
-            }
-        });
-    }
+    /**
+     * 构造存有Account表待上传记录的jsonObject
+     * @param needSync
+     * @param accountList
+     * @return
+     */
     public static JSONObject getAccountSyncRecordsJson(boolean needSync, List<Account> accountList){
         JSONObject accountSyncRecords=new JSONObject();
 
@@ -103,7 +76,12 @@ public class SyncUtil {
         return accountSyncRecords;
     }
 
-
+    /**
+     * 构造存有Bill表待上传记录的jsonObject
+     * @param needSync
+     * @param billList
+     * @return
+     */
     public static JSONObject getBillSyncRecordsJson(boolean needSync, List<Bill> billList){
         JSONObject billSyncRecords=new JSONObject();
 
@@ -138,6 +116,12 @@ public class SyncUtil {
         return billSyncRecords;
     }
 
+    /**
+     * 构造存有Category表待上传记录的jsonObject
+     * @param needSync
+     * @param categoryList
+     * @return
+     */
     public static JSONObject getCategorySyncRecordsJson(boolean needSync,
                                                         List<Category> categoryList){
        JSONObject categorySyncRecords=new JSONObject();
@@ -163,6 +147,12 @@ public class SyncUtil {
         return categorySyncRecords;
     }
 
+    /**
+     * 构造存有Periodic表待上传记录的jsonObject
+     * @param needSync
+     * @param periodicList
+     * @return
+     */
     public static JSONObject getPeriodicSyncRecordsJson(boolean needSync,
                                                         List<Periodic> periodicList){
         JSONObject  periodicSyncRecords=new JSONObject();
@@ -192,6 +182,11 @@ public class SyncUtil {
 
         return periodicSyncRecords;
     }
+
+    /**
+     * 获取所有需要同步的记录
+     * @return   一个存有各表待上传记录的JSONObject
+     */
     public static JSONObject getAllSyncRecords(){
         JSONObject accountRecordsJson;
         JSONObject billRecordsJson;
@@ -245,6 +240,10 @@ public class SyncUtil {
         return finalResult;
     }
 
+    /**
+     * 上传成功后，根据服务器返回结果对本地记录同步状态进行更新
+     * @param dataJson
+     */
     public static void processUploadResult(JSONObject dataJson){
         JSONObject accountSyncRecords=dataJson.getJSONObject("Account");
         JSONObject billSyncRecords=dataJson.getJSONObject("Bill");
@@ -290,5 +289,88 @@ public class SyncUtil {
             }
         }
         System.out.println("处理上传结果响应成功");
+    }
+
+    /**
+     * 获取各表与上一次与服务器同步的时间
+     * @return
+     */
+    public static JSONObject getTableLastUpdateTime(){
+        AccountDAO accountDAO=new AccountDAOImpl();
+        BillDAO billDAO=new BillDAOImpl();
+        CategoryDAO categoryDAO=new CategoryDAOImpl();
+        PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+
+        JSONObject resultObject=new JSONObject();
+
+        //注意：根据getMaxAnchor（）函数的实现可知，表中无记录时，获得到的anchor为Date(0）,刚好可以让服务器返回
+        // 所有记录
+        resultObject.put("Account",accountDAO.getMaxAnchor());
+        resultObject.put("Bill",billDAO.getMaxAnchor());
+        resultObject.put("Category",categoryDAO.getMaxAnchor());
+        resultObject.put("Periodic",periodicDAO.getMaxAnchor());
+
+        return resultObject;
+    }
+
+    /**
+     * 根据服务器对下载请求的响应结果 更新本地数据库(调用处理各表下载结果的子函数)
+     * @param dataJson
+     */
+    public static void processDownloadResult(JSONObject dataJson){
+        JSONObject accountSyncRecords=dataJson.getJSONObject("Account");
+        JSONObject billSyncRecords=dataJson.getJSONObject("Bill");
+        JSONObject categorySyncRecords=dataJson.getJSONObject("Category");
+        JSONObject periodicSyncRecords=dataJson.getJSONObject("Periodic");
+
+        AccountDAO accountDAO = new AccountDAOImpl();
+        BillDAO billDAO = new BillDAOImpl();
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+
+        processAccountDownload(accountSyncRecords);
+        processBillDownload(billSyncRecords);
+        processCategoryDownload(categorySyncRecords);
+        processPeriodicDownload(periodicSyncRecords);
+
+    }
+
+    /**
+     * 处理Account表下载结果
+     * @param accountSyncRecords
+     */
+    public static void processAccountDownload(JSONObject accountSyncRecords){
+        AccountDAO accountDAO=new AccountDAOImpl();
+        JSONArray recordsJSONArray=accountSyncRecords.getJSONArray("recordList");
+        ArrayList<Integer> conflictIdList=new ArrayList<>();
+
+        for(int i=0;i<recordsJSONArray.size();i++){
+            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            int id=recordObject.getInteger("localId");
+            int userId=recordObject.getInteger("userId");
+            String name=recordObject.getString("name");
+            Double money=recordObject.getDouble("money");
+            Account newAccount=new Account(id,userId,name,money,0,new Date(0));
+            if(accountDAO.getAccountById(id)==null){             //记录与本地没有冲突，直接加入
+                accountDAO.insertAccount(newAccount);
+            }
+            else{
+
+            }
+        }
+    }
+
+    /**
+     * 处理Bill表下载结果
+     * @param billSyncRecords
+     */
+    public static void processBillDownload(JSONObject billSyncRecords){
+
+    }
+    public static void processCategoryDownload(JSONObject categorySyncRecords){
+
+    }
+    public static void processPeriodicDownload(JSONObject periodicSyncRecords){
+
     }
 }
