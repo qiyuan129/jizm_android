@@ -6,6 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private Fragment3 fragment3;
     private Fragment4 fragment4;
     private List<Fragment> list;
+
+    private Toolbar toolbar;
 
     public static MyDatabaseHelper dbHelper;
 
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -288,6 +294,28 @@ public class MainActivity extends AppCompatActivity {
 //        periodic=new Periodic(4,4,5,1,1,"动车票",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),60,0,date0);
 //        periodicDAO.addPeriodic(periodic);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_edit_category:
+                Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_edit_account:
+                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                break;
+        }
+
+        return true;
     }
 
     public void initView(){

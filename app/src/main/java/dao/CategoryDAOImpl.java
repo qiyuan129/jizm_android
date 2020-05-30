@@ -144,4 +144,13 @@ public class CategoryDAOImpl implements CategoryDAO {
             updateCategory(category);
         }
     }
+
+    @Override
+    public void setState(int id, int state) {
+        Category category=getCategoryById(id);
+        if (category!=null){
+            category.setState(state);
+            updateCategory(category);
+        }
+    }
 }

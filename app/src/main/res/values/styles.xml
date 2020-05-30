@@ -6,6 +6,13 @@
         <item name="colorPrimary">@color/xui_config_color_main_theme</item>
         <item name="colorPrimaryDark">@color/xui_config_color_main_theme</item>
         <item name="colorAccent">@color/xui_config_color_main_theme</item>
+
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    </style>
+
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>  <!--设置不覆盖锚点-->
+        <item name="android:dropDownVerticalOffset">4dp</item>
     </style>
 
 </resources>
