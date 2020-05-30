@@ -115,6 +115,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         outcomeTv = (Button) mView.findViewById(R.id.outcome_tv);
         outcomeTv.setOnClickListener(this);
 
+        outcomeTv.setSelected(true);
+
         edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
         edittypeTv.setOnClickListener(this);
 

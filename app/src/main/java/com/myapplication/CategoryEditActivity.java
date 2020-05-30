@@ -57,6 +57,8 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         outcomeTv = (TextView) findViewById(R.id.tb_note_outcome);
         outcomeTv.setOnClickListener(this);
 
+        incomeTv.setSelected(true);
+
         backIv = (ImageView) findViewById(R.id.back_btn);
         backIv.setOnClickListener(this);
 
