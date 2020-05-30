@@ -144,4 +144,13 @@ public class AccountDAOImpl implements AccountDAO {
             updateAccount(account);
         }
     }
+
+    @Override
+    public void setState(int id, int state) {
+        Account account=getAccountById(id);
+        if (account!=null){
+            account.setState(state);
+            updateAccount(account);
+        }
+    }
 }

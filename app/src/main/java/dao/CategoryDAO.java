@@ -24,5 +24,5 @@ public interface CategoryDAO {
 
     void setStateAndAnchor(int id, int state, Date anchor);
 
-
+    void setState(int id,int state);
 }

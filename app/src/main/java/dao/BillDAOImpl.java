@@ -411,4 +411,13 @@ public class BillDAOImpl implements BillDAO {
             updateBill(bill);
         }
     }
+
+    @Override
+    public void setState(int id, int state) {
+        Bill bill=getBillById(id);
+        if (bill!=null){
+            bill.setState(state);
+            updateBill(bill);
+        }
+    }
 }

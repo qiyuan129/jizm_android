@@ -177,4 +177,13 @@ public class PeriodicDAOImpl implements PeriodicDAO {
             updatePeriodic(periodic);
         }
     }
+
+    @Override
+    public void setState(int id, int state) {
+        Periodic periodic=getPeriodicById(id);
+        if (periodic!=null){
+            periodic.setState(state);
+            updatePeriodic(periodic);
+        }
+    }
 }
