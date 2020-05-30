@@ -1,8 +1,10 @@
 package com.myapplication;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,6 +61,13 @@ public class PersonalDataEditActivity extends AppCompatActivity implements View.
         phoneEdit=(EditText)findViewById(R.id.phone_edit);
         emailEdit=(EditText)findViewById(R.id.email_edit);
         nickNameEdit=(EditText)findViewById(R.id.nickname_edit);
+
+
+        //设置信息
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        phoneEdit.setText(UserUtil.getPhone());
+        emailEdit.setText(UserUtil.getEmail());
+        nickNameEdit.setText(UserUtil.getUserName());
     }
 
 
@@ -68,9 +79,20 @@ public class PersonalDataEditActivity extends AppCompatActivity implements View.
                 break;
 
             case R.id.update_personal_data: {
-                Toast.makeText(this, "保存用户信息还未实现", Toast.LENGTH_SHORT).show();
                 //@TODO 对输入的各条信息判断非空后，调用写好的 updatePersonalData(xxxx)函数
-                // Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                String phone = phoneEdit.getText().toString();
+                String email = emailEdit.getText().toString();
+                String nickName = nickNameEdit.getText().toString();
+                if(judgeData(phone,email,nickName)){
+                    updatePersonalData(phone,email,nickName);
+
+                    //服务器改完后本地更改
+                    UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+                    UserUtil.setPhone(phone);
+                    UserUtil.setEmail(email);
+                    UserUtil.setUserName(nickName);
+                }
+
                 break;
             }
 
@@ -80,6 +102,43 @@ public class PersonalDataEditActivity extends AppCompatActivity implements View.
         }
 
     }
+
+
+
+    public boolean judgeData(String phone,String email,String nickName){
+        AlertDialog.Builder builder  = new AlertDialog.Builder(PersonalDataEditActivity.this);
+        builder.setTitle("确认" ) ;
+        builder.setPositiveButton("是" ,  null );
+
+        //判断非空
+        if(phone.equals("")||email.equals("")||nickName.equals("")){
+            builder.setMessage("输入信息不能为空" ) ;
+            builder.show();
+            return false;
+        }
+
+        //判断手机号是否合法
+        Pattern phoneP = Pattern.compile("^1(3|5|7|8|4)\\d{9}");
+        Matcher m = phoneP.matcher(phone);
+        if(!m.matches()){
+            builder.setMessage("电话号码错误" ) ;
+            builder.show();
+            return false;
+        }
+
+        //判断邮箱
+        Pattern emailP = Pattern.compile("[a-zA-Z0-9_\\-\\.]+@[a-zA-Z0-9]+(\\.)+[a-zA-z]+$");// + 表示至少出现一次 $表示以前面这个字符结尾
+        Matcher em = emailP.matcher(email);
+        if(!em.matches()){
+            builder.setMessage("邮箱地址格式不正确") ;
+            builder.show();
+            return false;
+        }
+
+        //昵称不空就合法
+        return true;
+    }
+
 
     /**
      * 向服务器发起修改用户信息请求，成功回到设置界面，失败显示提示并留在原页面
