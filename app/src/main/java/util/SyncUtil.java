@@ -318,16 +318,13 @@ public class SyncUtil {
      * @param dataJson
      */
     public static void processDownloadResult(JSONObject dataJson){
+        //取出各表数据
         JSONObject accountSyncRecords=dataJson.getJSONObject("Account");
         JSONObject billSyncRecords=dataJson.getJSONObject("Bill");
         JSONObject categorySyncRecords=dataJson.getJSONObject("Category");
         JSONObject periodicSyncRecords=dataJson.getJSONObject("Periodic");
 
-        AccountDAO accountDAO = new AccountDAOImpl();
-        BillDAO billDAO = new BillDAOImpl();
-        CategoryDAO categoryDAO = new CategoryDAOImpl();
-        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
-
+        //调用处理各表下载结果的子函数
         processAccountDownload(accountSyncRecords);
         processBillDownload(billSyncRecords);
         processCategoryDownload(categorySyncRecords);
@@ -336,13 +333,13 @@ public class SyncUtil {
     }
 
     /**
-     * 处理Account表下载结果
+     * 处理Account表下载结果 (！注意：当前版本只适用于处理没有离线添加数据的情况！）
      * @param accountSyncRecords
      */
     public static void processAccountDownload(JSONObject accountSyncRecords){
         AccountDAO accountDAO=new AccountDAOImpl();
         JSONArray recordsJSONArray=accountSyncRecords.getJSONArray("recordList");
-        ArrayList<Integer> conflictIdList=new ArrayList<>();
+        //ArrayList<Integer> conflictIdList=new ArrayList<>();
 
         for(int i=0;i<recordsJSONArray.size();i++){
             JSONObject recordObject=recordsJSONArray.getJSONObject(0);
@@ -350,13 +347,18 @@ public class SyncUtil {
             int userId=recordObject.getInteger("userId");
             String name=recordObject.getString("name");
             Double money=recordObject.getDouble("money");
-            Account newAccount=new Account(id,userId,name,money,0,new Date(0));
-            if(accountDAO.getAccountById(id)==null){             //记录与本地没有冲突，直接加入
+            Date anchor=recordObject.getDate("modified");
+
+            if(accountDAO.getAccountById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
+                Account newAccount=new Account(id,userId,name,money,9,anchor);
                 accountDAO.insertAccount(newAccount);
             }
-            else{
-
+            else{                           //找得到对应记录————根据从服务器那获取的数据修改
+                Account account=new Account(id,userId,name,money,9,anchor);
+                accountDAO.updateAccount(account);
             }
+
+
         }
     }
 
@@ -365,12 +367,97 @@ public class SyncUtil {
      * @param billSyncRecords
      */
     public static void processBillDownload(JSONObject billSyncRecords){
+        BillDAO billDAO=new BillDAOImpl();
+        JSONArray recordsJSONArray=billSyncRecords.getJSONArray("recordList");
 
+        for(int i=0;i<recordsJSONArray.size();i++){
+            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            int id=recordObject.getInteger("localId");
+            int userId=recordObject.getInteger("userId");
+            int accountId=recordObject.getJSONObject("account").getInteger("localId");
+            int categoryId=recordObject.getJSONObject("category").getInteger("localId");
+            int type=recordObject.getInteger("type");
+            String name=recordObject.getString("name");
+            Date date=recordObject.getDate("date");
+            Double money=recordObject.getDouble("money");
+            Date anchor=recordObject.getDate("modified");
+
+            Bill bill=new Bill(id,accountId,categoryId,userId,type,name,date,money,9,anchor);
+
+            if(billDAO.getBillById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
+                billDAO.insertBill(bill);
+            }
+            else{                           //找得到对应记录————根据从服务器那获取的数据修改
+                billDAO.updateBill(bill);
+            }
+
+
+        }
     }
+
+    /**
+     * 处理账单类别表的下载结果
+     * @param categorySyncRecords
+     */
     public static void processCategoryDownload(JSONObject categorySyncRecords){
+        CategoryDAO categoryDAO=new CategoryDAOImpl();
+        JSONArray recordsJSONArray=categorySyncRecords.getJSONArray("recordList");
 
+        for(int i=0;i<recordsJSONArray.size();i++){
+            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            int id=recordObject.getInteger("localId");
+            int userId=recordObject.getInteger("userId");
+            String name=recordObject.getString("name");
+            int type=recordObject.getInteger("type");
+            Date anchor=recordObject.getDate("modified");
+
+            Category category=new Category(id,userId,name,type,9,anchor);
+
+            if(categoryDAO.getCategoryById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
+                categoryDAO.insertCategory(category);
+            }
+            else{                           //找得到对应记录————根据从服务器那获取的数据修改
+                categoryDAO.updateCategory(category);
+            }
+
+
+        }
     }
-    public static void processPeriodicDownload(JSONObject periodicSyncRecords){
 
+    /**
+     * 处理周期事件表的下载结果
+     * @param periodicSyncRecords
+     */
+    public static void processPeriodicDownload(JSONObject periodicSyncRecords){
+        PeriodicDAO periodicDAO=new PeriodicDAOImpl();
+        JSONArray recordsJSONArray=periodicSyncRecords.getJSONArray("recordList");
+
+        for(int i=0;i<recordsJSONArray.size();i++){
+            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            int id=recordObject.getInteger("localId");
+            int userId=recordObject.getInteger("userId");
+            int accountId=recordObject.getJSONObject("account").getInteger("localId");
+            int categoryId=recordObject.getJSONObject("category").getInteger("localId");
+            int type=recordObject.getInteger("type");
+            String name=recordObject.getString("name");
+            int cycle=recordObject.getInteger("cycle");
+            Date start=recordObject.getDate("start");
+            Date end=recordObject.getDate("end");
+            Double money=recordObject.getDouble("money");
+            Date anchor=recordObject.getDate("modified");
+
+            Periodic periodic=new Periodic(id,accountId,categoryId,userId,type,name,cycle,start,end,
+                    money,9,anchor);
+
+            if(periodicDAO.getPeriodicById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
+                periodicDAO.addPeriodic(periodic);
+            }
+            else{                           //找得到对应记录————根据从服务器那获取的数据修改
+                periodicDAO.updatePeriodic(periodic);
+            }
+
+
+        }
     }
 }
+

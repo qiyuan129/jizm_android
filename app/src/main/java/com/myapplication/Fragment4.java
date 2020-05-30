@@ -156,11 +156,15 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 isDownloadSuccess=false;
                 Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
 
-                upload();
-                if(isUploadSuccess==true){       //
-
+                download();
+                if(isDownloadSuccess==true){       //下载成功才执行上传
+                    upload();
                 }
 
+                if(isDownloadSuccess==true && isUploadSuccess==true){
+                    Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_SHORT).show();
+                    syncTextView.setText("更新数据（上次同步时间:"+(new Date())+")" );
+                }
             }
                 default:
                     break;
@@ -250,7 +254,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     }
 
     /**
-     * 向服务器发起请求，获取待下载数据
+     * 向服务器发起请求，获取待下载数据并对本地数据库执行相应更新
      */
     private void download(){
         JSONObject lastUpdateDates= SyncUtil.getTableLastUpdateTime();
@@ -307,8 +311,8 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                     if(statusCode>=200 && statusCode<400) {
                         //取出返回的数据；更新本地记录状态
                         JSONObject dataJson = resultJson.getJSONObject("data");
-                        //@TODO根据发挥的记录做对应处理
 
+                        SyncUtil.processDownloadResult(dataJson);
                         isDownloadSuccess=true;            //上传成功，对此次同步的上传结果进行标记
                     }
                     //响应结果为失败类型
