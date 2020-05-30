@@ -307,9 +307,13 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_edit_category:
                 Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, CategoryEditActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_edit_account:
                 Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this,AccountEditActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 break;
