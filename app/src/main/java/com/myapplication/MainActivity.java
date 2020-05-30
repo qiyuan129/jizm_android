@@ -15,14 +15,27 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
+import pojo.Account;
+import pojo.Bill;
+import pojo.Category;
+import pojo.Periodic;
 import util.MyDatabaseHelper;
 import util.UserUtil;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
-    private ViewPager viewPager;
+    private NoScrollViewPager viewPager;
     private Fragment0 fragment0;
     private Fragment1 fragment1;
     private Fragment2 fragment2;
@@ -327,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initView(){
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager = (NoScrollViewPager )findViewById(R.id.viewpager);
 
         fragment0 = new Fragment0();
         fragment1 = new Fragment1();
