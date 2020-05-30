@@ -65,7 +65,8 @@
             android:id="@+id/phone_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="134***24625"/>
+            android:inputType="phone"
+            android:text="13290450508"/>
 
     </LinearLayout>
 
@@ -94,6 +95,7 @@
             android:id="@+id/email_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:text="245258851147@qq.com"/>
 
     </LinearLayout>
