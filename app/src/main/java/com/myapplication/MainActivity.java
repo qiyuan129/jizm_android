@@ -315,9 +315,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_edit_account:
+//                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(this,AccountEditActivity.class);
                 startActivity(intent2);
-//                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 break;
@@ -336,9 +336,9 @@ public class MainActivity extends AppCompatActivity {
         fragment4 = new Fragment4();
 
         list = new ArrayList<>();
+        list.add(fragment0);
         list.add(fragment1);
         list.add(fragment2);
-        list.add(fragment0);
         list.add(fragment3);
         list.add(fragment4);
 
