@@ -1,17 +1,12 @@
 package com.myapplication;
 
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,10 +16,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
@@ -90,10 +83,14 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
+                incomeTv.setSelected(false);
+                outcomeTv.setSelected(true);
                 break;
             case R.id.tb_note_outcome:
                 isIncome = 0;
                 initCategory();
+                incomeTv.setSelected(true);
+                outcomeTv.setSelected(false);
                 break;
         }
     }

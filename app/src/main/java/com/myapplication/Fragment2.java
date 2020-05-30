@@ -1,10 +1,7 @@
 package com.myapplication;
 
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -27,7 +24,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,7 +39,6 @@ import dao.CategoryDAOImpl;
 import pojo.Account;
 import pojo.Bill;
 import pojo.Category;
-import util.MyDatabaseHelper;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
@@ -200,12 +195,16 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 initsortTv();
                 initCategory();
                 Log.d("Fragment","收入");
+                incomeTv.setSelected(true);
+                outcomeTv.setSelected(false);
                 break;
             case R.id.outcome_tv:
                 isIncome = 0;
                 initsortTv();
                 initCategory();
                 Log.d("Fragment","支出");
+                outcomeTv.setSelected(true);
+                incomeTv.setSelected(false);
                 break;
             case R.id.type_edit:
                 Intent intent = new Intent(getActivity(), CategoryEditActivity.class);

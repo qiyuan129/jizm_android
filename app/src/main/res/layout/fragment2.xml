@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="55dp">
+    android:layout_alignParentBottom="true">
 
     <RelativeLayout
         android:id="@+id/layout"
@@ -21,8 +22,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:background="@drawable/shape_tb_cash"
-                android:textColor="@color/cardview_light_background" />
+                android:background="@drawable/tb_outcome_selector"
+                android:textColor="@drawable/tb_text_selector" />
 
             <Button
                 android:id="@+id/income_tv"
@@ -31,8 +32,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:background="@drawable/shape_tb_cash"
-                android:textColor="@color/cardview_light_background" />
+                android:background="@drawable/tb_income_selector"
+                android:textColor="@drawable/tb_text_selector" />
+
         </RelativeLayout>
 
         <TextView
@@ -195,7 +197,7 @@
     <View
         android:id="@+id/view_line"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:layout_above="@+id/bottom"
         style="@style/AppTheme"
         android:background="#8c8c8c"/>
