@@ -12,6 +12,11 @@
         android:title="@string/title_account" />
 
     <item
+        android:id="@+id/navigation_empty"
+        android:icon="@null"
+        android:title="" />
+
+    <item
         android:id="@+id/navigation_cycleaccount"
         android:icon="@drawable/ic_cycleaccount"
         android:title="@string/title_cycleaccount" />

@@ -23,6 +23,7 @@ import util.UserUtil;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
+    private Fragment0 fragment0;
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private Fragment3 fragment3;
@@ -46,11 +47,14 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_account:
                     viewPager.setCurrentItem(1);
                     return true;
-                case R.id.navigation_cycleaccount:
+                case R.id.navigation_empty:
                     viewPager.setCurrentItem(2);
                     return true;
-                case R.id.navigation_myself:
+                case R.id.navigation_cycleaccount:
                     viewPager.setCurrentItem(3);
+                    return true;
+                case R.id.navigation_myself:
+                    viewPager.setCurrentItem(4);
                     return true;
             }
             return false;
@@ -306,14 +310,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_edit_category:
-                Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, CategoryEditActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.menu_edit_account:
-                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(this,AccountEditActivity.class);
                 startActivity(intent2);
+//                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 break;
@@ -325,6 +329,7 @@ public class MainActivity extends AppCompatActivity {
     public void initView(){
         viewPager = (ViewPager)findViewById(R.id.viewpager);
 
+        fragment0 = new Fragment0();
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
@@ -333,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
         list = new ArrayList<>();
         list.add(fragment1);
         list.add(fragment2);
+        list.add(fragment0);
         list.add(fragment3);
         list.add(fragment4);
 
