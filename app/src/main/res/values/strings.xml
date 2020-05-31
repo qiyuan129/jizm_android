@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">JiZM</string>
     <string name="title_graph">报表</string>
-    <string name="title_account">手动记账</string>
+    <string name="title_account">账单</string>
     <string name="title_cycleaccount">周期记账</string>
     <string name="title_myself">我的</string>
     <string name="income">收入</string>

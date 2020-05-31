@@ -44,16 +44,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/refresh_trend"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.215"
-            app:layout_constraintStart_toEndOf="@+id/ButtonYear"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
-
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="330dp"
             android:layout_height="45dp"

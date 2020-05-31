@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.charts.Chart;
@@ -59,7 +60,6 @@ public class Fragment1_1 extends Fragment {
     private View mView;
     private ListView lview;
     private TextView choiceYear;
-    private ImageButton refresh;
     private int year=(Calendar.getInstance()).get(Calendar.YEAR);
     private LineChart lineChart;
     private TrendListAdapter adapter;
@@ -77,6 +77,7 @@ public class Fragment1_1 extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment1_1, container, false);
         }
+
         lview = (ListView) mView.findViewById(R.id.TrendList);
         lineChart = mView.findViewById(R.id.LineChart);
         initChart(lineChart);
@@ -101,19 +102,15 @@ public class Fragment1_1 extends Fragment {
         });
         initStartTimePicker();
 
-        //refresh_year = getYear(choiceYear.getText().toString());
-        refresh=(ImageButton)mView.findViewById(R.id.refresh_trend);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                year = getYear(choiceYear.getText().toString());
-                RefreshData(year);
-                //Toast.makeText(mView.getContext(),String.valueOf(refresh_year),Toast.LENGTH_SHORT).show();
-            }
-        });
+        onResume();
         return mView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        RefreshData(getYear(choiceYear.getText().toString()));
+    }
 
     public List<IncomeLineItem> loadincomeChart(int myear)
     {
@@ -356,6 +353,7 @@ public class Fragment1_1 extends Fragment {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 choiceYear.setText(DateTimeHelper.formatToString(date,"yyyy"));
+                RefreshData(getYear(choiceYear.getText().toString()));
             }
         })
                 .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
@@ -378,8 +376,6 @@ public class Fragment1_1 extends Fragment {
                 .setDate(selectedDate)//设置选中的日期
                 .build();
     }
-
-
 
 }
 
