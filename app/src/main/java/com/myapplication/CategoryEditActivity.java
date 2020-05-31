@@ -57,7 +57,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         outcomeTv = (TextView) findViewById(R.id.tb_note_outcome);
         outcomeTv.setOnClickListener(this);
 
-        outcomeTv.setSelected(true);
+        incomeTv.setSelected(true);
 
         backIv = (ImageView) findViewById(R.id.back_btn);
         backIv.setOnClickListener(this);
@@ -85,14 +85,14 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
-                incomeTv.setSelected(true);
-                outcomeTv.setSelected(false);
+                incomeTv.setSelected(false);
+                outcomeTv.setSelected(true);
                 break;
             case R.id.tb_note_outcome:
                 isIncome = 0;
                 initCategory();
-                incomeTv.setSelected(false);
-                outcomeTv.setSelected(true);
+                incomeTv.setSelected(true);
+                outcomeTv.setSelected(false);
                 break;
         }
     }

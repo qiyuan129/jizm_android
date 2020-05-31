@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import dao.AccountDAO;
 import dao.AccountDAOImpl;
@@ -44,31 +42,29 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     ArrayList<Category> categories;
     ArrayList<Account> accounts;
 
-    private List<Category> categoryList = new ArrayList<>();
 
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
-//    public ArrayList<String> listData = new  ArrayList<String>();
-    public ArrayList<String> outcomeListData = new ArrayList<String>();
-    public ArrayList<String> incomeListData = new ArrayList<String>();
-    public ArrayList<Integer> outcomeListId = new ArrayList<Integer>();
-    public ArrayList<Integer> incomeListId = new ArrayList<Integer>();
+    public ArrayList<String> listData = new  ArrayList<String>();
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
+
+
 
     public ArrayList<String> listAccount=new  ArrayList<String>();
     private TextView accountView ;
     private Spinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
 
+
     Button incomeButton;
     Button outComeButton;
     Button saveBillButton;
-    ImageView backIv;      //返回键
 
     //名称和金额
     EditText BillNameEdit;
     EditText BillMoneyEdit;
+
 
     //时间
     private TextView billUpdateTime;
@@ -77,41 +73,47 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     public int mMonth;
     public int mDays;
 
+
     //辅助变量
     public int categoryId;
     public int accountId;
 
-    //属性
-    public int isIncome = 0;         //记录类别（收入/支出）
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_bill);
 
+
         init();
         setData();
 
-        //将可选内容与ArrayAdapter连接起来
-        if(isIncome == 0) {
-            adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, outcomeListData);
-        } else {
-            adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, incomeListData);
-        }
 
+
+
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listData);
         accountAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listAccount);
+
+
 
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+
         //将adapter 添加到spinner中
         spinner.setAdapter(adapter);
         accountSpinner.setAdapter(accountAdapter);
 
+
         //spinner数据加载完，设置一下默认选中的值
         setDefaultPsinnerItem();
         setDefaultAccountItem();
+
 
         //添加事件Spinner事件监听
         spinner.setOnItemSelectedListener(new SpinnerSelectedListenerBup());
@@ -121,7 +123,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         spinner.setVisibility(View.VISIBLE);
         accountSpinner.setVisibility(View.VISIBLE);
 
+
     }
+
+
 
     public void init(){
         view = (TextView) findViewById(R.id.bill_update_spinnerText);
@@ -129,28 +134,37 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         spinner = (Spinner) findViewById(R.id.bill_update_spinner);
         accountSpinner=(Spinner)findViewById(R.id.bill_account_spinner);
 
-        //返回按钮
-        backIv = (ImageView)findViewById(R.id.back_btn1);
-
         //输入支出按钮
         incomeButton = (Button)findViewById(R.id.bill_update_income);
         outComeButton = (Button)findViewById((R.id.bill_update_outcome));
         saveBillButton = (Button)findViewById(R.id.save_bill_update) ;
 
+
         //选择时间
         billUpdateTime=(TextView)findViewById(R.id.bill_update_time);
+
 
         //账单名称和金额
         BillNameEdit = (EditText)findViewById(R.id.bill_name_update) ;
         BillMoneyEdit = (EditText)findViewById(R.id.bill_update_money) ;
 
+
+
+
+
+
+
         //设置事件监听者
-        backIv.setOnClickListener(this);
         billUpdateTime.setOnClickListener(this);
         incomeButton.setOnClickListener(this);
         outComeButton.setOnClickListener(this);
         saveBillButton.setOnClickListener(this);
+
+
     }
+
+
+
 
     /*
     设置下拉列表默认选中的值
@@ -162,24 +176,20 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         CategoryDAO catDAO = new CategoryDAOImpl();
         Category category = catDAO.getCategoryById(catId);
         String categoryName = category.getCategory_name();
-
-        if (isIncome == 0) {
-            for(int i=0;i<outcomeListData.size();i++){
-                if(categoryName.equals(outcomeListData.get(i))){
-                    spinner.setSelection(i);
-                    break;
-                }
-            }
-        } else {
-            for(int i=0;i<incomeListData.size();i++){
-                if(categoryName.equals(incomeListData.get(i))){
-                    spinner.setSelection(i);
-                    break;
-                }
+        for(int i=0;i<listData.size();i++){
+            if(categoryName.equals(listData.get(i))){
+                spinner.setSelection(i);
+                break;
             }
         }
+
+
         //spinner.setSelection(1);
+
+
     }
+
+
 
     public void setDefaultAccountItem(){
         //dao的代码还没好，先注释掉
@@ -195,9 +205,14 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             }
         }
 
+
         //后面删除
         //accountSpinner.setSelection(1);
     }
+
+
+
+
 
     public void setData(){
 
@@ -207,11 +222,19 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         BillDAO billDAO = new BillDAOImpl();
         bill= billDAO.getBillById(id);
 
+
+
+
+
         //设置开始结束时间
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         days = formatter.format(bill.getBill_date());
 
         billUpdateTime.setText(days);
+
+
+
 
         //获取当前年，月，日
         Calendar calendar = Calendar.getInstance();
@@ -220,42 +243,39 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         mMonth = calendar.get(Calendar.MONTH);
         mDays = calendar.get(Calendar.DAY_OF_MONTH);
 
+
+
+
+
+
         //设置按钮选中
         if(bill.getType()==0){//0是支出
             outComeButton.setSelected(true);
             incomeButton.setSelected(false);
-            isIncome = 0;
             // outComeButton.setBackgroundColor();
         }
         else {//1是收入
             incomeButton.setSelected(true);
             outComeButton.setSelected(false);
-            isIncome = 1;
             // incomeButton.setBackgroundColor();
         }
+
+
 
         //设置账目名称和金额输入框内容
         BillNameEdit.setText(bill.getBill_name());
         BillMoneyEdit.setText(String.valueOf(bill.getBill_money()));
 
+
+
         //设置类别值
+
         CategoryDAO categoryDAO=new CategoryDAOImpl();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
-//        for(Category cat:categories){
-//            listData.add(cat.getCategory_name());
-//        }
-
-        //设置收入支出切换时类别切换
-        for(int i = 0; i < categories.size(); i++){
-            Category category = (Category)categories.get(i);
-            if (category.getType() == 0) {
-                outcomeListData.add(category.getCategory_name());
-                outcomeListId.add(category.getCategory_id());
-            } else {
-                incomeListData.add(category.getCategory_name());
-                incomeListId.add(category.getCategory_id());
-            }
+        for(Category cat:categories){
+            listData.add(cat.getCategory_name());
         }
+
 
         /*listData.add("学习用品");
         listData.add("生活用品");
@@ -264,54 +284,46 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         listData.add("旅游");
         listData.add("其他");*/
 
-        //设置账户值
-        AccountDAO accountDAO=new AccountDAOImpl();
-        accounts = (ArrayList<Account>) accountDAO.listAccount();
-        for(Account act:accounts){
-            listAccount.add(act.getAccount_name());
-        }
+
+
+          //设置账户值
+
+          AccountDAO accountDAO=new AccountDAOImpl();
+          accounts = (ArrayList<Account>) accountDAO.listAccount();
+          for(Account act:accounts){
+              listAccount.add(act.getAccount_name());
+          }
+
 
       /*  listAccount.add("支付宝账户");
         listAccount.add("微信账户");
         listAccount.add("银行账户");*/
 
+
+
+
+
     }
+
+
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.back_btn1:
-                finish();
-                break;
-
             case R.id.bill_update_time:
                 showStartDateSelector();
                 break;
 
             case R.id.bill_update_outcome:
                 setBillType(0);//0代表支出
-                isIncome = 0;
-                adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, outcomeListData);
-                adapter.notifyDataSetChanged();
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-                setDefaultPsinnerItem();
-                spinner.setOnItemSelectedListener(new SpinnerSelectedListenerBup());
-                spinner.setVisibility(View.VISIBLE);
                 break;
             case R.id.bill_update_income:
                 setBillType(1);//1代表收入
-                isIncome = 1;
-                adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, incomeListData);
-                adapter.notifyDataSetChanged();
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-                setDefaultPsinnerItem();
-                spinner.setOnItemSelectedListener(new SpinnerSelectedListenerBup());
-                spinner.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.save_bill_update:
+
                 if(saveBill()){
                     Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
                     //把值periodicId传回上一个界面
@@ -320,10 +332,12 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                     setResult(RESULT_OK,intent);
                     this.finish();
                 }
+
                 break;
 
-            default:
-                break;
+
+                default:
+                    break;
 
         }
 
@@ -334,20 +348,22 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     class SpinnerSelectedListenerBup implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            if (isIncome == 0) {
-                view.setText("你的选择是："+ outcomeListData.get(arg2));
-                //设置Category_id 记得去掉注释
-                categoryId = outcomeListId.get(arg2);
-            } else {
-                view.setText("你的选择是："+ incomeListData.get(arg2));
-                //设置Category_id 记得去掉注释
-                categoryId = incomeListId.get(arg2);
-            }
+            view.setText("你的选择是："+ listData.get(arg2));
+
+
+            //设置Category_id 记得去掉注释
+            categoryId = categories.get(arg2).getCategory_id();
+
+
+
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
+
+
+
 
     //内部类，下拉列表监听者，使用数组形式操作
     class BillAccountSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -357,11 +373,20 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
             //设置Account_id 记得去掉注释
             accountId = accounts.get(arg2).getAccount_id();
+
+
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
+
+
+
+
+
+
+
 
     //显示开始日期选择器
     public void showStartDateSelector() {
@@ -390,6 +415,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         },mYear,mMonth,mDays).show();
     }
 
+
+
+
+
     public void setBillType(int type){
         if(type==0){//支出
             outComeButton.setSelected(true);
@@ -403,6 +432,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+
+
+
     public void setBillCategory(){
         //设置categoryId
         bill.setCategory_id(categoryId);
@@ -411,6 +443,8 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     public void setBillAccount(){
         bill.setAccount_id(accountId);
     }
+
+
 
     public boolean review(){
        /*
@@ -429,7 +463,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             builder.setMessage("账单信息名称或金额为空！" ) ;
             builder.show();
             return false;
-        }
+       }
 
         //检查时间是否超过现在
         Log.i("days: ",days);
@@ -445,13 +479,21 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             e.printStackTrace();
         }
 
+
+
+
+
         String moneyStr=BillMoneyEdit.getText().toString();
         if(moneyStr.startsWith("-")){
             builder.show();
             return false;
         }
+
+
         return true;
+
     }
+
 
     public boolean saveBill(){
 
@@ -459,16 +501,18 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             return false;
         }
 
-        //设置名称和金额
+       //设置名称和金额
         String moneyStr=BillMoneyEdit.getText().toString();
 
         bill.setBill_name(BillNameEdit.getText().toString());
         bill.setBill_money(Double.valueOf(moneyStr));
 
+
         //设置种类
         setBillCategory();
         //设置账户
         setBillAccount();
+
 
         //设置时间
         Date date= null;
@@ -480,7 +524,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
         //Date date=new Date(days);
 
+
         bill.setBill_date(date);
+
 
         Log.i("bill_name: ",bill.getBill_name());
         Log.i("bill_money: ",String.valueOf(bill.getBill_money()));
@@ -488,10 +534,16 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         Log.i("bill_category: ",String.valueOf(bill.getCategory_id()));
         Log.i("bill_recycle: ",String.valueOf(bill));
 
+
         //存入数据库 暂时注解掉
         BillDAO billDAO = new BillDAOImpl();
         billDAO.updateBill(bill);
 
+
+
         return true;
     }
+
+
+
 }
