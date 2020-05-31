@@ -319,10 +319,6 @@ public class Fragment1_3 extends Fragment {
         BillDAO billDao = new BillDAOImpl();
         billList=billDao.listBill();
 
-
-
-
-
     }
 
 
@@ -518,8 +514,9 @@ class BillRecomendAdapter extends BaseAdapter implements Filterable {
     }
 
     public void removeItem(int index){
-        backData.remove(data.get(index));
-        data.remove(index);
+        Bill tep = data.get(index);
+        backData.remove(tep);
+        data.remove(tep);
     }
 
 
