@@ -9,6 +9,8 @@ import pojo.Bill;
 public interface BillDAO {
     void insertBill(Bill bill);
 
+    void insertBillById(Bill bill);
+
     List<Bill> listBill();
 
     List<Bill> listBillByDate();

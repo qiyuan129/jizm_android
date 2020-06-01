@@ -1,15 +1,10 @@
 package util;
 
 
-import android.widget.Toast;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import dao.AccountDAO;
@@ -20,20 +15,12 @@ import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import dao.PeriodicDAO;
 import dao.PeriodicDAOImpl;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import pojo.Account;
 import pojo.Bill;
 import pojo.Category;
 import pojo.Periodic;
-
-import static android.support.constraint.Constraints.TAG;
 
 
 public class SyncUtil {
@@ -364,12 +351,13 @@ public class SyncUtil {
             Double money=recordObject.getDouble("money");
             Date anchor=recordObject.getDate("modified");
 
+            Account account=new Account(id,userId,name,money,9,anchor);
+
             if(accountDAO.getAccountById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
-                Account newAccount=new Account(id,userId,name,money,9,anchor);
-                accountDAO.insertAccount(newAccount);
+                accountDAO.insertAccountById(account);
             }
             else{                           //找得到对应记录————根据从服务器那获取的数据修改
-                Account account=new Account(id,userId,name,money,9,anchor);
+
                 accountDAO.updateAccount(account);
             }
 
@@ -403,7 +391,7 @@ public class SyncUtil {
             Bill bill=new Bill(id,accountId,categoryId,userId,type,name,date,money,9,anchor);
 
             if(billDAO.getBillById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
-                billDAO.insertBill(bill);
+                billDAO.insertBillById(bill);
             }
             else{                           //找得到对应记录————根据从服务器那获取的数据修改
                 billDAO.updateBill(bill);
@@ -435,7 +423,7 @@ public class SyncUtil {
             Category category=new Category(id,userId,name,type,9,anchor);
 
             if(categoryDAO.getCategoryById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
-                categoryDAO.insertCategory(category);
+                categoryDAO.insertCategoryById(category);
             }
             else{                           //找得到对应记录————根据从服务器那获取的数据修改
                 categoryDAO.updateCategory(category);
@@ -474,7 +462,7 @@ public class SyncUtil {
                     money,9,anchor);
 
             if(periodicDAO.getPeriodicById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
-                periodicDAO.addPeriodic(periodic);
+                periodicDAO.insertPeriodicById(periodic);
             }
             else{                           //找得到对应记录————根据从服务器那获取的数据修改
                 periodicDAO.updatePeriodic(periodic);

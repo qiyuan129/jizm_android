@@ -11,7 +11,9 @@ public interface PeriodicDAO {
 
     List<Periodic> listPeriodic();
 
-    void addPeriodic(Periodic  periodic);
+    void insertPeriodic(Periodic  periodic);
+
+    void insertPeriodicById(Periodic periodic);
 
     void updatePeriodic(Periodic  periodic);
 

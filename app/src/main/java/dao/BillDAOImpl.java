@@ -37,6 +37,24 @@ public class BillDAOImpl implements BillDAO {
         db.insert("bill",null,values);
     }
 
+    @Override
+    public void insertBillById(Bill bill) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("bill_id",bill.getBill_id());
+        values.put("account_id",bill.getAccount_id());
+        values.put("category_id",bill.getCategory_id());
+        values.put("user_id",bill.getUser_id());
+        values.put("type",bill.getType());
+        values.put("bill_name",bill.getBill_name());
+        values.put("bill_date",bill.getBill_date().getTime());
+        values.put("bill_money",bill.getBill_money());
+        values.put("state",bill.getState());
+        values.put("anchor",bill.getAnchor().getTime());
+
+        db.insert("bill",null,values);
+    }
 
     @Override
     public List<Bill> listBill() {

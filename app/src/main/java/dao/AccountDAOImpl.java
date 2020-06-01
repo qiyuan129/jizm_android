@@ -56,6 +56,20 @@ public class AccountDAOImpl implements AccountDAO {
     }
 
     @Override
+    public void insertAccountById(Account account) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("account_id",account.getAccount_id());
+        values.put("user_id",account.getUser_id());
+        values.put("account_name",account.getAccount_name());
+        values.put("money",account.getMoney());
+        values.put("state",account.getState());
+        values.put("anchor",account.getAnchor().getTime());
+        db.insert("account",null,values);
+    }
+
+    @Override
     public void updateAccount(Account account) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
