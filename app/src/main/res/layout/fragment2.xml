@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_marginTop="10dp"
-        android:background="@color/cardview_light_background"
+        android:background="@drawable/shape_container"
         >
 
         <GridLayout
@@ -83,7 +83,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/cardview_light_background"
+        android:background="@drawable/shape_container"
         android:orientation="horizontal">
 
         <TextView
@@ -131,7 +131,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/cardview_light_background"
+        android:background="@drawable/shape_container"
         android:orientation="horizontal">
 
         <TextView

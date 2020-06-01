@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -458,12 +459,11 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
 
        //从数组中得到数据并然后给页面组件设置值
         Periodic periodicItem=data.get(position);
+
         TextView nameView = (TextView)view.findViewById(R.id.periodic_item_name);
         TextView moneyView = (TextView)view.findViewById(R.id.periodic_item_money);
         TextView startView = (TextView)view.findViewById(R.id.periodic_item_start);
         TextView endView = (TextView)view.findViewById(R.id.periodic_item_end);
-
-
 
 
         /*
@@ -471,6 +471,22 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
          */
         //时间格式化
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        String tmpMoney=null;
+        if(periodicItem.getType()==0){//支出
+            tmpMoney = "-" + String.valueOf(periodicItem.getPeriodic_money());
+            moneyView.setTextColor(Color.parseColor("#ff0000"));
+
+
+        }
+        else {//收入
+            tmpMoney = "+" + String.valueOf(periodicItem.getPeriodic_money());
+            moneyView.setTextColor(Color.parseColor("#00ff00"));
+
+        }
+
+
+
         nameView.setText(periodicItem.getPeriodic_name());
         moneyView.setText(String.valueOf(periodicItem.getPeriodic_money()));
         startView.setText(format.format(periodicItem.getStart()));

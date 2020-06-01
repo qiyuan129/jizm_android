@@ -319,10 +319,6 @@ public class Fragment1_3 extends Fragment {
         BillDAO billDao = new BillDAOImpl();
         billList=billDao.listBill();
 
-
-
-
-
     }
 
 
@@ -441,7 +437,7 @@ class BillListAdapter extends ArrayAdapter<Bill> {
 
         TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
         TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
-        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
+        TextView typeText = (TextView)view.findViewById(R.id.bill_item_category);
         TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
 
 
@@ -518,8 +514,9 @@ class BillRecomendAdapter extends BaseAdapter implements Filterable {
     }
 
     public void removeItem(int index){
-        backData.remove(data.get(index));
-        data.remove(index);
+        Bill tep = data.get(index);
+        backData.remove(tep);
+        data.remove(tep);
     }
 
 
@@ -565,7 +562,7 @@ class BillRecomendAdapter extends BaseAdapter implements Filterable {
         //获取组件
         TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
         TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
-        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
+        TextView typeText = (TextView)view.findViewById(R.id.bill_item_category);
         TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
 
 

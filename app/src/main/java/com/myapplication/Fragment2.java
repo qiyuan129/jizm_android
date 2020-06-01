@@ -192,86 +192,68 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.income_tv:
+            case R.id.income_tv:  //收入按钮
                 isIncome = 1;
                 initsortTv();
                 initCategory();
-                Log.d("Fragment","收入");
                 incomeTv.setSelected(true);
                 outcomeTv.setSelected(false);
                 break;
-            case R.id.outcome_tv:
+            case R.id.outcome_tv:  //支出按钮
                 isIncome = 0;
                 initsortTv();
                 initCategory();
-                Log.d("Fragment","支出");
                 outcomeTv.setSelected(true);
                 incomeTv.setSelected(false);
                 break;
-            case R.id.type_edit:
+            case R.id.type_edit:  //编辑分类
                 Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                 startActivity(intent);
-                Log.d("Fragment","编辑分类");
                 break;
-            case R.id.tb_note_cash:
+            case R.id.tb_note_cash:  //选择账户按钮
                 showPayAccount();
-                Log.d("Fragment","选择账户");
                 break;
-            case R.id.tb_note_date:
+            case R.id.tb_note_date:  //选择日期按钮
                 showDateSelector();
-                Log.d("Fragment","选择日期");
                 break;
-            case R.id.tb_note_remark:
+            case R.id.tb_note_remark:  //设置账单名称
                 showContentDialog();
-                Log.d("Fragment","备注");
                 break;
-            case R.id.tb_note_text:
+            case R.id.tb_note_text:  //设置账单名称
                 showContentDialog();
-                Log.d("Fragment","备注");
                 break;
-            case R.id.tb_calc_num_done:
+            case R.id.tb_calc_num_done:  //确定按钮
                 doCommit();
-                Log.d("Fragment","确定按钮");
                 break;
-            case R.id.tb_calc_num_1:
+            case R.id.tb_calc_num_1:  //以下数字键盘按钮
                 calMoney(1);
-                Log.d("Fragment","1");
                 break;
             case R.id.tb_calc_num_2:
                 calMoney(2);
-                Log.d("Fragemnt","2");
                 break;
             case R.id.tb_calc_num_3:
                 calMoney(3);
-                Log.d("Fragemnt","3");
                 break;
             case R.id.tb_calc_num_4:
                 calMoney(4);
-                Log.d("Fragemnt","4");
                 break;
             case R.id.tb_calc_num_5:
                 calMoney(5);
-                Log.d("Fragemnt","5");
                 break;
             case R.id.tb_calc_num_6:
                 calMoney(6);
-                Log.d("Fragemnt","6");
                 break;
             case R.id.tb_calc_num_7:
                 calMoney(7);
-                Log.d("Fragemnt","7");
                 break;
             case R.id.tb_calc_num_8:
                 calMoney(8);
-                Log.d("Fragemnt","8");
                 break;
             case R.id.tb_calc_num_9:
                 calMoney(9);
-                Log.d("Fragemnt","9");
                 break;
             case R.id.tb_calc_num_0:
                 calMoney(0);
-                Log.d("Fragemnt","0");
                 break;
             case R.id.tb_calc_num_dot:
                 if (dotNum.equals(".00")) {
@@ -281,13 +263,11 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 moneyTv.setText(num + dotNum);
                 Log.d("Fragemnt",".");
                 break;
-            case R.id.tb_note_clear:
+            case R.id.tb_note_clear:  //清空按钮
                 doClear();
-                Log.d("Fragemnt","清空");
                 break;
-            case R.id.tb_calc_num_del:
+            case R.id.tb_calc_num_del:  //数字键盘回格按钮
                 doDelect();
-                Log.d("Fragemnt","删除");
                 break;
         }
     }
@@ -438,6 +418,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
     }
 
+    //确认按钮
     public void doCommit() {
         if ((num + dotNum).equals("0.00")) {
             Toast.makeText(getActivity(), "请输入账单金额", Toast.LENGTH_SHORT).show();
@@ -466,11 +447,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             String date = String.valueOf(dateTv.getText());
             bill_date = sdf.parse(date);
         } catch (Exception e) {
-            //TODO:handle excepton
+
         }
-        Log.d("Fragment", categorySelect);
-        Log.d("Fragment", accountText);
-        Log.d("Fragment", bill_name);
 
         Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, bill_name, bill_date, bill_money, state, anchor);
         BillDAO billDAO = new BillDAOImpl();
@@ -488,6 +466,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         initcashTv();
     }
 
+    //初始化账单类别
     private void initCategory() {
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categoryList = categoryDAO.listCategory();
@@ -614,6 +593,4 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             }
         }
     }
-
-
 }
