@@ -3,37 +3,21 @@ package com.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuAdapter;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuLayout;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.baoyz.swipemenulistview.SwipeMenuView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -435,7 +419,7 @@ public class Fragment0 extends Fragment {
             //获取组件
             TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
             TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
-            TextView categoryText = (TextView)view.findViewById(R.id.bill_item_type);
+            TextView categoryText = (TextView)view.findViewById(R.id.bill_item_category);
             TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
 
 

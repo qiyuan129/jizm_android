@@ -437,7 +437,7 @@ class BillListAdapter extends ArrayAdapter<Bill> {
 
         TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
         TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
-        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
+        TextView typeText = (TextView)view.findViewById(R.id.bill_item_category);
         TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
 
 
@@ -562,7 +562,7 @@ class BillRecomendAdapter extends BaseAdapter implements Filterable {
         //获取组件
         TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
         TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
-        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
+        TextView typeText = (TextView)view.findViewById(R.id.bill_item_category);
         TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
 
 
