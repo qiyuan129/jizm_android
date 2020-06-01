@@ -2,21 +2,38 @@ package com.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuAdapter;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuLayout;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.swipemenulistview.SwipeMenuView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +54,7 @@ public class Fragment0 extends Fragment {
     private View mView;
 
     SlideDeleteListView listView;
+
     private List<Bill> billList;//只有初始化的时候用过一次，之后里面的数据都是过期的
 
     BillRecomendAdapterF0 newAdapter;
@@ -68,7 +86,7 @@ public class Fragment0 extends Fragment {
 
         //设置视图
         spinner = (Spinner) mView.findViewById(R.id.category_spinner_F0);
-        listView=(SlideDeleteListView)mView.findViewById(R.id.list_bill_view_frag_f0);
+        listView=mView.findViewById(R.id.list_bill_view_frag_f0);
         //listView.setAdapter(adapter);
         listView.setAdapter(newAdapter);
 
@@ -92,6 +110,11 @@ public class Fragment0 extends Fragment {
 
 
 
+        //设置左滑删除产生器
+
+
+
+
         //viewItem点击
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -109,6 +132,7 @@ public class Fragment0 extends Fragment {
 
             }
         });
+
 
 
 
@@ -357,198 +381,196 @@ public class Fragment0 extends Fragment {
 
 
 
+    /**
+     数据适配器
+     *
+     */
+    class BillRecomendAdapterF0 extends BaseAdapter implements Filterable {
+        Context context;
+        List<Bill> data; //这个数据是会改变的，所以要有个变量来备份一下原始数据
+        List<Bill> backData;//用来备份原始数据,处理删除时两个数组中的元素都要删除
+        MyFilter mFilter ;
 
-}
+        public BillRecomendAdapterF0(Context context, List<Bill> data) {
+            this.context = context;
+            this.data = data;
+            backData = data;
+        }
 
+        @Override
+        public int getCount() {
+            return data.size();
+        }
 
+        @Override
+        public Object getItem(int i) {
+            return data.get(i);
+            //return null;
+        }
 
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
 
+        public  void addItem(Bill obj){
+            data.add(obj);
+        }
 
-
-
-
-
-/**
- 数据适配器
- *
- */
-class BillRecomendAdapterF0 extends BaseAdapter implements Filterable {
-    Context context;
-    List<Bill> data; //这个数据是会改变的，所以要有个变量来备份一下原始数据
-    List<Bill> backData;//用来备份原始数据,处理删除时两个数组中的元素都要删除
-    MyFilter mFilter ;
-
-    public BillRecomendAdapterF0(Context context, List<Bill> data) {
-        this.context = context;
-        this.data = data;
-        backData = data;
-    }
-
-    @Override
-    public int getCount() {
-        return data.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return data.get(i);
-        //return null;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    public  void addItem(Bill obj){
-        data.add(obj);
-    }
-
-    public void removeItem(int index){
-        Bill tep = data.get(index);
-        backData.remove(tep);
-        data.remove(tep);
-    }
-
-
-    public void clearAll(){
-        data.clear();
-    }
-
-
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-
-        if (view ==null){
-            view = LayoutInflater.from(context).inflate(R.layout.bill_list_item,null);
+        public void removeItem(int index){
+            Bill tep = data.get(index);
+            backData.remove(tep);
+            data.remove(tep);
         }
 
 
-        //从数组中得到数据并然后给页面组件设置值
-        //Periodic periodicItem=data.get(position);
-        Bill  billItem = data.get(position);
-
-
-       /* TextView nameView = (TextView)view.findViewById(R.id.periodic_item_name);
-        TextView moneyView = (TextView)view.findViewById(R.id.periodic_item_money);
-        TextView startView = (TextView)view.findViewById(R.id.periodic_item_start);
-        TextView endView = (TextView)view.findViewById(R.id.periodic_item_end);
-
-
-
-
-
-        //设置periodic项目的值，信息
-
-        //时间格式化
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        nameView.setText(periodicItem.getPeriodic_name());
-        moneyView.setText(String.valueOf(periodicItem.getPeriodic_money()));
-        startView.setText(format.format(periodicItem.getStart()));
-        endView.setText(format.format(periodicItem.getEnd()));*/
-
-
-
-
-        //获取组件
-        TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
-        TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
-        TextView typeText = (TextView)view.findViewById(R.id.bill_item_type);
-        TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
-
-
-        String billType = null;
-        if(billItem.getType()==0){
-            billType = "支出";
-        }
-        else {
-            billType = "收入";
+        public void clearAll(){
+            data.clear();
         }
 
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateStr = formatter.format(billItem.getBill_date());
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
+
+            if (view ==null){
+                view = LayoutInflater.from(context).inflate(R.layout.bill_list_item,null);
+            }
+
+
+            //从数组中得到数据并然后给页面组件设置值
+            //Periodic periodicItem=data.get(position);
+            Bill  billItem = data.get(position);
+
+
+
+            //获取组件
+            TextView nametext =(TextView)view.findViewById(R.id.bill_item_name);
+            TextView moneyText = (TextView)view.findViewById(R.id.bill_item_money);
+            TextView categoryText = (TextView)view.findViewById(R.id.bill_item_type);
+            TextView dateText = (TextView)view.findViewById(R.id.bill_item_date);
+
+
+
+            String tmpMoney=null;
+            String billCategory=null;
+            if(billItem.getType()==0){//支出
+                tmpMoney = "-" + String.valueOf(billItem.getBill_money());
+                moneyText.setTextColor(Color.parseColor("#ff0000"));
+
+
+            }
+            else {//收入
+                tmpMoney = "+" + String.valueOf(billItem.getBill_money());
+                moneyText.setTextColor(Color.parseColor("#00ff00"));
+
+            }
+
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = formatter.format(billItem.getBill_date());
+
+
+            for(Category cat:categories){
+                if(cat.getCategory_id()==billItem.getCategory_id()){
+                    billCategory = cat.getCategory_name();
+                    break;
+                }
+            }
         /*
         设置bill项目的值，信息
          */
 
-        nametext.setText(billItem.getBill_name());
-        moneyText.setText(String.valueOf(billItem.getBill_money()));
-        typeText.setText(billType);
-        dateText.setText(dateStr);
+            nametext.setText(billItem.getBill_name());
+            moneyText.setText(tmpMoney);
+            categoryText.setText(billCategory);
+            dateText.setText(dateStr);
 
 
 
 
-        return view;
-    }
-
-    //当ListView调用setTextFilter()方法的时候，便会调用该方法
-    @Override
-    public Filter getFilter() {
-        if (mFilter ==null){
-            mFilter = new MyFilter();
+            return view;
         }
-        return mFilter;
-    }
 
-
-
-
-    //我们需要定义一个过滤器的类来定义过滤规则
-    class MyFilter extends Filter{
-        //我们在performFiltering(CharSequence charSequence)这个方法中定义过滤规则
+        //当ListView调用setTextFilter()方法的时候，便会调用该方法
         @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            FilterResults result = new FilterResults();
-            List<Bill> list ;
-
-
-
-            //
-
-            Log.i("到达过滤器:  ",charSequence.toString());
-            //
-
-            if (TextUtils.isEmpty(charSequence)){//当过滤的关键字为空的时候，我们则显示所有的数据
-                list  = backData;
+        public Filter getFilter() {
+            if (mFilter ==null){
+                mFilter = new MyFilter();
             }
-            else {//否则把符合条件的数据对象添加到集合中
-                String tmp = charSequence.toString();
-                int categoryId=Integer.valueOf(tmp);
-
-                list = new ArrayList<>();
-                for (Bill recomend:backData){
-                    //过滤规则
-
-                    //先用名字过滤一下
-                    if (recomend.getCategory_id()==categoryId){
-                        //if (recomend.getPeriodic_name().contains(charSequence)||recomend.getDesc().contains(charSequence))
+            return mFilter;
+        }
 
 
-                        list.add(recomend);
+
+
+        //我们需要定义一个过滤器的类来定义过滤规则
+        class MyFilter extends Filter{
+            //我们在performFiltering(CharSequence charSequence)这个方法中定义过滤规则
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults result = new FilterResults();
+                List<Bill> list ;
+
+
+
+                //
+
+                Log.i("到达过滤器:  ",charSequence.toString());
+                //
+
+                if (TextUtils.isEmpty(charSequence)){//当过滤的关键字为空的时候，我们则显示所有的数据
+                    list  = backData;
+                }
+                else {//否则把符合条件的数据对象添加到集合中
+                    String tmp = charSequence.toString();
+                    int categoryId=Integer.valueOf(tmp);
+
+                    list = new ArrayList<>();
+                    for (Bill recomend:backData){
+                        //过滤规则
+
+                        //先用名字过滤一下
+                        if (recomend.getCategory_id()==categoryId){
+                            //if (recomend.getPeriodic_name().contains(charSequence)||recomend.getDesc().contains(charSequence))
+
+
+                            list.add(recomend);
+                        }
+
                     }
+                }
+                result.values = list; //将得到的集合保存到FilterResults的value变量中
+                result.count = list.size();//将集合的大小保存到FilterResults的count变量中
 
+                return result;
+            }
+            //在publishResults方法中告诉适配器更新界面
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                data = (List<Bill>)filterResults.values;
+                Log.d("++publishResults:",String.valueOf(filterResults.count));
+
+                if (filterResults.count>0){
+                    notifyDataSetChanged();//通知数据发生了改变
+                    Log.d("publishResults:","notifyDataSetChanged");
+                }else {
+                    notifyDataSetInvalidated();//通知数据失效
+                    Log.d("++publishResults:","notifyDataSetInvalidated");
                 }
             }
-            result.values = list; //将得到的集合保存到FilterResults的value变量中
-            result.count = list.size();//将集合的大小保存到FilterResults的count变量中
-
-            return result;
-        }
-        //在publishResults方法中告诉适配器更新界面
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            data = (List<Bill>)filterResults.values;
-            Log.d("++publishResults:",String.valueOf(filterResults.count));
-
-            if (filterResults.count>0){
-                notifyDataSetChanged();//通知数据发生了改变
-                Log.d("publishResults:","notifyDataSetChanged");
-            }else {
-                notifyDataSetInvalidated();//通知数据失效
-                Log.d("++publishResults:","notifyDataSetInvalidated");
-            }
         }
     }
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
