@@ -56,11 +56,11 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
     private int account_id = 1;
     private int user_id = 1;
-    private Date anchor = new Date(0);
     //状态
     private int addState = 0;  //本地新增
     private int deleteState = -1;  //标记删除
     private int updateState = 1;  //本地更新
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

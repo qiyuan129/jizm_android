@@ -42,13 +42,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HttpTestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--        <activity android:name=".HttpTestActivity">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
         <activity android:name=".CategoryEditActivity" />
         <activity android:name=".AccountEditActivity"/>
     </application>

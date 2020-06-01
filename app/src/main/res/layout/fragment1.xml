@@ -5,45 +5,21 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
 
-    <Button
-        android:id="@+id/trend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:text="趋势"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.123"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:text="分类"
-        app:layout_constraintEnd_toStartOf="@+id/billlist"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toEndOf="@+id/trend"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/billlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:text="账单"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.866"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="#299EE3"
+        app:tabIndicatorHeight='2dp'
+        app:tabMode="fixed"
+        app:tabMaxWidth="0dp"
+        app:tabGravity="fill"
+        app:tabIndicatorFullWidth="false"
+        app:tabSelectedTextColor="#299EE3"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
@@ -51,5 +27,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="58dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></android.support.v4.view.ViewPager>
+        app:layout_constraintTop_toTopOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>

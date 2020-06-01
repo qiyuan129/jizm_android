@@ -52,7 +52,8 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     TextView syncTextView;
 
     boolean isUploadSuccess;
-    boolean isDownloadSuccess;
+    //boolean isDownloadSuccess;
+    boolean isSyncSuccess;
 
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -152,11 +153,11 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.syncTextView: {
-                isUploadSuccess=false;
-                isDownloadSuccess=false;
+                //isUploadSuccess=false;
+                //isDownloadSuccess=false;
                 Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
 
-                download();
+             /*   download();
                 if(isDownloadSuccess==true){       //下载成功才执行上传
                     upload();
                 }
@@ -165,6 +166,13 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                     Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_SHORT).show();
                     syncTextView.setText("更新数据（上次同步时间:"+(new Date())+")" );
                 }
+                else{
+                    Toast.makeText(getActivity(),"同步失败",Toast.LENGTH_SHORT).show();
+                }
+
+                System.out.println("isDownloadSuccess="+isDownloadSuccess+",isUploadSuccess="+isUploadSuccess);*/
+
+                download();
             }
                 default:
                     break;
@@ -232,7 +240,8 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                         JSONObject dataJson = resultJson.getJSONObject("data");
                         SyncUtil.processUploadResult(dataJson);
 
-                        isUploadSuccess=true;            //上传成功，对此次同步的上传结果进行标记
+                        System.out.println("上传成功，同步完成");
+
                     }
                     //响应结果为失败类型
                     else{
@@ -313,7 +322,15 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                         JSONObject dataJson = resultJson.getJSONObject("data");
 
                         SyncUtil.processDownloadResult(dataJson);
-                        isDownloadSuccess=true;            //上传成功，对此次同步的上传结果进行标记
+
+                        System.out.println("下载成功，开始执行上传");
+                        upload();
+
+                        Looper.prepare();
+                        Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_LONG).show();
+                        Looper.loop();
+                        //syncTextView.setText("更新数据（上次同步时间："+new Date()+")");
+
                     }
                     //响应结果为失败类型
                     else{
@@ -326,6 +343,13 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 } catch (IOException e) {
                     Looper.prepare();
                     Toast.makeText(getActivity(),"转换响应结果为字符串时出错",Toast.LENGTH_SHORT)
+                            .show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+                catch (Exception e){
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"其他错误，详细信息见控制台",Toast.LENGTH_SHORT)
                             .show();
                     Looper.loop();
                     e.printStackTrace();

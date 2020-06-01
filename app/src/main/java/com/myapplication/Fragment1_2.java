@@ -72,7 +72,8 @@ public class Fragment1_2 extends Fragment
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, 1);
         strbeginDate =  new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        c.set(Calendar.DATE, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         //strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date(2020-1900,5,6));
 
 
@@ -234,12 +235,12 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            if(i>2)
-            {
-                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
-                dateString = df.format(dbDataOut.get(i-1).getBill_date());
-                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
-            }
+//            if(i>2)
+//            {
+//                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
+//                dateString = df.format(dbDataOut.get(i-1).getBill_date());
+//                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
+//            }
         }
         else {
             i=0;
@@ -251,12 +252,12 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            if(i>2)
-            {
-                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
-                dateString = df.format(dbDataOut.get(i-1).getBill_date());
-                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
-            }
+//            if(i>2)
+//            {
+//                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
+//                dateString = df.format(dbDataOut.get(i-1).getBill_date());
+//                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
+//            }
         }
         return mcategoryList;
     }
@@ -592,6 +593,16 @@ class CategoryListItem
 class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
 {
     private int id;
+    int[]colors = {Color.rgb(196,69,54),
+            Color.rgb(243,114,44),
+            Color.rgb(248,150,30),
+            Color.rgb(249,199,79),
+            Color.rgb(156,197,161),
+            Color.rgb(144,190,109),
+            Color.rgb(67,170,139),
+            Color.rgb(25,114,120),
+            Color.rgb( 87,117,144),
+            Color.rgb(38,70,83)};
     public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects)
     {
         super(context, textid, objects);
@@ -603,14 +614,15 @@ class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
     {
         CategoryListItem categoryListItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(id, parent, false);
-        TextView month = (TextView) view.findViewById(R.id.order);
-        TextView income = (TextView) view.findViewById(R.id.categoryname);
-        TextView outcome = (TextView) view.findViewById(R.id.money);
-        TextView balance = (TextView) view.findViewById(R.id.date);
-        month.setText(String.valueOf(categoryListItem.getOrder()));
-        income.setText(categoryListItem.getCategoryname());
-        outcome.setText(String.valueOf(categoryListItem.getMoney()));
-        balance.setText(String.valueOf(categoryListItem.getDate()));
+        TextView order = (TextView) view.findViewById(R.id.order);
+        TextView categoryname = (TextView) view.findViewById(R.id.categoryname);
+        TextView money = (TextView) view.findViewById(R.id.money);
+        TextView date = (TextView) view.findViewById(R.id.date);
+        order.setText(String.valueOf(categoryListItem.getOrder()));
+        order.setTextColor(colors[position]);
+        categoryname.setText(categoryListItem.getCategoryname());
+        money.setText(String.valueOf(categoryListItem.getMoney()));
+        date.setText(String.valueOf(categoryListItem.getDate()));
         return view;
     }
 }

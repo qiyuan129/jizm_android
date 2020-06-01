@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,13 +20,15 @@ import java.util.List;
 public class Fragment1 extends Fragment {
     private View mView;
     private ViewPager viewPager;
-    private Button trend;
-    private Button category;
-    private Button billlist;
+    private TabLayout mTabLayout;
+    private TabLayout.Tab trend;
+    private TabLayout.Tab category;
+//    private Button trend;
+//    private Button category;
     private Fragment1_1 fragment1_1;
     private Fragment1_2 fragment1_2;
-    private Fragment1_3 fragment1_3;
     private List<Fragment> list;
+    private String[] fragmentTitles = new String[]{"趋势","分类"};
 
 
     //private MyDatabaseHelper dbHelper;
@@ -52,39 +55,33 @@ public class Fragment1 extends Fragment {
 
         fragment1_1 = new Fragment1_1();
         fragment1_2 = new Fragment1_2();
-        fragment1_3 = new Fragment1_3();
         list = new ArrayList<>();
         list.add(fragment1_1);
         list.add(fragment1_2);
-        list.add(fragment1_3);
 
         viewPager = (ViewPager) mView.findViewById(R.id.viewpager);
         MyViewPagerAdapter adapter = new MyViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
+        mTabLayout = (TabLayout) mView.findViewById(R.id.tabLayout);
+        mTabLayout.setupWithViewPager(viewPager);
+        trend = mTabLayout.getTabAt(0);
+        category = mTabLayout.getTabAt(1);
 
 
-        trend=(Button) mView.findViewById(R.id.trend);
-        trend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
-        category=(Button) mView.findViewById(R.id.category);
-        category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
-        billlist=(Button) mView.findViewById(R.id.billlist);
-        billlist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(2);
-            }
-        });
-
+//        trend=(Button) mView.findViewById(R.id.trend);
+//        trend.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                viewPager.setCurrentItem(0);
+//            }
+//        });
+//        category=(Button) mView.findViewById(R.id.category);
+//        category.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                viewPager.setCurrentItem(1);
+//            }
+//        });
 
         //dbHelper.getWritableDatabase();
 
@@ -114,16 +111,30 @@ public class Fragment1 extends Fragment {
             super(fm);
         }
 
-        //返回每个position对应的Fragment对象
+//        //返回每个position对应的Fragment对象
+//        @Override
+//        public Fragment getItem(int position) {
+//            return list.get(position);
+//        }
+//
+//        //返回list的长度，也就是Fragment对象的个数
+//        @Override
+//        public int getCount() {
+//            return list.size();
+//        }
         @Override
         public Fragment getItem(int position) {
-            return list.get(position);
+          return list.get(position);
         }
 
-        //返回list的长度，也就是Fragment对象的个数
         @Override
         public int getCount() {
-            return list.size();
+           return fragmentTitles.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitles[position];
         }
     }
 

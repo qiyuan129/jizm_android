@@ -55,18 +55,21 @@ public class SyncUtil {
 
         //构建符合格式的json记录数组
         JSONArray accountArray=new JSONArray();
-        for(Account account:accountList){
-            //创建对应每个Account记录的json对象
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("localId",account.getAccount_id());
-            jsonObject.put("userId",account.getUser_id());
-            jsonObject.put("name",account.getAccount_name());
-            jsonObject.put("money",account.getMoney());
-            jsonObject.put("state",account.getState());
-            jsonObject.put("anchor",account.getAnchor());
 
-            //添加到jsonArray中
-            accountArray.add(jsonObject);
+        if(accountList!=null) {
+            for (Account account : accountList) {
+                //创建对应每个Account记录的json对象
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("localId", account.getAccount_id());
+                jsonObject.put("userId", account.getUser_id());
+                jsonObject.put("name", account.getAccount_name());
+                jsonObject.put("money", account.getMoney());
+                jsonObject.put("state", account.getState());
+                jsonObject.put("anchor", account.getAnchor());
+
+                //添加到jsonArray中
+                accountArray.add(jsonObject);
+            }
         }
 
         accountSyncRecords.put("needSync",needSync);
@@ -87,26 +90,29 @@ public class SyncUtil {
 
         //构建符合格式的json记录数组
         JSONArray billArray=new JSONArray();
-        for(Bill bill:billList){
-            //创建对应每个Bill记录的json对象
-            JSONObject billObject=new JSONObject();
-            JSONObject accountObject=new JSONObject();
-            JSONObject categoryObject=new JSONObject();
 
-            accountObject.put("localId",bill.getAccount_id());
-            categoryObject.put("localId",bill.getCategory_id());
-            billObject.put("localId",bill.getBill_id());
-            billObject.put("account",accountObject);
-            billObject.put("category",categoryObject);
-            billObject.put("userId",bill.getUser_id());
-            billObject.put("type",bill.getType());
-            billObject.put("name",bill.getBill_name());
-            billObject.put("date",bill.getBill_date());
-            billObject.put("money",bill.getBill_money());
-            billObject.put("state",bill.getState());
-            billObject.put("anchor",bill.getAnchor());
-            //添加到jsonArray中
-            billArray.add(billObject);
+        if(billList!=null) {
+            for (Bill bill : billList) {
+                //创建对应每个Bill记录的json对象
+                JSONObject billObject = new JSONObject();
+                JSONObject accountObject = new JSONObject();
+                JSONObject categoryObject = new JSONObject();
+
+                accountObject.put("localId", bill.getAccount_id());
+                categoryObject.put("localId", bill.getCategory_id());
+                billObject.put("localId", bill.getBill_id());
+                billObject.put("account", accountObject);
+                billObject.put("category", categoryObject);
+                billObject.put("userId", bill.getUser_id());
+                billObject.put("type", bill.getType());
+                billObject.put("name", bill.getBill_name());
+                billObject.put("date", bill.getBill_date());
+                billObject.put("money", bill.getBill_money());
+                billObject.put("state", bill.getState());
+                billObject.put("anchor", bill.getAnchor());
+                //添加到jsonArray中
+                billArray.add(billObject);
+            }
         }
 
         billSyncRecords.put("needSync",needSync);
@@ -127,17 +133,20 @@ public class SyncUtil {
        JSONObject categorySyncRecords=new JSONObject();
 
         JSONArray categoryArray=new JSONArray();
-        for(Category category:categoryList){
-            JSONObject categoryObject=new JSONObject();
 
-            categoryObject.put("localId",category.getCategory_id());
-            categoryObject.put("userId",category.getUser_id());
-            categoryObject.put("name",category.getCategory_name());
-            categoryObject.put("type",category.getType());
-            categoryObject.put("state",category.getState());
-            categoryObject.put("anchor",category.getAnchor());
+        if(categoryList!=null) {
+            for (Category category : categoryList) {
+                JSONObject categoryObject = new JSONObject();
 
-            categoryArray.add(categoryObject);
+                categoryObject.put("localId", category.getCategory_id());
+                categoryObject.put("userId", category.getUser_id());
+                categoryObject.put("name", category.getCategory_name());
+                categoryObject.put("type", category.getType());
+                categoryObject.put("state", category.getState());
+                categoryObject.put("anchor", category.getAnchor());
+
+                categoryArray.add(categoryObject);
+            }
         }
 
         categorySyncRecords.put("needSync",needSync);
@@ -158,22 +167,25 @@ public class SyncUtil {
         JSONObject  periodicSyncRecords=new JSONObject();
 
         JSONArray periodicArray=new JSONArray();
-        for(Periodic periodic:periodicList){
-            JSONObject periodicObject=new JSONObject();
 
-            periodicObject.put("localId",periodic.getPeriodic_id());
-            periodicObject.put("accountId",periodic.getAccount_id());
-            periodicObject.put("categoryId",periodic.getCategory_id());
-            periodicObject.put("userId",periodic.getUser_id());
-            periodicObject.put("type",periodic.getType());
-            periodicObject.put("name",periodic.getPeriodic_name());
-            periodicObject.put("cycle",periodic.getCycle());
-            periodicObject.put("start",periodic.getStart());
-            periodicObject.put("end",periodic.getEnd());
-            periodicObject.put("money",periodic.getPeriodic_money());
+        if(periodicList!=null) {
+            for (Periodic periodic : periodicList) {
+                JSONObject periodicObject = new JSONObject();
 
-            periodicArray.add(periodicObject);
+                periodicObject.put("localId", periodic.getPeriodic_id());
+                periodicObject.put("accountId", periodic.getAccount_id());
+                periodicObject.put("categoryId", periodic.getCategory_id());
+                periodicObject.put("userId", periodic.getUser_id());
+                periodicObject.put("type", periodic.getType());
+                periodicObject.put("name", periodic.getPeriodic_name());
+                periodicObject.put("cycle", periodic.getCycle());
+                periodicObject.put("start", periodic.getStart());
+                periodicObject.put("end", periodic.getEnd());
+                periodicObject.put("money", periodic.getPeriodic_money());
 
+                periodicArray.add(periodicObject);
+
+            }
         }
 
         periodicSyncRecords.put("needSync",needSync);
@@ -341,8 +353,11 @@ public class SyncUtil {
         JSONArray recordsJSONArray=accountSyncRecords.getJSONArray("recordList");
         //ArrayList<Integer> conflictIdList=new ArrayList<>();
 
+        if(recordsJSONArray==null){
+            return;
+        }
         for(int i=0;i<recordsJSONArray.size();i++){
-            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            JSONObject recordObject=recordsJSONArray.getJSONObject(i);
             int id=recordObject.getInteger("localId");
             int userId=recordObject.getInteger("userId");
             String name=recordObject.getString("name");
@@ -370,8 +385,11 @@ public class SyncUtil {
         BillDAO billDAO=new BillDAOImpl();
         JSONArray recordsJSONArray=billSyncRecords.getJSONArray("recordList");
 
+        if(recordsJSONArray==null){
+            return;
+        }
         for(int i=0;i<recordsJSONArray.size();i++){
-            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            JSONObject recordObject=recordsJSONArray.getJSONObject(i);
             int id=recordObject.getInteger("localId");
             int userId=recordObject.getInteger("userId");
             int accountId=recordObject.getJSONObject("account").getInteger("localId");
@@ -403,8 +421,11 @@ public class SyncUtil {
         CategoryDAO categoryDAO=new CategoryDAOImpl();
         JSONArray recordsJSONArray=categorySyncRecords.getJSONArray("recordList");
 
+        if(recordsJSONArray==null){
+            return;
+        }
         for(int i=0;i<recordsJSONArray.size();i++){
-            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            JSONObject recordObject=recordsJSONArray.getJSONObject(i);
             int id=recordObject.getInteger("localId");
             int userId=recordObject.getInteger("userId");
             String name=recordObject.getString("name");
@@ -432,12 +453,15 @@ public class SyncUtil {
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
         JSONArray recordsJSONArray=periodicSyncRecords.getJSONArray("recordList");
 
+        if(recordsJSONArray==null){
+            return;
+        }
         for(int i=0;i<recordsJSONArray.size();i++){
-            JSONObject recordObject=recordsJSONArray.getJSONObject(0);
+            JSONObject recordObject=recordsJSONArray.getJSONObject(i);
             int id=recordObject.getInteger("localId");
             int userId=recordObject.getInteger("userId");
-            int accountId=recordObject.getJSONObject("account").getInteger("localId");
-            int categoryId=recordObject.getJSONObject("category").getInteger("localId");
+            int accountId=recordObject.getInteger("accountId");
+            int categoryId=recordObject.getInteger("categoryId");
             int type=recordObject.getInteger("type");
             String name=recordObject.getString("name");
             int cycle=recordObject.getInteger("cycle");
