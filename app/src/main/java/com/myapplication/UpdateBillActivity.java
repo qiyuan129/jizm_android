@@ -478,15 +478,16 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             e.printStackTrace();
         }
 
-        //Date date=new Date(days);
-
         bill.setBill_date(date);
 
-        Log.i("bill_name: ",bill.getBill_name());
+        //设置状态码
+        bill.setState(1);
+
+      /*  Log.i("bill_name: ",bill.getBill_name());
         Log.i("bill_money: ",String.valueOf(bill.getBill_money()));
         Log.i("bill_type: ",String.valueOf(bill.getType()));
         Log.i("bill_category: ",String.valueOf(bill.getCategory_id()));
-        Log.i("bill_recycle: ",String.valueOf(bill));
+        Log.i("bill_recycle: ",String.valueOf(bill));*/
 
         //存入数据库 暂时注解掉
         BillDAO billDAO = new BillDAOImpl();

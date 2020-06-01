@@ -60,7 +60,8 @@ public class Fragment0 extends Fragment {
 
         //初始化数据数组
         initBills();
-        setData();
+        setCategoryData();
+
         //创建listView的数据适配器
         //adapter = new BillListAdapter(getActivity(),R.layout.bill_list_item,billList);
         newAdapter = new BillRecomendAdapterF0(getActivity(),billList);
@@ -135,16 +136,13 @@ public class Fragment0 extends Fragment {
         });
 
 
-
-
-
         return mView;
     }
 
 
 
 
-    public void setData(){
+    public void setCategoryData(){
 
         //填充类别列表
         CategoryDAO categoryDAO = new CategoryDAOImpl();
@@ -194,24 +192,50 @@ public class Fragment0 extends Fragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser)
-    {
-        Log.i("TAG", "---------setUserVisibleHint(" + isVisibleToUser + ")");
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        //Log.i("Fragment0", "---------setUserVisibleHint(" + isVisibleToUser + ")");
+        Log.i("Fragment0", "账单列表刷新数据");
+
         //到显示状态为true，不可见为false
-        if (isVisibleToUser)
-        {
+        if (isVisibleToUser) {
+            RefreshData();
         }
         super.setUserVisibleHint(isVisibleToUser);
     }
 
 
 
+    public void RefreshData(){
+        if(billList!=null && newAdapter!=null && categoryAdapter!=null && spinner!=null && listView!=null){
+            billList.clear();
+            BillDAO billDao = new BillDAOImpl();
+            billList = billDao.listBill();
+            newAdapter.clearAll();
+            newAdapter.setData(billList);
+
+            //刷新类别
+            setCategoryData();
+            categoryAdapter.clear();
+            categoryAdapter.addAll(CategoryListData);
+
+
+            //更新适配器
+            categoryAdapter.notifyDataSetChanged();
+            spinner.setAdapter(categoryAdapter);
+            newAdapter.notifyDataSetChanged();
+            listView.setAdapter(newAdapter);
+        }
+
+
+    }
+
+
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Fragment ", "----------------------onResume");
     }
+
 
 
 
@@ -262,7 +286,6 @@ public class Fragment0 extends Fragment {
 
 
     private void initBills(){
-
         //实际代码
         BillDAO billDao = new BillDAOImpl();
         billList=billDao.listBill();
@@ -293,13 +316,7 @@ public class Fragment0 extends Fragment {
 
         //本地list与adapter绑定的，因此本地的list不用处理
 
-
-
-
-
-
-
-        Toast.makeText(getActivity(), "账单删除成功", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "账单删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -370,6 +387,16 @@ public class Fragment0 extends Fragment {
             backData = data;
         }
 
+        public void clearAll(){
+            data.clear();
+            backData.clear();
+        }
+
+        public void setData(List<Bill> data){
+            this.data = data;
+            backData = data;
+        }
+
         @Override
         public int getCount() {
             return data.size();
@@ -397,9 +424,7 @@ public class Fragment0 extends Fragment {
         }
 
 
-        public void clearAll(){
-            data.clear();
-        }
+
 
 
         @Override

@@ -35,6 +35,7 @@ import dao.PeriodicDAOImpl;
 import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
+import pojo.Category;
 import pojo.Periodic;
 
 import static android.app.Activity.RESULT_OK;
@@ -44,7 +45,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     private View mView;
     private Button addPeriodic;
     private SearchView searchPeriodic;
-    private List<Periodic> periodics;
+    private List<Periodic> periodics = new ArrayList<Periodic>();
     private  SlideDeleteListView listView;
     private RecomendAdapter tmpadapter;
 
@@ -128,7 +129,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 Log.i("list:",String.valueOf(periodics.get(position).getPeriodic_id()));
                 //删除这个周期事件
                 deletePeriodic(position);
-                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -171,6 +172,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
 
 
+
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent Tdata){
         switch (requestCode){
@@ -198,6 +200,73 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("Fragment3 周期事件列表", "onHiddenChanged  ！hidden刷新数据");
+        if(hidden){
+            //TODO now visible to user
+            Log.i("Fragment3 周期事件列表", "onHiddenChanged  hidden刷新数据");
+        } else {
+            //TODO now invisible to user
+            Log.i("Fragment3 周期事件列表", "onHiddenChanged  ！hidden刷新数据");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.i("Fragment3", "刷新周期事件列表");
+
+        //到显示状态为true，不可见为false
+        if (isVisibleToUser) {
+            RefreshData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+
+
+
+    public void RefreshData(){
+        if(periodics!=null && tmpadapter!=null && listView!=null){
+            periodics.clear();
+            PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+            periodics = periodicDAO.listPeriodic();
+            tmpadapter.clearAll();
+            tmpadapter.setData(periodics);
+            tmpadapter.notifyDataSetChanged();
+            listView.setAdapter(tmpadapter);
+        }
+
+
+
+
+
+        Log.i("Fragment3", "RefreshData");
+
+
+
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -293,10 +362,6 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
        periodics = periodicDAO.listPeriodic();
-
-
-
-
 
     }
 
@@ -436,9 +501,9 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
     }
 
     public void removeItem(int index){
-
-        backData.remove(data.get(index));
-        data.remove(index);
+        Periodic tep = data.get(index);
+        backData.remove(tep);
+        data.remove(tep);
 
 
     }
@@ -446,6 +511,12 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
 
     public void clearAll(){
        data.clear();
+       backData.clear();
+    }
+
+    public void setData(List<Periodic> data){
+        this.data = data;
+        backData = data;
     }
 
 

@@ -201,7 +201,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     Bill bill = new Bill(0,obj.getAccount_id(),obj.getCategory_id(),obj.getUser_id(),
                             obj.getType(),"周期："+obj.getPeriodic_name(),
                             new Date(),obj.getPeriodic_money(),
-                            0,new Date());
+                            0,new Date(0));
                     billDAO.insertBill(bill);
 
                 }
@@ -223,7 +223,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Bill bill = new Bill(0,obj.getAccount_id(),obj.getCategory_id(),obj.getUser_id(),
                         obj.getType(),"周期："+obj.getPeriodic_name(),
                         new Date(),obj.getPeriodic_money(),
-                        0,new Date());
+                        0,new Date(0));
                 billDAO.insertBill(bill);
 
             }
