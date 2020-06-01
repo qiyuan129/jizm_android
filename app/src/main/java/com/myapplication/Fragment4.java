@@ -191,7 +191,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
         // 需要重新获取
         Request request = new Request.Builder()
-                .url("http://192.168.0.100:8080/app/synchronization")
+                .url("http://39.100.48.69:8080/app/synchronization")
                 .post(requestBody)
                 .addHeader("token", UserUtil.getToken())
                 .build();
@@ -273,7 +273,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
         // 需要重新获取
         Request request = new Request.Builder()
-                .url("http://192.168.0.100:8080/app/download")
+                .url("http://39.100.48.69:8080/app/download")
                 .post(requestBody)
                 .addHeader("token", UserUtil.getToken())
                 .build();
@@ -326,7 +326,11 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                         System.out.println("下载成功，开始执行上传");
                         upload();
 
-                        System.out.println("new Date(0)的结果是："+new Date(0));
+                        Looper.prepare();
+                        Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_LONG).show();
+                        Looper.loop();
+                        //syncTextView.setText("更新数据（上次同步时间："+new Date()+")");
+
                     }
                     //响应结果为失败类型
                     else{
