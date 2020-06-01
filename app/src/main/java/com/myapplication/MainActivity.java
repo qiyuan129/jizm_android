@@ -342,15 +342,15 @@ public class MainActivity extends AppCompatActivity {
     public void initView(){
         viewPager = (NoScrollViewPager )findViewById(R.id.viewpager);
 
-        fragment0 = new Fragment0();
         fragment1 = new Fragment1();
+        fragment0 = new Fragment0();
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
         fragment4 = new Fragment4();
 
         list = new ArrayList<>();
-        list.add(fragment0);
         list.add(fragment1);
+        list.add(fragment0);
         list.add(fragment2);
         list.add(fragment3);
         list.add(fragment4);

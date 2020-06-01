@@ -189,23 +189,17 @@ public class Fragment0 extends Fragment {
                     Log.i("更新修改的bill数据  : ","结束");
 
                 }
-
                 break;
-
 
             default:
                 break;
         }
     }
 
-
-
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         Log.i("TTPPPPP", "onHiddenChanged  ！hidden刷新数据");
-
         if(hidden){
             //TODO now visible to user
             Log.i("TTP", "onHiddenChanged  hidden刷新数据");
@@ -215,10 +209,6 @@ public class Fragment0 extends Fragment {
         }
     }
 
-
-
-
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser)
     {
@@ -226,7 +216,6 @@ public class Fragment0 extends Fragment {
         //到显示状态为true，不可见为false
         if (isVisibleToUser)
         {
-
         }
         super.setUserVisibleHint(isVisibleToUser);
     }
