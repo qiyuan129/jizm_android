@@ -161,12 +161,12 @@ public class Fragment1_1 extends Fragment {
         }
         //TrendListItem tt = new TrendListItem("测试"+String.format("%02d",i+1),"1111", "1111", "1111");
         //trendList.add(tt);
-        if(i>0)
-        {
-            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
-                String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
-            trendList.add(t1);
-        }
+//        if(i>0)
+//        {
+//            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
+//                String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
+//            trendList.add(t1);
+//        }
         return trendList;
     }
     public void RefreshData(int year)
@@ -401,6 +401,18 @@ class TrendListItem
 class TrendListAdapter extends ArrayAdapter<TrendListItem>
 {
     private int id;
+    int[]colors = {Color.rgb(196,69,54),
+            Color.rgb(243,114,44),
+            Color.rgb(248,150,30),
+            Color.rgb(236,164,0),
+            Color.rgb(249,199,79),
+            Color.rgb(156,197,161),
+            Color.rgb(144,190,109),
+            Color.rgb(67,170,139),
+            Color.rgb( 73,160,120),
+            Color.rgb(25,114,120),
+            Color.rgb( 87,117,144),
+            Color.rgb(38,70,83)};
     public TrendListAdapter(Context context, int textid, List<TrendListItem>objects)
     {
         super(context,textid,objects);
@@ -416,9 +428,15 @@ class TrendListAdapter extends ArrayAdapter<TrendListItem>
         TextView outcome = (TextView) view.findViewById(R.id.trendoutcome);
         TextView balance = (TextView) view.findViewById(R.id.trendbalance);
         month.setText(trendListItem.getMonth());
+        //int months = Integer.valueOf(trendListItem.getMonth());
+        month.setTextColor(colors[position]);
         income.setText(trendListItem.getIncome());
         outcome.setText(trendListItem.getOutcome());
         balance.setText(trendListItem.getBalance());
+        if(trendListItem.getBalance().compareTo("0.0")<0)
+            balance.setTextColor(Color.rgb(220,20,60));
+        else if(trendListItem.getBalance().compareTo("0.0")>0)
+            balance.setTextColor(Color.rgb(50,205,50));
         return view;
     }
 }

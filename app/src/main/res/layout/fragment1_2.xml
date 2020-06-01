@@ -75,9 +75,11 @@
             android:id="@+id/beginDate"
             android:layout_width="103dp"
             android:layout_height="27dp"
+            android:background="@drawable/shape_button"
             android:textColor="#005082"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.285"
+            app:layout_constraintHorizontal_bias="0.178"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,9 +87,11 @@
             android:id="@+id/endDate"
             android:layout_width="101dp"
             android:layout_height="26dp"
+            android:background="@drawable/shape_button"
             android:textColor="#005082"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.903"
+            app:layout_constraintHorizontal_bias="0.87"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -105,7 +109,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="起："
+            android:text="起:"
             app:layout_constraintEnd_toStartOf="@+id/beginDate"
             app:layout_constraintHorizontal_bias="0.973"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +119,7 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="止："
+            android:text="止:"
             app:layout_constraintEnd_toStartOf="@+id/endDate"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
