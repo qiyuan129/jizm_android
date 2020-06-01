@@ -48,10 +48,31 @@ public class PeriodicDAOImpl implements PeriodicDAO {
     }
 
     @Override
-    public void addPeriodic(Periodic periodic) {
+    public void insertPeriodic(Periodic periodic) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put("account_id",periodic.getAccount_id());
+        values.put("category_id",periodic.getCategory_id());
+        values.put("user_id",periodic.getUser_id());
+        values.put("type",periodic.getType());
+        values.put("periodic_name",periodic.getPeriodic_name());
+        values.put("cycle",periodic.getCycle());
+        values.put("start",periodic.getStart().getTime());
+        values.put("end",periodic.getEnd().getTime());
+        values.put("periodic_money",periodic.getPeriodic_money());
+        values.put("state",periodic.getState());
+        values.put("anchor",periodic.getAnchor().getTime());
+
+        db.insert("periodic",null,values);
+    }
+
+    @Override
+    public void insertPeriodicById(Periodic periodic) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("periodic_id",periodic.getPeriodic_id());
         values.put("account_id",periodic.getAccount_id());
         values.put("category_id",periodic.getCategory_id());
         values.put("user_id",periodic.getUser_id());

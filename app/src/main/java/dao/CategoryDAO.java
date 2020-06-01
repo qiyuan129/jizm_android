@@ -12,6 +12,8 @@ public interface CategoryDAO {
 
     void insertCategory(Category category);
 
+    void insertCategoryById(Category category);
+
     void updateCategory(Category category);
 
     void deleteCategory(int id);

@@ -54,9 +54,12 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private int bill_id = 1;
     private int account_id = 1;
     private Date bill_date = new Date();
-    private int state = 1;
-    private Date anchor= new Date();
+    private Date anchor= new Date(0);
     public int isIncome = 0;         //记录类别（收入/支出）
+    //状态
+    private int addState = 0;  //本地新增
+    private int deleteState = -1;  //标记删除
+    private int updateState = 1;  //本地更新
 
     private RecyclerView recyclerView;
     private Button incomeTv;        //收入按钮
@@ -116,6 +119,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         outcomeTv.setOnClickListener(this);
 
         outcomeTv.setSelected(true);
+        incomeTv.setSelected(false);
 
         edittypeTv = (TextView) mView.findViewById(R.id.type_edit);
         edittypeTv.setOnClickListener(this);
@@ -450,7 +454,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         }
 
-        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, bill_name, bill_date, bill_money, state, anchor);
+        Bill bill = new Bill(bill_id, account_id, category_id, user_id, isIncome, bill_name, bill_date, bill_money, addState, anchor);
         BillDAO billDAO = new BillDAOImpl();
         billDAO.insertBill(bill);
 
@@ -491,7 +495,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             if (isIncome == 0) {
                 for(int i = 0; i < outcome_category.size(); i++){
                     category_id = outcome_category_id.get(i);
-                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                     if (outcome_category_id.size() != 0) {
                         category_id = outcome_category_id.get(0);
@@ -500,7 +504,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             } else {
                 for(int i = 0; i < income_category.size(); i++){
                     category_id = income_category_id.get(i);
-                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                     if (income_category_id.size() != 0) {
                         category_id = income_category_id.get(0);
@@ -511,7 +515,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             if (isIncome == 0) {
                 for(int i = 0; i < outcome_category.size(); i++){
                     category_id = outcome_category_id.get(i);
-                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                     if (outcome_category_id.size() != 0) {
                         category_id = outcome_category_id.get(0);
@@ -520,7 +524,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             } else {
                 for(int i = 0; i < income_category.size(); i++){
                     category_id = income_category_id.get(i);
-                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                     if (income_category_id.size() != 0) {
                         category_id = income_category_id.get(0);

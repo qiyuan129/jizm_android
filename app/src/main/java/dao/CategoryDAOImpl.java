@@ -55,6 +55,21 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
+    public void insertCategoryById(Category category) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("category_id",category.getCategory_id());
+        values.put("user_id",category.getUser_id());
+        values.put("category_name",category.getCategory_name());
+        values.put("type",category.getType());
+        values.put("state",category.getState());
+        values.put("anchor",category.getAnchor().getTime());
+
+        db.insert("category",null,values);
+    }
+
+    @Override
     public void updateCategory(Category category) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();

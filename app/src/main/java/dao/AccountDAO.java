@@ -11,6 +11,8 @@ public interface AccountDAO {
 
     void insertAccount(Account account);
 
+    void insertAccountById(Account account);
+
     Account getAccountById(int id);
 
     void updateAccount(Account account);

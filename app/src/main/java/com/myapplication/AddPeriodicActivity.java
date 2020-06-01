@@ -99,7 +99,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     double money;
     Date start;
     Date end;
-    Date anchor = new Date();
+    Date anchor = new Date(0);
     int recycleId;
     int typeId;
     int categoryId;
@@ -368,7 +368,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();
-        periodicDAO.addPeriodic(periodic);
+        periodicDAO.insertPeriodic(periodic);
 
 
         Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show();

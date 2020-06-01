@@ -98,9 +98,9 @@ public class Fragment1_3 extends Fragment {
         categoryDAO.insertCategory(category);
 
         periodic=new Periodic(1,1,1,1,0,"吃饭",1,date1,date2,6.2,1,date);
-        periodicDAO.addPeriodic(periodic);
+        periodicDAO.insertPeriodic(periodic);
         periodic=new Periodic(2,1,2,1,0,"打车",2,date1,date2,6.2,1,date);
-        periodicDAO.addPeriodic(periodic);
+        periodicDAO.insertPeriodic(periodic);
 
         /////////////////
 */
