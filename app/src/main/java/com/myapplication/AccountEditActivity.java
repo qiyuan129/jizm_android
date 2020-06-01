@@ -58,7 +58,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
     private String account_name;
     private double money = 0;
     private int state = 0;
-    private Date anchor = new Date();
+    private Date anchor = new Date(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

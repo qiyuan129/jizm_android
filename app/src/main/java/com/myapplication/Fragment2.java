@@ -55,7 +55,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private int account_id = 1;
     private Date bill_date = new Date();
     private int state = 1;
-    private Date anchor= new Date();
+    private Date anchor= new Date(0);
     public int isIncome = 0;         //记录类别（收入/支出）
 
     private RecyclerView recyclerView;

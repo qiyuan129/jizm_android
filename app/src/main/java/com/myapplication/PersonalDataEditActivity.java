@@ -192,8 +192,7 @@ public class PersonalDataEditActivity extends AppCompatActivity implements View.
                     if(statusCode>=200 && statusCode<400) {
                         toast("保存成功！");
 
-                        Intent intent=new Intent(PersonalDataEditActivity.this,Fragment4.class);
-                        startActivity(intent);              //跳转回“我的”界面
+                        finish();
                     }
                     //响应结果为失败类型
                     else{

@@ -99,7 +99,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     double money;
     Date start;
     Date end;
-    Date anchor = new Date();
+    Date anchor = new Date(0);
     int recycleId;
     int typeId;
     int categoryId;
@@ -364,7 +364,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
 
         Periodic periodic=new Periodic(0,accountId,categoryId,UserUtil.getUserId(),
-                typeId,periodicName,recycleId,start,end,money,state,new Date());
+                typeId,periodicName,recycleId,start,end,money,state,new Date(0));
 
 
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();

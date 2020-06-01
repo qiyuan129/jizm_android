@@ -44,7 +44,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     private int user_id = 1;
     private int isIncome = 0;
     private int state = 0;
-    private Date anchor = new Date();
+    private Date anchor = new Date(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

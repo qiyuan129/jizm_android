@@ -52,7 +52,8 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     TextView syncTextView;
 
     boolean isUploadSuccess;
-    boolean isDownloadSuccess;
+    //boolean isDownloadSuccess;
+    boolean isSyncSuccess;
 
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -152,11 +153,11 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.syncTextView: {
-                isUploadSuccess=false;
-                isDownloadSuccess=false;
+                //isUploadSuccess=false;
+                //isDownloadSuccess=false;
                 Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
 
-                download();
+             /*   download();
                 if(isDownloadSuccess==true){       //下载成功才执行上传
                     upload();
                 }
@@ -165,6 +166,13 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                     Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_SHORT).show();
                     syncTextView.setText("更新数据（上次同步时间:"+(new Date())+")" );
                 }
+                else{
+                    Toast.makeText(getActivity(),"同步失败",Toast.LENGTH_SHORT).show();
+                }
+
+                System.out.println("isDownloadSuccess="+isDownloadSuccess+",isUploadSuccess="+isUploadSuccess);*/
+
+                download();
             }
                 default:
                     break;
@@ -183,7 +191,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
         // 需要重新获取
         Request request = new Request.Builder()
-                .url("http://39.100.48.69:8080/app/synchronization")
+                .url("http://192.168.0.100:8080/app/synchronization")
                 .post(requestBody)
                 .addHeader("token", UserUtil.getToken())
                 .build();
@@ -232,7 +240,8 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                         JSONObject dataJson = resultJson.getJSONObject("data");
                         SyncUtil.processUploadResult(dataJson);
 
-                        isUploadSuccess=true;            //上传成功，对此次同步的上传结果进行标记
+                        System.out.println("上传成功，同步完成");
+
                     }
                     //响应结果为失败类型
                     else{
@@ -264,7 +273,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
         // 需要重新获取
         Request request = new Request.Builder()
-                .url("http://39.100.48.69:8080/app/download")
+                .url("http://192.168.0.100:8080/app/download")
                 .post(requestBody)
                 .addHeader("token", UserUtil.getToken())
                 .build();
@@ -313,7 +322,11 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                         JSONObject dataJson = resultJson.getJSONObject("data");
 
                         SyncUtil.processDownloadResult(dataJson);
-                        isDownloadSuccess=true;            //上传成功，对此次同步的上传结果进行标记
+
+                        System.out.println("下载成功，开始执行上传");
+                        upload();
+
+                        System.out.println("new Date(0)的结果是："+new Date(0));
                     }
                     //响应结果为失败类型
                     else{
@@ -326,6 +339,13 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 } catch (IOException e) {
                     Looper.prepare();
                     Toast.makeText(getActivity(),"转换响应结果为字符串时出错",Toast.LENGTH_SHORT)
+                            .show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+                catch (Exception e){
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"其他错误，详细信息见控制台",Toast.LENGTH_SHORT)
                             .show();
                     Looper.loop();
                     e.printStackTrace();
