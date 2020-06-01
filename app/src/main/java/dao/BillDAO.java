@@ -11,6 +11,8 @@ public interface BillDAO {
 
     List<Bill> listBill();
 
+    List<Bill> listBillByDate();
+
     void updateBill(Bill bill);
 
     void deleteBill(int id);

@@ -37,6 +37,7 @@ public class BillDAOImpl implements BillDAO {
         db.insert("bill",null,values);
     }
 
+
     @Override
     public List<Bill> listBill() {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
@@ -44,6 +45,36 @@ public class BillDAOImpl implements BillDAO {
         List<Bill> list=new ArrayList<>();
 
         Cursor cursor = db.query("bill",null,null,null,null,null,null);
+        if (cursor.moveToFirst())
+        {
+            do {
+                int bill_id=cursor.getInt(cursor.getColumnIndex("bill_id"));
+                int account_id=cursor.getInt(cursor.getColumnIndex("account_id"));
+                int category_id=cursor.getInt(cursor.getColumnIndex("category_id"));
+                int user_id=cursor.getInt(cursor.getColumnIndex("user_id"));
+                int type=cursor.getInt(cursor.getColumnIndex("type"));
+                String bill_name=cursor.getString(cursor.getColumnIndex("bill_name"));
+                Date bill_date= new Date(cursor.getLong(cursor.getColumnIndex("bill_date")));
+                double bill_money=cursor.getDouble(cursor.getColumnIndex("bill_money"));
+                int state=cursor.getInt(cursor.getColumnIndex("state"));
+                Date anchor= new Date(cursor.getLong(cursor.getColumnIndex("anchor")));
+
+                bill=new Bill(bill_id,account_id,category_id,user_id,type,bill_name,bill_date,bill_money,state,anchor);
+                list.add(bill);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public List<Bill> listBillByDate() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Bill bill=null;
+        List<Bill> list=new ArrayList<>();
+
+        Cursor cursor = db.query("bill",null,null,null,null,null,"bill_date desc");
         if (cursor.moveToFirst())
         {
             do {
