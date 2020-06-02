@@ -11,6 +11,8 @@ public interface AccountDAO {
 
     void insertAccount(Account account);
 
+    void insertAccountById(Account account);
+
     Account getAccountById(int id);
 
     void updateAccount(Account account);
@@ -22,6 +24,8 @@ public interface AccountDAO {
     Date getMaxAnchor();
 
     void setStateAndAnchor(int id, int state, Date anchor);
+
+    void setState(int id,int state);
 
 
 }

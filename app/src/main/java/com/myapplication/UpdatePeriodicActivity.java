@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -63,19 +64,6 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     //收入支出单选button组
     private RadioGroup RBGroup;
     private RadioButton incomeRB, outcomeRB;
@@ -106,6 +94,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
     //确认修改按钮
     Button storePeriodic;
+    ImageView cancelUpdate;
+
 
 
     //需要设置默认值组件
@@ -177,7 +167,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     设置下拉列表默认选中的值
      */
     public void setDefaultPsinnerItem(){
-        //dao的代码还没好，先注释掉
+
         //拿着periodic的category_id取得Category，然后用category名字和listData做对比得到选中的值
         int catId = periodic.getCategory_id();
         CategoryDAO catDAO = new CategoryDAOImpl();
@@ -190,7 +180,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 break;
             }
         }
-        //spinner.setSelection(1);
+
 
 
     }
@@ -235,9 +225,11 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         //设置收入支出类别
         if(periodic.getType()==1){//收入
             RBGroup.check(incomeRB.getId());
+            typeId = 1;
         }
         else {//支出
             RBGroup.check(outcomeRB.getId());
+            typeId = 0;
         }
 
 
@@ -314,11 +306,17 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //设置周期
         switch (periodic.getCycle()){
-          case 0:RecycleRBGroup.check(perDay.getId());
+          case 0:
+              RecycleRBGroup.check(perDay.getId());
+              recycleId=0;//每天
               break;
-          case 1:RecycleRBGroup.check(perWeek.getId());
+          case 1:
+              RecycleRBGroup.check(perWeek.getId());
+              recycleId=1;//每周
               break;
-          case 2:RecycleRBGroup.check(perMonth.getId());
+          case 2:
+              RecycleRBGroup.check(perMonth.getId());
+              recycleId=2;//每月
               break;
 
               default:
@@ -368,6 +366,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //保存按钮
         storePeriodic=(Button)findViewById(R.id.store_periodic_update);
+        cancelUpdate = (ImageView)findViewById((R.id.cancel_update_periodic));
 
 
         //需要设置默认值的组件
@@ -386,6 +385,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //保存按钮事件监听
         storePeriodic.setOnClickListener(this);
+        cancelUpdate.setOnClickListener(this);
 
 
     }
@@ -465,7 +465,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         periodic.setType(typeId);
         periodic.setCategory_id(categoryId);
         periodic.setAccount_id(accountId);
-        periodic.setState(1);
+        periodic.setState(1);//本地更新
 
         //存入数据库
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
@@ -502,6 +502,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
                 break;
 
+
+            case R.id.cancel_update_periodic:
+                this.finish();
+                break;
 
 
             default:

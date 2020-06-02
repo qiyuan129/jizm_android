@@ -1,11 +1,72 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="XUITheme.Phone">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/xui_config_color_main_theme</item>
+        <item name="colorPrimaryDark">@color/xui_config_color_main_theme</item>
+        <item name="colorAccent">@color/xui_config_color_main_theme</item>
+
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    </style>
+
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>  <!--设置不覆盖锚点-->
+        <item name="android:dropDownVerticalOffset">4dp</item>
+    </style>
+
+    <style name="Button" parent="ButtonBase">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:minHeight">?attr/xui_btn_view_height</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="RoundButton" parent="@style/Button">
+        <item name="android:layout_width">?attr/xui_btn_view_width</item>
+        <item name="android:layout_height">?attr/xui_btn_view_height</item>
+        <item name="android:textSize">?attr/xui_btn_view_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@null</item>
+
+        <item name="android:ellipsize">end</item>
+        <item name="rb_isRadiusAdjustBounds">false</item>
+        <item name="rb_radius">?attr/xui_btn_view_radius</item>
+        <item name="rb_borderWidth">?attr/xui_btn_view_border_width</item>
+
+        <item name="rb_backgroundColor">?attr/xui_round_btn_bg_color</item>
+        <item name="rb_borderColor">?attr/xui_round_btn_border_color</item>
+        <item name="android:textColor">?attr/xui_round_btn_text_color</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">?attr/xui_btn_view_width</item>
+        <item name="android:layout_height">?attr/xui_btn_view_height</item>
+        <item name="android:textSize">?attr/xui_btn_view_text_size</item>
+        <item name="android:textColor">@color/xui_config_color_white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SuperButton" parent="ButtonStyle">
+        <item name="sCornersRadius">?attr/xui_btn_view_radius</item>
+        <item name="sSelectorDisableColor">@color/xui_btn_disable_color</item>
+        <item name="sUseSelector">true</item>
+        <item name="sGravity">center</item>
+        <item name="android:background">@null</item>
+    </style>
+    <style name="SuperButton.Primary">
+        <item name="sSelectorNormalColor">?attr/colorAccent</item>
+        <item name="sSelectorPressedColor">?attr/colorAccent</item>
+    </style>
+    <style name="SuperButton.Primary.Login">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginStart">50dp</item>
+        <item name="android:layout_marginEnd">50dp</item>
+        <item name="sCornersRadius">20dp</item>
+        <item name="sSelectorNormalColor">?attr/colorAccent</item>
+        <item name="sSelectorPressedColor">?attr/colorAccent</item>
+        <item name="android:textColor">@color/xui_config_color_white</item>
     </style>
 
 </resources>

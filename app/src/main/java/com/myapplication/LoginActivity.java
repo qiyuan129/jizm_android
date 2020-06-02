@@ -10,7 +10,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import util.User;
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import util.UserUtil;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -20,8 +34,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_regiser;
     private EditText et_password;
     private String phone ="";
-    //private String password ="";
+    private String password ="";
     private Button btn_find;
+
+    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,33 +79,107 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //获得用户输入的验证码
                 String pn = et_phonenum.getText().toString().trim().replaceAll("/s","");
-                String pw = et_password.getText().toString().trim().replaceAll("/s","");
-                /**
-                 * 用set和get注册和登录
-                 */
-                User user = new User(getSharedPreferences("user",MODE_PRIVATE));
-                String phoneNum=user.getPhone();
-                String password=user.getPassword();
-                String userName=user.getEmail();
-
+                String pw = et_password.getText().toString().replaceAll("/s","");
                 if (TextUtils.isEmpty(pn)) {//判断手机号是否为空
-                    toast("请输入账号");
+                    toast("请输入手机号");
                 }
                 else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
                     toast("请输入密码");
                 }
                 //写登录的账号密码判断语句 和跳转
-                else if ((phoneNum.equals(pn)||userName.equals(pn))&&password.equals(pw)) {
-                    user.setRemember(true);
-                    Intent intent3 =new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent3);
-                }
-                else {
-                    toast("账号或密码错误");
-                }
+                postLoginRequest(pn,pw);
+
 
             }
         });
+    }
+
+    /**
+     * 发起登录请求
+     * @param phoneNumber
+     * @param password
+     */
+    private void postLoginRequest(String phoneNumber,String password){
+        RequestBody formBody = new FormBody.Builder()
+                .add("type",Integer.toString(0))
+                .add("account",phoneNumber)
+                .add("password",password)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://39.100.48.69:8080/user/login")    //这里的主机地址要填电脑的ip地址
+                .post(formBody)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e instanceof SocketTimeoutException){//判断超时异常
+                    toast("登录失败:网络链接超时");
+                    e.printStackTrace();
+                }
+                if(e instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+                    toast("登录失败:无法连接到服务器");
+                    e.printStackTrace();
+                }
+                else{
+                    toast("登录失败：其他未知错误，详情请查看控制台");
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onResponse(Call call, Response response)  {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseString=responseBody.string();
+                    JSONObject resultJson=JSONObject.parseObject(responseString);
+                    int statusCode=resultJson.getInteger("code");
+                    String message=resultJson.getString("msg");
+
+                    //如果响应结果状态码为成功的
+                    if(statusCode>=200 && statusCode<400) {
+                        //取出返回的数据；更新本地记录状态
+                        JSONObject dataJson = resultJson.getJSONObject("data");
+
+                        toast("登陆成功！");
+                        storeUserInfomation(dataJson);     //将用户信息及token存储进文件
+
+                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        startActivity(intent);              //跳转到主界面
+                    }
+                    //响应结果为失败类型
+                    else{
+                        String errorMessage="状态码："+statusCode+",错误信息："+message+'\n';
+                        toast("登录失败\n"+errorMessage);
+                    }
+                } catch (IOException e) {
+                    toast("登录失败，未知错误，错误信息请查看控制台");
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 将json中的用户数据存储智文件
+     * @param dataJson
+     */
+    private void storeUserInfomation(JSONObject dataJson){
+        String token=dataJson.getString("token");
+        int userId=dataJson.getInteger("userId");
+        String userName=dataJson.getString("userName");
+        String phone=dataJson.getString("phone");
+        String email=dataJson.getString("email");
+
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        UserUtil.setToken(token);
+        UserUtil.setUserId(userId);
+        UserUtil.setUserName(userName);
+        UserUtil.setPhone(phone);
+        UserUtil.setEmail(email);
     }
     private void toast(final String str) {
         runOnUiThread(new Runnable() {

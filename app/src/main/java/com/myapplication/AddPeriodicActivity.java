@@ -34,6 +34,7 @@ import dao.PeriodicDAOImpl;
 import pojo.Account;
 import pojo.Category;
 import pojo.Periodic;
+import util.UserUtil;
 
 public class AddPeriodicActivity extends AppCompatActivity implements View.OnClickListener{
     ArrayList<Category> categories;
@@ -98,7 +99,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     double money;
     Date start;
     Date end;
-    Date anchor = new Date();
+    Date anchor = new Date(0);
     int recycleId;
     int typeId;
     int categoryId;
@@ -249,35 +250,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
 
-       /* //测试用，后面删除
-        if(categories==null){
-            categories = new ArrayList<Category>();
-        }
-        if(listData==null){
-            listData=new ArrayList<String>();
-            listData.add("学习用品");
-            listData.add("生活用品");
-        }
-
-
-        if(accounts==null){
-            accounts=new ArrayList<Account>();
-        }
-
-        if(listAccount==null){
-            listAccount=new ArrayList<String>();
-            listAccount.add("支付宝账户");
-            listAccount.add("微信账户");
-            listAccount.add("银行账户");
-
-        }*/
-
-
 
 
 
         //设置默认选中的值
+        typeId=0;
         RBGroup.check(outcomeRB.getId());
+        recycleId=0;
         RecycleRBGroup.check(perDay.getId());
     }
 
@@ -380,14 +359,16 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         }
 
 
-        //存入数据库，暂时不做，因为缺少一些信息，比如Periodic.id需要沟通一下
-        //id是随便填的
-        Periodic periodic=new Periodic(0,accountId,categoryId,1,
-                typeId,periodicName,recycleId,start,end,money,state,new Date());
+
+        //Periodic.数据库自增长，这里随便填一个
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+
+        Periodic periodic=new Periodic(0,accountId,categoryId,UserUtil.getUserId(),
+                typeId,periodicName,recycleId,start,end,money,state,new Date(0));
 
 
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();
-        periodicDAO.addPeriodic(periodic);
+        periodicDAO.insertPeriodic(periodic);
 
 
         Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show();

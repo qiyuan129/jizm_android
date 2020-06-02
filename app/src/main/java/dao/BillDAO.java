@@ -9,7 +9,11 @@ import pojo.Bill;
 public interface BillDAO {
     void insertBill(Bill bill);
 
+    void insertBillById(Bill bill);
+
     List<Bill> listBill();
+
+    List<Bill> listBillByDate();
 
     void updateBill(Bill bill);
 
@@ -32,5 +36,7 @@ public interface BillDAO {
     Date getMaxAnchor();
 
     void setStateAndAnchor(int id, int state, Date anchor);
+
+    void setState(int id,int state);
 
 }

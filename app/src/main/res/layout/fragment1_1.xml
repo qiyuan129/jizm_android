@@ -14,15 +14,15 @@
             android:id="@+id/ButtonYear"
             android:layout_width="284dp"
             android:layout_height="30dp"
-            android:textColor="#005082"
-            android:background="#bee3db"
             android:text="2020"
             android:textAlignment="center"
+            android:textColor="#005082"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.322"
+            app:layout_constraintHorizontal_bias="0.574"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/shape_button"/>
 
         <view
             android:id="@+id/LineChart"
@@ -30,7 +30,6 @@
             android:layout_width="330dp"
             android:layout_height="250dp"
             android:layout_marginTop="36dp"
-            android:background="#bee3db"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -42,26 +41,14 @@
             android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="345dp"
-            android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/refresh_trend"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.215"
-            app:layout_constraintStart_toEndOf="@+id/ButtonYear"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="330dp"
             android:layout_height="45dp"
             android:layout_marginTop="300dp"
-            android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

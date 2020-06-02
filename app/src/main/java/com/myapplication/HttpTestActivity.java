@@ -323,13 +323,13 @@ public class HttpTestActivity extends AppCompatActivity {
 //        billDAO.insertBill(bill);
 //
 //        periodic=new Periodic(1,1,9,1,2,"物业费",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),300,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 //        periodic=new Periodic(2,2,2,1,2,"工资",2,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),10000,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 //        periodic=new Periodic(3,3,9,1,2,"按揭",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),1200,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 //        periodic=new Periodic(4,4,5,1,1,"动车票",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),60,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 
     }
 

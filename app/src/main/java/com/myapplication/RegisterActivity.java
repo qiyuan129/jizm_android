@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import util.User;
+import util.UserUtil;
 
 
 public class RegisterActivity extends AppCompatActivity{
@@ -159,10 +159,10 @@ public class RegisterActivity extends AppCompatActivity{
                     /**
                      * 用set和get注册和登录
                      */
-                    User user = new User(getSharedPreferences("user",MODE_PRIVATE));
-                    user.setPhone(phoneNum);
-                    user.setPassword(password);
-                    user.setEmail(userName);
+                    UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+                    UserUtil.setPhone(phoneNum);
+                    UserUtil.setPassword(password);
+                    UserUtil.setEmail(userName);
                     //
                     Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
                     intent.putExtra("phone",phoneNum);

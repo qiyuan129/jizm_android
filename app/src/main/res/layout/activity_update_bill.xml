@@ -5,32 +5,55 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical">
 
-        <Button
-            android:id="@+id/bill_update_outcome"
-            android:text="支出"
+        <RelativeLayout
+            android:id="@+id/back_layout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:background="@drawable/shape_tb_cash"
-            android:textColor="@color/cardview_light_background" />
+            android:layout_centerVertical="true">
 
+            <ImageView
+                android:id="@+id/back_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:onClick="onClick"
+                android:paddingRight="10dp"
+                android:src="@mipmap/ic_back" />
 
-        <Button
-            android:id="@+id/bill_update_income"
-            android:text="收入"
-            android:layout_toRightOf="@id/bill_update_outcome"
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/type_layout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:background="@drawable/shape_tb_cash"
-            android:textColor="@color/cardview_light_background"/>
+            android:layout_centerInParent="true">
 
+            <Button
+                android:id="@+id/bill_update_outcome"
+                android:text="支出"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:background="@drawable/tb_outcome_selector_edit"
+                android:textColor="@drawable/tb_text_selector_edit" />
+
+            <Button
+                android:id="@+id/bill_update_income"
+                android:text="收入"
+                android:layout_toRightOf="@id/bill_update_outcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:background="@drawable/tb_income_selector_edit"
+                android:textColor="@drawable/tb_text_selector_edit"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 
 

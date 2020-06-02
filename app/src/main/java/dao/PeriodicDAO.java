@@ -11,7 +11,9 @@ public interface PeriodicDAO {
 
     List<Periodic> listPeriodic();
 
-    void addPeriodic(Periodic  periodic);
+    void insertPeriodic(Periodic  periodic);
+
+    void insertPeriodicById(Periodic periodic);
 
     void updatePeriodic(Periodic  periodic);
 
@@ -24,5 +26,7 @@ public interface PeriodicDAO {
     Date getMaxAnchor();
 
     void setStateAndAnchor(int id, int state, Date anchor);
+
+    void setState(int id,int state);
 
 }

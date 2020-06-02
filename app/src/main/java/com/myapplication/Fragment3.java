@@ -2,6 +2,7 @@ package com.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ import dao.PeriodicDAOImpl;
 import hlq.com.slidedeletelistview.BtnDeleteListern;
 import hlq.com.slidedeletelistview.SlideDeleteListView;
 import pojo.Bill;
+import pojo.Category;
 import pojo.Periodic;
 
 import static android.app.Activity.RESULT_OK;
@@ -43,7 +45,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     private View mView;
     private Button addPeriodic;
     private SearchView searchPeriodic;
-    private List<Periodic> periodics;
+    private List<Periodic> periodics = new ArrayList<Periodic>();
     private  SlideDeleteListView listView;
     private RecomendAdapter tmpadapter;
 
@@ -127,7 +129,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 Log.i("list:",String.valueOf(periodics.get(position).getPeriodic_id()));
                 //删除这个周期事件
                 deletePeriodic(position);
-                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -140,8 +142,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
             public boolean onQueryTextSubmit(String query) {
                 //提交搜索后的处理逻辑
                 //实际应用中应该在该方法内执行实际查询，此处仅使用Toast显示用户输入的查询内容
-                Toast.makeText(getActivity(), "你输入的选择是：" + query,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "你输入的选择是：" + query, Toast.LENGTH_SHORT).show();
 
                 return false;
             }
@@ -168,6 +169,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
         return mView;
     }
+
 
 
 
@@ -198,6 +200,73 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("Fragment3 周期事件列表", "onHiddenChanged  ！hidden刷新数据");
+        if(hidden){
+            //TODO now visible to user
+            Log.i("Fragment3 周期事件列表", "onHiddenChanged  hidden刷新数据");
+        } else {
+            //TODO now invisible to user
+            Log.i("Fragment3 周期事件列表", "onHiddenChanged  ！hidden刷新数据");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.i("Fragment3", "刷新周期事件列表");
+
+        //到显示状态为true，不可见为false
+        if (isVisibleToUser) {
+            RefreshData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+
+
+
+    public void RefreshData(){
+        if(periodics!=null && tmpadapter!=null && listView!=null){
+            periodics.clear();
+            PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+            periodics = periodicDAO.listPeriodic();
+            tmpadapter.clearAll();
+            tmpadapter.setData(periodics);
+            tmpadapter.notifyDataSetChanged();
+            listView.setAdapter(tmpadapter);
+        }
+
+
+
+
+
+        Log.i("Fragment3", "RefreshData");
+
+
+
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -270,7 +339,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 break;
             case R.id.search_periodic:
                 Log.d("search_periodic","查询事件");
-                Toast.makeText(getActivity(), "搜索功能尚未编写", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "搜索功能", Toast.LENGTH_SHORT).show();
                 break;
 
 
@@ -294,10 +363,6 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
        periodics = periodicDAO.listPeriodic();
 
-
-
-
-
     }
 
 
@@ -306,8 +371,10 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     删除周期事件
     id: 周期事件id
      */
-    private boolean deletePeriodic(int id){
-        Periodic delPeriodic = periodics.get(id);
+    private boolean deletePeriodic(int index){
+        //Periodic delPeriodic = periodics.get(id);
+        Periodic delPeriodic = (Periodic) tmpadapter.getItem(index);
+
         //标记为删除
         delPeriodic.setState(-1);
 
@@ -316,10 +383,10 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         periodicDAO.deletePeriodic(delPeriodic.getPeriodic_id());
 
         //periodics与tmpadapter里的数据是绑定的，因此periodics不用重复删除
-        tmpadapter.removeItem(id);
+        tmpadapter.removeItem(index);
         tmpadapter.notifyDataSetChanged();
 
-        Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -434,12 +501,22 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
     }
 
     public void removeItem(int index){
-        data.remove(index);
+        Periodic tep = data.get(index);
+        backData.remove(tep);
+        data.remove(tep);
+
+
     }
 
 
     public void clearAll(){
        data.clear();
+       backData.clear();
+    }
+
+    public void setData(List<Periodic> data){
+        this.data = data;
+        backData = data;
     }
 
 
@@ -453,12 +530,11 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
 
        //从数组中得到数据并然后给页面组件设置值
         Periodic periodicItem=data.get(position);
+
         TextView nameView = (TextView)view.findViewById(R.id.periodic_item_name);
         TextView moneyView = (TextView)view.findViewById(R.id.periodic_item_money);
         TextView startView = (TextView)view.findViewById(R.id.periodic_item_start);
         TextView endView = (TextView)view.findViewById(R.id.periodic_item_end);
-
-
 
 
         /*
@@ -466,6 +542,22 @@ class RecomendAdapter extends BaseAdapter implements Filterable {
          */
         //时间格式化
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        String tmpMoney=null;
+        if(periodicItem.getType()==0){//支出
+            tmpMoney = "-" + String.valueOf(periodicItem.getPeriodic_money());
+            moneyView.setTextColor(Color.parseColor("#ff0000"));
+
+
+        }
+        else {//收入
+            tmpMoney = "+" + String.valueOf(periodicItem.getPeriodic_money());
+            moneyView.setTextColor(Color.parseColor("#00ff00"));
+
+        }
+
+
+
         nameView.setText(periodicItem.getPeriodic_name());
         moneyView.setText(String.valueOf(periodicItem.getPeriodic_money()));
         startView.setText(format.format(periodicItem.getStart()));

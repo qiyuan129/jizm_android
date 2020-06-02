@@ -53,6 +53,13 @@
 
 
 
+    <Spinner android:id="@+id/category_spinner"
+        android:textSize="30dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+
     <hlq.com.slidedeletelistview.SlideDeleteListView
         android:id="@+id/list_bill_view_frag"
         android:layout_width="match_parent"

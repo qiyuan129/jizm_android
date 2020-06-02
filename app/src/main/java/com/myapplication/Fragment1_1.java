@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.github.mikephil.charting.charts.Chart;
@@ -59,15 +60,10 @@ public class Fragment1_1 extends Fragment {
     private View mView;
     private ListView lview;
     private TextView choiceYear;
-    private ImageButton refresh;
     private int year=(Calendar.getInstance()).get(Calendar.YEAR);
     private LineChart lineChart;
     private TrendListAdapter adapter;
     private XAxis xAxis;                //X轴
-    private YAxis leftYAxis;            //左侧Y轴
-    private YAxis rightYaxis;           //右侧Y轴
-    private Legend legend;              //图例
-    private LimitLine limitLine;        //限制线
 
     private List<TrendListItem> trendList = new ArrayList<>();
     private List<IncomeLineItem> incomeLine = new ArrayList<>();
@@ -81,6 +77,7 @@ public class Fragment1_1 extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment1_1, container, false);
         }
+
         lview = (ListView) mView.findViewById(R.id.TrendList);
         lineChart = mView.findViewById(R.id.LineChart);
         initChart(lineChart);
@@ -105,19 +102,15 @@ public class Fragment1_1 extends Fragment {
         });
         initStartTimePicker();
 
-        //refresh_year = getYear(choiceYear.getText().toString());
-        refresh=(ImageButton)mView.findViewById(R.id.refresh_trend);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                year = getYear(choiceYear.getText().toString());
-                RefreshData(year);
-                //Toast.makeText(mView.getContext(),String.valueOf(refresh_year),Toast.LENGTH_SHORT).show();
-            }
-        });
+        onResume();
         return mView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        RefreshData(getYear(choiceYear.getText().toString()));
+    }
 
     public List<IncomeLineItem> loadincomeChart(int myear)
     {
@@ -168,12 +161,12 @@ public class Fragment1_1 extends Fragment {
         }
         //TrendListItem tt = new TrendListItem("测试"+String.format("%02d",i+1),"1111", "1111", "1111");
         //trendList.add(tt);
-        if(i>0)
-        {
-            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
-                String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
-            trendList.add(t1);
-        }
+//        if(i>0)
+//        {
+//            t1 = new TrendListItem(String.valueOf(myear)+"/"+String.format("%02d",i), String.valueOf(dbDataIncome.get(i-1)),
+//                String.valueOf(dbDataOutcome.get(i-1)), String.valueOf(dbDataIncome.get(i-1)-dbDataOutcome.get(i-1)));
+//            trendList.add(t1);
+//        }
         return trendList;
     }
     public void RefreshData(int year)
@@ -192,9 +185,6 @@ public class Fragment1_1 extends Fragment {
     }
 
 
-
-
-
     public int getYear(String stryear) {
         int year = 0;
         try {
@@ -210,7 +200,9 @@ public class Fragment1_1 extends Fragment {
 
      private void initChart(LineChart lineChart)
      {
-           /***图表设置***/
+         YAxis leftYAxis;            //左侧Y轴
+         YAxis rightYaxis;           //右侧Y轴
+           /*图表设置*/
            //是否展示网格线
           lineChart.setDrawGridBackground(false);
             //是否显示边界
@@ -250,7 +242,7 @@ public class Fragment1_1 extends Fragment {
 
           /***折线图例 标签 设置***/
 
-          legend = legend = lineChart.getLegend();
+          Legend legend = lineChart.getLegend();
                 //设置显示类型，LINE CIRCLE SQUARE EMPTY 等等 多种方式，查看LegendForm 即可
           legend.setForm(Legend.LegendForm.LINE);
           legend.setTextSize(12f);
@@ -287,21 +279,6 @@ public class Fragment1_1 extends Fragment {
            }
       }
 
-      private void addLine(List<OutcomeLineItem> dataList, String name, int color)
-      {
-          List<Entry> entries = new ArrayList<>();
-          for (int i = 0; i < dataList.size(); i++) {
-              OutcomeLineItem data = dataList.get(i);
-              Entry entry = new Entry(i, (float) data.getValue());
-              entries.add(entry);
-          }
-          // 每一个LineDataSet代表一条线
-          LineDataSet lineDataSet = new LineDataSet(entries, name);
-          initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
-          lineChart.getLineData().addDataSet(lineDataSet);
-          lineChart.invalidate();
-      }
-
       public void setMarkerView()
       {
           LineChartMarkView mv = new LineChartMarkView(getActivity(), xAxis.getValueFormatter());
@@ -314,9 +291,11 @@ public class Fragment1_1 extends Fragment {
           if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0)
           {
               LineDataSet lineDataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
-              //避免在 initLineDataSet()方法中 设置了 lineDataSet.setDrawFilled(false); 而无法实现效果
               lineDataSet.setDrawFilled(true);
               lineDataSet.setFillDrawable(drawable);
+
+              //避免在 initLineDataSet()方法中 设置了 lineDataSet.setDrawFilled(false); 而无法实现效果
+
               lineChart.invalidate();
           }
       }
@@ -338,6 +317,22 @@ public class Fragment1_1 extends Fragment {
           setChartFillDrawable(drawable);
           setMarkerView();
       }
+    private void addLine(List<OutcomeLineItem> dataList, String name, int color)
+    {
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++) {
+            OutcomeLineItem data = dataList.get(i);
+            Entry entry = new Entry(i, (float) data.getValue());
+            entries.add(entry);
+        }
+        // 每一个LineDataSet代表一条线
+       LineDataSet lineDataSet = new LineDataSet(entries, name);
+        initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
+        lineChart.getLineData().addDataSet(lineDataSet);
+        //Drawable drawable = getResources().getDrawable(R.drawable.outcome_fade);
+        //setChartFillDrawable(drawable);
+        lineChart.invalidate();
+    }
 
     public void initStartTimePicker() {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
@@ -358,6 +353,7 @@ public class Fragment1_1 extends Fragment {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 choiceYear.setText(DateTimeHelper.formatToString(date,"yyyy"));
+                RefreshData(getYear(choiceYear.getText().toString()));
             }
         })
                 .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
@@ -380,8 +376,6 @@ public class Fragment1_1 extends Fragment {
                 .setDate(selectedDate)//设置选中的日期
                 .build();
     }
-
-
 
 }
 
@@ -407,6 +401,18 @@ class TrendListItem
 class TrendListAdapter extends ArrayAdapter<TrendListItem>
 {
     private int id;
+    int[]colors = {Color.rgb(196,69,54),
+            Color.rgb(243,114,44),
+            Color.rgb(248,150,30),
+            Color.rgb(236,164,0),
+            Color.rgb(249,199,79),
+            Color.rgb(156,197,161),
+            Color.rgb(144,190,109),
+            Color.rgb(67,170,139),
+            Color.rgb( 73,160,120),
+            Color.rgb(25,114,120),
+            Color.rgb( 87,117,144),
+            Color.rgb(38,70,83)};
     public TrendListAdapter(Context context, int textid, List<TrendListItem>objects)
     {
         super(context,textid,objects);
@@ -422,9 +428,15 @@ class TrendListAdapter extends ArrayAdapter<TrendListItem>
         TextView outcome = (TextView) view.findViewById(R.id.trendoutcome);
         TextView balance = (TextView) view.findViewById(R.id.trendbalance);
         month.setText(trendListItem.getMonth());
+        //int months = Integer.valueOf(trendListItem.getMonth());
+        month.setTextColor(colors[position]);
         income.setText(trendListItem.getIncome());
         outcome.setText(trendListItem.getOutcome());
         balance.setText(trendListItem.getBalance());
+        if(trendListItem.getBalance().compareTo("0.0")<0)
+            balance.setTextColor(Color.rgb(220,20,60));
+        else if(trendListItem.getBalance().compareTo("0.0")>0)
+            balance.setTextColor(Color.rgb(50,205,50));
         return view;
     }
 }

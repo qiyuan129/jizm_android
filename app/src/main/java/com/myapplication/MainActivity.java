@@ -6,32 +6,44 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import pojo.*;
-import dao.*;
-
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
+import pojo.Account;
+import pojo.Bill;
+import pojo.Category;
+import pojo.Periodic;
 import util.MyDatabaseHelper;
-import util.User;
+import util.UserUtil;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
-    private ViewPager viewPager;
+    private NoScrollViewPager viewPager;
+    private Fragment0 fragment0;
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private Fragment3 fragment3;
     private Fragment4 fragment4;
     private List<Fragment> list;
+
+    private Toolbar toolbar;
 
     public static MyDatabaseHelper dbHelper;
 
@@ -48,11 +60,14 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_account:
                     viewPager.setCurrentItem(1);
                     return true;
-                case R.id.navigation_cycleaccount:
+                case R.id.navigation_empty:
                     viewPager.setCurrentItem(2);
                     return true;
-                case R.id.navigation_myself:
+                case R.id.navigation_cycleaccount:
                     viewPager.setCurrentItem(3);
+                    return true;
+                case R.id.navigation_myself:
+                    viewPager.setCurrentItem(4);
                     return true;
             }
             return false;
@@ -63,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -72,14 +89,17 @@ public class MainActivity extends AppCompatActivity {
         Intent intent1 = new Intent(MainActivity.this, LongRunningService.class);
         startService(intent1);
 
-        User user = new User(getSharedPreferences("user",MODE_PRIVATE));
-        boolean rememberMe=user.getRemember();
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+
+
+
+        boolean rememberMe=UserUtil.getRemember();
         if (!rememberMe) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity2.class);
             startActivity(intent);
         }
-        float limit=user.getLimit();
-        String warning=user.earlyWarning();
+        float limit=UserUtil.getLimit();
+        String warning=UserUtil.earlyWarning();
         if (warning!=null){
             Toast.makeText(this,warning,Toast.LENGTH_SHORT).show();
 
@@ -283,26 +303,54 @@ public class MainActivity extends AppCompatActivity {
 //        billDAO.insertBill(bill);
 //
 //        periodic=new Periodic(1,1,9,1,2,"物业费",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),300,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 //        periodic=new Periodic(2,2,2,1,2,"工资",2,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),10000,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 //        periodic=new Periodic(3,3,9,1,2,"按揭",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),1200,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 //        periodic=new Periodic(4,4,5,1,1,"动车票",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),60,0,date0);
-//        periodicDAO.addPeriodic(periodic);
+//        periodicDAO.insertPeriodic(periodic);
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_edit_category:
+//                Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, CategoryEditActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_edit_account:
+//                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this,AccountEditActivity.class);
+                startActivity(intent2);
+                return true;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
     public void initView(){
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager = (NoScrollViewPager )findViewById(R.id.viewpager);
 
         fragment1 = new Fragment1();
+        fragment0 = new Fragment0();
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
         fragment4 = new Fragment4();
 
         list = new ArrayList<>();
         list.add(fragment1);
+        list.add(fragment0);
         list.add(fragment2);
         list.add(fragment3);
         list.add(fragment4);

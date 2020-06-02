@@ -10,26 +10,12 @@
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants">
 
-
-        <Switch
-            android:id="@+id/Switch_In_Out"
-            android:layout_width="43dp"
-            android:layout_height="29dp"
-
-            android:textOff="开"
-            android:textOn="关"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.809"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <view
             android:id="@+id/PieChart"
             class="com.github.mikephil.charting.charts.PieChart"
             android:layout_width="330dp"
             android:layout_height="250dp"
             android:layout_marginTop="35dp"
-            android:background="#bee3db"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
@@ -40,7 +26,6 @@
             android:layout_width="330dp"
             android:layout_height="45dp"
             android:layout_marginTop="300dp"
-            android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -82,7 +67,6 @@
             android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="345dp"
-            android:background="#F0FFF0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -91,11 +75,11 @@
             android:id="@+id/beginDate"
             android:layout_width="103dp"
             android:layout_height="27dp"
-            android:background="#bee3db"
-            android:text="起:2020-05-20"
+            android:background="@drawable/shape_button"
             android:textColor="#005082"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintHorizontal_bias="0.178"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,24 +87,43 @@
             android:id="@+id/endDate"
             android:layout_width="101dp"
             android:layout_height="26dp"
-            android:background="#bee3db"
-            android:text="止:2020-05-20"
+            android:background="@drawable/shape_button"
             android:textColor="#005082"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.87"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/refresh_category"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="66dp"
+            android:layout_height="62dp"
+            android:layout_marginTop="128dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.976"
+            app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="起:"
+            app:layout_constraintEnd_toStartOf="@+id/beginDate"
+            app:layout_constraintHorizontal_bias="0.973"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="止:"
+            app:layout_constraintEnd_toStartOf="@+id/endDate"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

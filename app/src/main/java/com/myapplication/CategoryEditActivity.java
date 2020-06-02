@@ -1,17 +1,13 @@
 package com.myapplication;
 
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,10 +17,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
@@ -50,8 +44,12 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     private int category_id = 1;
     private int user_id = 1;
     private int isIncome = 0;
-    private int state = 0;
-    private Date anchor = new Date();
+    private Date anchor = new Date(0);
+
+    //状态
+    private int addState = 0;  //本地新增
+    private int deleteState = -1;  //标记删除
+    private int updateState = 1;  //本地更新
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +62,8 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         outcomeTv = (TextView) findViewById(R.id.tb_note_outcome);
         outcomeTv.setOnClickListener(this);
 
+        outcomeTv.setSelected(true);
+
         backIv = (ImageView) findViewById(R.id.back_btn);
         backIv.setOnClickListener(this);
 
@@ -73,6 +73,8 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
         recycleView = (RecyclerView) findViewById(R.id.edit_category_recycleview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycleView.setLayoutManager(layoutManager);
+        //添加Android自带的分割线
+        recycleView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         initCategory();
     }
@@ -90,10 +92,14 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             case R.id.tb_note_income:
                 isIncome = 1;
                 initCategory();
+                incomeTv.setSelected(true);
+                outcomeTv.setSelected(false);
                 break;
             case R.id.tb_note_outcome:
                 isIncome = 0;
                 initCategory();
+                incomeTv.setSelected(false);
+                outcomeTv.setSelected(true);
                 break;
         }
     }
@@ -121,7 +127,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                             dialog = null;
                             return;
                         } else {
-                            Category category = new Category(1, 1, dialog.getInputEditText().getText().toString(), isIncome, state, anchor);
+                            Category category = new Category(1, 1, dialog.getInputEditText().getText().toString(), isIncome, addState, anchor);
                             CategoryDAO categoryDAO = new CategoryDAOImpl();
                             categoryDAO.insertCategory(category);
                             initCategory();
@@ -192,7 +198,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                                 } else {
                                     //修改分类名称
                                     edit_category_name = dialog.getInputEditText().getText().toString();
-                                    Category category = new Category(category_id, user_id, edit_category_name, isIncome, state, anchor);
+                                    Category category = new Category(category_id, user_id, edit_category_name, isIncome, updateState, anchor);
                                     CategoryDAO categoryDAO = new CategoryDAOImpl();
                                     categoryDAO.updateCategory(category);
                                     edit_category_name = "";
@@ -256,13 +262,13 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             if (isIncome == 0) {
                 for(int i = 0; i < outcome_category.size(); i++){
                     category_id = outcome_category_id.get(i);
-                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < income_category.size(); i++){
                     category_id = income_category_id.get(i);
-                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                 }
             }
@@ -270,13 +276,13 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
             if (isIncome == 0) {
                 for(int i = 0; i < outcome_category.size(); i++){
                     category_id = outcome_category_id.get(i);
-                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, outcome_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                 }
             } else {
                 for(int i = 0; i < income_category.size(); i++){
                     category_id = income_category_id.get(i);
-                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,state,anchor);
+                    Category category = new Category(category_id,user_id, income_category.get(i),isIncome,updateState,anchor);
                     categoryList.add(category);
                 }
             }

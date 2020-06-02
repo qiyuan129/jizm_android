@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -50,9 +51,8 @@ public class Fragment1_2 extends Fragment
     boolean IncomeFlag = true;  //1
     private String allmoneystring;
     private View mView;
-    private ImageButton refresh;
     private PieChart mPieChart;
-    private Switch mChangeType;
+    private Button changeTypeButton;
     private ListView lview;
     private String strbeginDate;
     private String strendDate;
@@ -64,30 +64,33 @@ public class Fragment1_2 extends Fragment
     private TimePickerView mStartDatePickerView1;
     private TimePickerView mStartDatePickerView2;
 
+    final int[] typeFlag= {0};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, 1);
         strbeginDate =  new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        c.set(Calendar.DATE, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        strendDate= new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         //strendDate= new SimpleDateFormat("yyyy-MM-dd").format(new Date(2020-1900,5,6));
 
 
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment1_2, container, false);
         }
-
         lview = mView.findViewById(R.id.CategoryList);
         mPieChart = mView.findViewById(R.id.PieChart);
-        mChangeType = mView.findViewById(R.id.Switch_In_Out);
-        refresh = mView.findViewById(R.id.refresh_category);
         tvBeginDate = mView.findViewById(R.id.beginDate);
         tvEndDate = mView.findViewById(R.id.endDate);
+        changeTypeButton = mView.findViewById(R.id.button2);
+
 
         //设置texeview初始时间，为本月1号——今日
         tvBeginDate.setText(strbeginDate);
         tvEndDate.setText(strendDate);
+
         tvBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,7 +106,6 @@ public class Fragment1_2 extends Fragment
         });
         initStartTimePicker2();
 
-
         //设置Listview,默认数据为当月支出前10
         categoryList = loadcategoryList(strbeginDate,strendDate,OutcomeFlag);
         adapter = new CategoryListAdapter(getActivity(), R.layout.categorylist_item, categoryList);
@@ -113,54 +115,35 @@ public class Fragment1_2 extends Fragment
         categoryChart = loadcategoryChart(strbeginDate,strendDate,OutcomeFlag);
         ShowPieChart(mPieChart, setPieChartData(categoryChart), OutcomeFlag);
 
-        //收支切换时 refresh数据
-        mChangeType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        ///中心按钮 收支切换时 refresh数据
+        changeTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if (isChecked)
+            public void onClick(View view) {
+                if(typeFlag[0] == 1)
                 {
-                    RefreshData(strbeginDate,strendDate,IncomeFlag);
-                    Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                    typeFlag[0] = 0;
+                    //changeTypeButton.setText("总支出"+allmoneystring+"元");
                     RefreshData(strbeginDate,strendDate,OutcomeFlag);
                     Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
 
-        //起止日期切换时 refresh数据
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(compareDate(tvBeginDate.getText().toString(),tvEndDate.getText().toString()))
+                else if(typeFlag[0] == 0)
                 {
-                    strbeginDate = tvBeginDate.getText().toString();
-                    strendDate = tvEndDate.getText().toString();
-                    if(mChangeType.isChecked())
-                    {
-                        RefreshData(strbeginDate,strendDate,IncomeFlag);
-                        Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        RefreshData(strbeginDate,strendDate,OutcomeFlag);
-                        Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
-
-                    }
-
-                }
-                else {
-                    tvBeginDate.setText(strbeginDate);
-                    tvEndDate.setText(strendDate);
-                    Toast.makeText(getActivity(), "起始时间大于终止时间，请重新选择", Toast.LENGTH_SHORT).show();
+                    typeFlag[0] = 1;
+                    //changeTypeButton.setText("总收入"+allmoneystring+"元");
+                    RefreshData(strbeginDate,strendDate,IncomeFlag);
+                    Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        onResume();
         return mView;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        RefreshData(strbeginDate,strendDate,OutcomeFlag);
     }
 
     //加载数据用于饼图展示  String categoryname,Float percent    true/1/收入   false/0/支出
@@ -252,12 +235,12 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            if(i>2)
-            {
-                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
-                dateString = df.format(dbDataOut.get(i-1).getBill_date());
-                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
-            }
+//            if(i>2)
+//            {
+//                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
+//                dateString = df.format(dbDataOut.get(i-1).getBill_date());
+//                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
+//            }
         }
         else {
             i=0;
@@ -269,12 +252,12 @@ public class Fragment1_2 extends Fragment
                 mcategoryList.add(new CategoryListItem(i+1,categoryname,c.getBill_money(),dateString));
                 i++;
             }
-            if(i>2)
-            {
-                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
-                dateString = df.format(dbDataOut.get(i-1).getBill_date());
-                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
-            }
+//            if(i>2)
+//            {
+//                categoryname = categoryDAO.getCategoryById(dbDataOut.get(i-1).getCategory_id()).getCategory_name();
+//                dateString = df.format(dbDataOut.get(i-1).getBill_date());
+//                mcategoryList.add(new CategoryListItem(i-1,categoryname,dbDataOut.get(i-1).getBill_money(),dateString));
+//            }
         }
         return mcategoryList;
     }
@@ -324,7 +307,8 @@ public class Fragment1_2 extends Fragment
         description.setEnabled(false);
         pieChart.setDescription(description);
         //设置半透明圆环的半径, 0为透明
-        pieChart.setTransparentCircleRadius(0f);
+        pieChart.setTransparentCircleRadius(48f);
+        pieChart.setHoleRadius(45f); //半径
         //设置初始旋转角度
         pieChart.setRotationAngle(-15);
         //数据连接线距图形片内部边界的距离，为百分数
@@ -361,6 +345,7 @@ public class Fragment1_2 extends Fragment
             pieChart.setCenterText("总支出"+allmoneystring+"元");
         else
             pieChart.setCenterText("总收入"+allmoneystring+"元");
+
         pieChart.setCenterTextColor(Color.DKGRAY);//中间的文字颜色
         pieChart.setCenterTextSize(12);//中间的文字字体大小
         // 绘制内容value，设置字体颜色大小
@@ -375,23 +360,114 @@ public class Fragment1_2 extends Fragment
     }
 
 
-    //比较两个yyyy-mm-dd格式的时间，d1<=d2返回true
-    public boolean compareDate(String d1,String d2) {
+    //比较两个yyyy-MM-dd格式的时间，d1<=d2返回true
+    public boolean compareDateValid(String strbeginDate,String strendDate) {
         boolean flag=false;
         try {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            Date dt1 = df.parse(d1);
-            Date dt2 = df.parse(d2);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date dt1 = df.parse(strbeginDate);
+            Date dt2 = df.parse(strendDate);
             //dt1在dt2后
             if (dt1.getTime() <= dt2.getTime()) {
                 flag=true;
+                return flag;
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return flag;
     }
+    public void dateChange()
+    {
+        String strbegin,strend;
+        strbegin = tvBeginDate.getText().toString();
+        strend = tvEndDate.getText().toString();
+        if(compareDateValid(strbegin,strend))
+        {
+            strbeginDate = strbegin;
+            strendDate = strend;
+            if(typeFlag[0]==1)
+            {
+                RefreshData(strbeginDate,strendDate,IncomeFlag);
+                Toast.makeText(getActivity(),"时间范围:"+strbeginDate+"--"+strendDate,Toast.LENGTH_SHORT).show();
+            }
+            else if(typeFlag[0]==0)
+            {
+                RefreshData(strbeginDate,strendDate,OutcomeFlag);
+                Toast.makeText(getActivity(),"时间范围:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            Toast.makeText(getActivity(),strbegin+"--"+strend+"起始时间大于终止时间，请重新选择",Toast.LENGTH_SHORT).show();
+            tvBeginDate.setText(strbeginDate);
+            tvEndDate.setText(strendDate);
+        }
+    }
 
+    public void monthBefore(String strbeginDate, String strendDate)
+    {
+        Map <Integer,String> Date = new HashMap<>();
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();//日历对象
+
+            Date dt = df.parse(strbeginDate);
+            calendar.setTime(dt);//设置当前日期
+            calendar.set(Calendar.MONTH, -1);//月份减一
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            strbeginDate=df.format(calendar.getTime());
+
+            dt = df.parse(strendDate);
+            calendar.setTime(dt);//设置当前日期
+            calendar.set(Calendar.MONTH, -1);//月份减一
+            int lastday = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            calendar.set(Calendar.DAY_OF_MONTH, lastday);
+            strendDate=df.format(calendar.getTime());
+
+            Date.put(0,strbeginDate);
+            Date.put(1,strendDate);
+            tvBeginDate.setText(strbeginDate);
+            tvEndDate.setText(strendDate);
+            Toast.makeText(getActivity(),"传出:"+strbeginDate+"--"+strendDate,Toast.LENGTH_SHORT).show();
+
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Map<Integer, String> monthAfter(String strDateBegin, String strDateEnd)
+    {
+        Map <Integer,String> Date = new HashMap<>();
+        String strBeforeBegin= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String strBeforeEnd= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();//日历对象
+
+            Date dt = df.parse(strDateBegin);
+            calendar.setTime(dt);//设置当前日期
+            calendar.set(Calendar.MONTH, +1);//月份减一
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            strBeforeBegin=df.format(calendar.getTime());
+
+            dt = df.parse(strDateEnd);
+            calendar.setTime(dt);//设置当前日期
+            calendar.set(Calendar.MONTH, +1);//月份减一
+            int lastday = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            calendar.set(Calendar.DAY_OF_MONTH, lastday);
+            strBeforeEnd=df.format(calendar.getTime());
+
+            Date.put(0,strBeforeBegin);
+            Date.put(1,strBeforeEnd);
+            return Date;
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Date;
+    }
     private void initStartTimePicker1() {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
         //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
@@ -412,6 +488,7 @@ public class Fragment1_2 extends Fragment
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 tvBeginDate.setText(DateTimeHelper.formatToString(date,"yyyy-MM-dd"));
+                dateChange();
             }
         })
                 .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
@@ -454,6 +531,7 @@ public class Fragment1_2 extends Fragment
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 tvEndDate.setText(DateTimeHelper.formatToString(date,"yyyy-MM-dd"));
+                dateChange();
             }
         })
                 .setDecorView((ConstraintLayout)mView.findViewById(R.id.container))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
@@ -461,7 +539,7 @@ public class Fragment1_2 extends Fragment
                 .setType(new boolean[]{true, true, true, false, false, false})
                 .setLabel("", "", "", "", "", "")
                 .isCenterLabel(false)//是否只显示中间选中项的label文字，false则每项item全部都带有label。
-                .setTitleText("开始日期")//标题文字
+                .setTitleText("结束日期")//标题文字
                 .setTitleSize(20)//标题文字大小
                 .setTitleColor(getResources().getColor(R.color.pickerview_title_text_color))//标题文字颜色
                 .setCancelText("取消")//取消按钮文字
@@ -515,6 +593,16 @@ class CategoryListItem
 class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
 {
     private int id;
+    int[]colors = {Color.rgb(196,69,54),
+            Color.rgb(243,114,44),
+            Color.rgb(248,150,30),
+            Color.rgb(249,199,79),
+            Color.rgb(156,197,161),
+            Color.rgb(144,190,109),
+            Color.rgb(67,170,139),
+            Color.rgb(25,114,120),
+            Color.rgb( 87,117,144),
+            Color.rgb(38,70,83)};
     public CategoryListAdapter(Context context, int textid, List<CategoryListItem> objects)
     {
         super(context, textid, objects);
@@ -526,14 +614,15 @@ class CategoryListAdapter extends ArrayAdapter<CategoryListItem>
     {
         CategoryListItem categoryListItem = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(id, parent, false);
-        TextView month = (TextView) view.findViewById(R.id.order);
-        TextView income = (TextView) view.findViewById(R.id.categoryname);
-        TextView outcome = (TextView) view.findViewById(R.id.money);
-        TextView balance = (TextView) view.findViewById(R.id.date);
-        month.setText(String.valueOf(categoryListItem.getOrder()));
-        income.setText(categoryListItem.getCategoryname());
-        outcome.setText(String.valueOf(categoryListItem.getMoney()));
-        balance.setText(String.valueOf(categoryListItem.getDate()));
+        TextView order = (TextView) view.findViewById(R.id.order);
+        TextView categoryname = (TextView) view.findViewById(R.id.categoryname);
+        TextView money = (TextView) view.findViewById(R.id.money);
+        TextView date = (TextView) view.findViewById(R.id.date);
+        order.setText(String.valueOf(categoryListItem.getOrder()));
+        order.setTextColor(colors[position]);
+        categoryname.setText(categoryListItem.getCategoryname());
+        money.setText(String.valueOf(categoryListItem.getMoney()));
+        date.setText(String.valueOf(categoryListItem.getDate()));
         return view;
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -55,10 +56,11 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
     private int account_id = 1;
     private int user_id = 1;
-    private String account_name;
-    private double money = 0;
-    private int state = 0;
-    private Date anchor = new Date();
+    private Date anchor = new Date(0);
+    //状态
+    private int addState = 0;  //本地新增
+    private int deleteState = -1;  //标记删除
+    private int updateState = 1;  //本地更新
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
         recycleView = (RecyclerView) findViewById(R.id.edit_account_recycleview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycleView.setLayoutManager(layoutManager);
+        //添加Android自带的分割线
+        recycleView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         initAccount();
     }
@@ -117,7 +121,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                             return;
                         } else {
                             //新增账户
-                            Account account = new Account(account_id, user_id, editAccountName.getText().toString(), Double.valueOf(editAccountMoney.getText().toString()), state, anchor);
+                            Account account = new Account(account_id, user_id, editAccountName.getText().toString(), Double.valueOf(editAccountMoney.getText().toString()), addState, anchor);
                             AccountDAO accountDAO = new AccountDAOImpl();
                             accountDAO.insertAccount(account);
                             initAccount();
@@ -184,7 +188,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                                     return;
                                 } else {
                                     //修改账户
-                                    Account account = new Account(account_id, user_id, editAccountName.getText().toString(), Double.valueOf(editAccountMoney.getText().toString()), state, anchor);
+                                    Account account = new Account(account_id, user_id, editAccountName.getText().toString(), Double.valueOf(editAccountMoney.getText().toString()), updateState, anchor);
                                     AccountDAO accountDAO = new AccountDAOImpl();
                                     accountDAO.updateAccount(account);
                                     initAccount();
@@ -239,14 +243,14 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
             accountList.clear();
             for(int i = 0; i < account_name_list1.size(); i++){
                 account_id = account_id_list1.get(i);
-                Account account = new Account(account_id,user_id, account_name_list1.get(i),account_money_list1.get(i),state,anchor);
+                Account account = new Account(account_id,user_id, account_name_list1.get(i),account_money_list1.get(i),updateState,anchor);
                 accountList.add(account);
             }
 
         } else {
             for(int i = 0; i < account_name_list1.size(); i++){
                 account_id = account_id_list1.get(i);
-                Account account = new Account(account_id,user_id, account_name_list1.get(i),account_money_list1.get(i),state,anchor);
+                Account account = new Account(account_id,user_id, account_name_list1.get(i),account_money_list1.get(i),updateState,anchor);
                 accountList.add(account);
             }
 
