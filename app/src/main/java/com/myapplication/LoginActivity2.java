@@ -43,7 +43,7 @@ public class LoginActivity2 extends AppCompatActivity {
             }
         });
 
-
+        //跳转到注册页面
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +52,15 @@ public class LoginActivity2 extends AppCompatActivity {
             }
         });
 
+        //跳转到寻找密码页面
+        /*
+        btn_find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(LoginActivity.this,FindActivity.class);
+                startActivity(intent1);
+            }
+        });*/
 
     }
 
