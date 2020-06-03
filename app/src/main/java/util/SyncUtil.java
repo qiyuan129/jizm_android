@@ -25,6 +25,7 @@ import pojo.Category;
 import pojo.Periodic;
 
 
+
 public class SyncUtil {
     public static final MediaType MEDIA_TYPE_MARKDOWN
             = MediaType.parse("text/x-markdown; charset=utf-8");
@@ -32,6 +33,12 @@ public class SyncUtil {
             = MediaType.parse("application/json; charset=utf-8");
 
     private final static OkHttpClient client = new OkHttpClient();
+
+    public static String CLOUD_HOST_IP="39.100.69.48";
+
+    public static String LOCAL_HOST_IP="192.168.0.100";
+
+    public static String HOST_IP=CLOUD_HOST_IP;
 
     /**
      * 构造存有Account表待上传记录的jsonObject
@@ -171,7 +178,8 @@ public class SyncUtil {
                 periodicObject.put("start", periodic.getStart());
                 periodicObject.put("end", periodic.getEnd());
                 periodicObject.put("money", periodic.getPeriodic_money());
-
+                periodicObject.put("state",periodic.getState());
+                periodicObject.put("anchor",periodic.getAnchor());
                 periodicArray.add(periodicObject);
 
             }

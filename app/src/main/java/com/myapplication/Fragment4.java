@@ -37,7 +37,7 @@ import util.SyncUtil;
 import util.UserUtil;
 
 import static android.content.Context.MODE_PRIVATE;
-
+import static util.SyncUtil.HOST_IP;
 
 public class Fragment4 extends Fragment implements View.OnClickListener{
 
@@ -51,6 +51,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     TextView userName;
     TextView userTel;
     TextView syncTextView;
+
 
     boolean isUploadSuccess;
     //boolean isDownloadSuccess;
@@ -192,7 +193,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
         // 需要重新获取
         Request request = new Request.Builder()
-                .url("http://39.100.48.69:8080/app/synchronization")
+                .url("http://"+HOST_IP+":8080/app/synchronization")
                 .post(requestBody)
                 .addHeader("token", UserUtil.getToken())
                 .build();
@@ -235,20 +236,21 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                     JSONObject resultJson=JSONObject.parseObject(responseString);
                     int statusCode=resultJson.getInteger("code");
                     String message=resultJson.getString("msg");
+                    Log.d("处理上传相应","接收到了上传响应结果，状态码为"+statusCode);
 
                     //如果响应结果状态码为成功的
                     if(statusCode>=200 && statusCode<400) {
                         //取出返回的数据；更新本地记录状态
                         JSONObject dataJson = resultJson.getJSONObject("data");
-                        Log.d("处理上传响应","成功获得上传响应结果，开始更新本地记录同步状态");
+                        Log.d("处理上传响应","响应结果为成功（200），开始更新本地记录同步状态");
                         SyncUtil.processUploadResult(dataJson);
 
 
                         Looper.prepare();
                         Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_LONG).show();
                         Looper.loop();
-                        System.out.println("上传成功，同步完成");
 
+                        Log.d("处理上传响应","!!!更新本地记录同步状态完成，同步成功！");
                     }
                     //响应结果为失败类型
                     else{
@@ -280,7 +282,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
         // 需要重新获取
         Request request = new Request.Builder()
-                .url("http://39.100.48.69:8080/app/download")
+                .url("http://"+HOST_IP+":8080/app/download")
                 .post(requestBody)
                 .addHeader("token", UserUtil.getToken())
                 .build();
@@ -331,7 +333,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
 
                         SyncUtil.processDownloadResult(dataJson);
 
-                        System.out.println("下载成功，开始执行上传");
+                        Log.d("处理下载请求","下载成功，开始执行上传");
                         upload();
 
                         //syncTextView.setText("更新数据（上次同步时间："+new Date()+")");
