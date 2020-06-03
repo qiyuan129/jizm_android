@@ -5,6 +5,6 @@
 
     <!-- 填充的颜色 -->
     <corners
-        android:radius="5dip" />
-    <stroke android:width="2px" android:color="#299EE3" />
+        android:radius="7dip" />
+    <stroke android:width="4px" android:color="#299EE3" />
 </shape>
