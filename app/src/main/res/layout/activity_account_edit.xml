@@ -39,7 +39,6 @@
                 android:id="@+id/edit_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_tb_cash"
                 android:text="账户编辑"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="15sp" />
