@@ -103,7 +103,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
                 //这里构造的periodic没有id,先写一个
                 //tmp.setPeriodic_id(4);//设置一下id
 
-                //查看和修改账单,后续添加
+                //查看和修改账单
                 Intent intent1 = new Intent(getContext(),UpdatePeriodicActivity.class);
                 intent1.putExtra("periodicId",Integer.toString(tmp.getPeriodic_id()));
 

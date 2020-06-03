@@ -42,7 +42,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic
-    public ArrayList<String> listData = new ArrayList<String>();
+//    public ArrayList<String> listData = new ArrayList<String>();
+
+    public ArrayList<String> outcomeListData = new ArrayList<String>();
+    public ArrayList<String> incomeListData = new ArrayList<String>();
+    public ArrayList<Integer> outcomeListId = new ArrayList<Integer>();
+    public ArrayList<Integer> incomeListId = new ArrayList<Integer>();
+
     private TextView view ;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -54,24 +60,19 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     private Spinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
 
-
-
-
-
     //收入支出单选button组
     private RadioGroup RBGroup;
     private RadioButton incomeRB, outcomeRB;
+
+    public int isIncome = 0;         //记录类别（收入/支出）
 
     //周期类型单选button组
     private RadioGroup RecycleRBGroup;
     private RadioButton perDay,perWeek,perMonth;
 
-
-
     //日期选择
     private TextView startDate;
     private TextView endDate;
-
 
     //选择开始时间
     protected String myStartDay;
@@ -85,14 +86,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     protected int endMonth;
     protected int endDay;
 
-
     //确认添加按钮
     Button storePeriodic;
     private EditText nameEditText;
     private EditText moneyEditText;
-
-
-
 
     //辅助变量
     String periodicName;
@@ -106,23 +103,21 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     int accountId;
     int state=0;//本地新增
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_periodic);
 
-
         init();
         setData();
 
-
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listData);
+        if(isIncome == 0) {
+            adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, outcomeListData);
+        } else {
+            adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, incomeListData);
+        }
+
         accountAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listAccount);
 
         //设置下拉列表的风格
@@ -175,24 +170,16 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         perWeek = (RadioButton) findViewById(R.id.per_week_RB);
         perMonth = (RadioButton) findViewById(R.id.per_month_RB);
 
-
         //名称金额
         nameEditText = (EditText)findViewById(R.id.add_periodic_name_edit);
         moneyEditText = (EditText)findViewById(R.id.add_periodic_money_edit);
-
-
-
-
-
 
         //日期选择
         startDate = (TextView)findViewById(R.id.date_start);
         endDate = (TextView)findViewById(R.id.date_end);
 
-
         //保存按钮
         storePeriodic=(Button)findViewById(R.id.store_periodic);
-
 
         //获取当前年，月，日
         Calendar calendar = Calendar.getInstance();
@@ -205,9 +192,6 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         endMonth = calendar.get(Calendar.MONTH);
         endDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-
-
-
         //设置当前时间
         myStartDay = new StringBuffer().append(startYear).append("-").append( startMonth + 1).append("-").append(startDay).toString();
         startDate.setText(myStartDay);
@@ -217,16 +201,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         endDate.setText(myEndDay);
         endDate.setOnClickListener(this);
 
-
         //保存按钮事件监听
         storePeriodic.setOnClickListener(this);
 
-
-
     }
-
-
-
 
 
     public void setData(){
@@ -235,10 +213,21 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         //设置种类
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
-        for(Category cat:categories){
-            listData.add(cat.getCategory_name());
-        }
+//        for(Category cat:categories){
+//            listData.add(cat.getCategory_name());
+//        }
 
+        //设置收入支出切换时类别切换
+        for(int i = 0; i < categories.size(); i++){
+            Category category = (Category)categories.get(i);
+            if (category.getType() == 0) {
+                outcomeListData.add(category.getCategory_name());
+                outcomeListId.add(category.getCategory_id());
+            } else {
+                incomeListData.add(category.getCategory_name());
+                incomeListId.add(category.getCategory_id());
+            }
+        }
 
         //设置账户
         AccountDAO accountDAO = new AccountDAOImpl();
@@ -247,20 +236,12 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             listAccount.add(act.getAccount_name());
         }
 
-
-
-
-
-
-
         //设置默认选中的值
         typeId=0;
         RBGroup.check(outcomeRB.getId());
         recycleId=0;
         RecycleRBGroup.check(perDay.getId());
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -273,10 +254,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                 showEndDateSelector();
                 break;
 
-
             case R.id.store_periodic:
-                //Toast.makeText(this,"保存还没有实现",Toast.LENGTH_SHORT).show();
-
                 if(savePeriodic()){
                     Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
                     //告诉上一个界面添加成功
@@ -284,10 +262,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     setResult(RESULT_OK,intent);
                     this.finish();
                 }
-
-
                 break;
-
 
             default:
                 break;
@@ -311,13 +286,11 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             return false;
         }
 
-
-
         try {
             Date startDate= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
             Date endDate= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
 
-           // Date now = new Date();
+            // Date now = new Date();
 
             if(startDate.compareTo(endDate)==1){
                 builder.setMessage("开始时间应小于结束时间" ) ;
@@ -342,23 +315,16 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         periodicName=nameEditText.getText().toString();
         money=Double.valueOf(moneyEditText.getText().toString());
 
-       //recycleId和typeId已近处理了
-
+        //recycleId和typeId已近处理了
 
         //categoryId在  SpinnerSelectedListener里处理了
-
-
 
         try {
             start= new SimpleDateFormat("yyyy-MM-dd").parse(myStartDay);
             end= new SimpleDateFormat("yyyy-MM-dd").parse(myEndDay);
-
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
 
         //Periodic.数据库自增长，这里随便填一个
         UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
@@ -366,10 +332,8 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         Periodic periodic=new Periodic(0,accountId,categoryId,UserUtil.getUserId(),
                 typeId,periodicName,recycleId,start,end,money,state,new Date(0));
 
-
         PeriodicDAO periodicDAO = new PeriodicDAOImpl();
         periodicDAO.insertPeriodic(periodic);
-
 
         Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show();
         return true;
@@ -379,14 +343,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            view.setText("你的选择是："+ listData.get(arg2));
-
-            //设置Category_id 记得去掉注释
-            categoryId = categories.get(arg2).getCategory_id();
-
-            //测试用，后面删除
-           // categoryId=0;
-
+            if (isIncome == 0) {
+                view.setText("你的选择是："+ outcomeListData.get(arg2));
+                categoryId = outcomeListId.get(arg2);
+            } else {
+                view.setText("你的选择是："+ incomeListData.get(arg2));
+                categoryId = incomeListId.get(arg2);
+            }
 
         }
 
@@ -400,21 +363,13 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             accountView.setText("你的选择是："+ listAccount.get(arg2));
-
-            //设置Account_id 记得去掉注释
             accountId=accounts.get(arg2).getAccount_id();
-
-            //测试用，后面删除
-            //accountId=0;
-
 
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
-
-
 
     //显示开始日期选择器
     public void showStartDateSelector() {
@@ -451,9 +406,6 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         }, startYear, startMonth, startDay).show();
     }
 
-
-
-
     //显示结束日期选择器
     public void showEndDateSelector() {
         new DatePickerDialog(this,(DatePicker datePicker, int i, int i1, int i2) -> {
@@ -489,13 +441,6 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         }, endYear, endMonth, endDay).show();
     }
 
-
-
-
-
-
-
-
     //按钮组的监听者
     class MyRadioButtonListener implements RadioGroup.OnCheckedChangeListener {
 
@@ -507,10 +452,27 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     // 当用户选择支出时
                     Log.i("outcome_RB", "当前用户选择"+ outcomeRB.getText().toString());
                     setType(0);
+                    isIncome = 0;
+                    adapter = new ArrayAdapter<String>(AddPeriodicActivity.this,android.R.layout.simple_spinner_item, outcomeListData);
+                    adapter.notifyDataSetChanged();
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+                    spinner.setVisibility(View.VISIBLE);
+                    spinner.setSelection(0,true);
                     break;
                 case R.id.income_RB:
                     // 当用户选择收入时
                     setType(1);
+                    isIncome = 1;
+                    adapter = new ArrayAdapter<String>(AddPeriodicActivity.this,android.R.layout.simple_spinner_item, incomeListData);
+                    adapter.notifyDataSetChanged();
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+                    spinner.setVisibility(View.VISIBLE);
+                    spinner.setSelection(0,true);
+
                     Log.i("income_RB", "当前用户选择"+ incomeRB.getText().toString());
                     break;
 
@@ -526,15 +488,11 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     setRecycleId(2);
                     break;
 
-
-
-                    default:break;
+                default:
+                    break;
             }
 
-
-
         }
-
 
         /*
         设置周期事件周期 day week month season year
@@ -543,12 +501,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
           /*
           将周期设为多少天就可以了
            */
-
-         Log.i("周期id将被设置为： ",String.valueOf(id));
-         recycleId = id;
-
+            Log.i("周期id将被设置为： ",String.valueOf(id));
+            recycleId = id;
         }
-
 
         public void setType(int id){
             typeId=id;
