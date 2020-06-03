@@ -9,6 +9,7 @@
         android:layout_weight="1"
         android:layout_height="50dp"
         android:textAlignment="center"
+        android:gravity="center"
         android:textColor="@color/colorPrimary"
         android:textSize="12sp"/>
     <TextView
@@ -16,17 +17,20 @@
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="50dp"
+        android:gravity="center"
         android:textAlignment="center"/>
     <TextView
         android:id="@+id/trendoutcome"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="50dp"
+        android:gravity="center"
         android:textAlignment="center"/>
     <TextView
         android:id="@+id/trendbalance"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="50dp"
+        android:gravity="center"
         android:textAlignment="center"/>
 </LinearLayout>

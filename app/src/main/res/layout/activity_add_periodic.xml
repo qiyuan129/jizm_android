@@ -8,29 +8,29 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
 
         <ImageView
             android:id="@+id/setting_go_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_go_back" />
-
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:onClick="onClick"
+            android:paddingRight="10dp"
+            android:src="@mipmap/ic_back" />
 
         <TextView
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
-            android:textStyle="bold"
+            android:textSize="20dp"
             android:text="添加周期事件"
+            android:textColor="@color/cardview_light_background"
             android:editable="false"/>
 
     </RelativeLayout>
-
-
 
     <RadioGroup
         android:id="@+id/rg_type"
@@ -39,8 +39,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal" >
-
-
 
         <RadioButton
             android:id="@+id/outcome_RB"
@@ -56,71 +54,86 @@
             android:layout_height="wrap_content"
             android:text="收入" />
 
-
-
-
     </RadioGroup>
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#090808"/>
-
-    <EditText
-        android:id="@+id/add_periodic_name_edit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:hint="事件名称"
-        android:inputType="text"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:textColorHint="#0E171D" />
-    <EditText
-        android:id="@+id/add_periodic_money_edit"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:layout_marginTop="5dp"
-        android:hint="金额"
-        android:inputType="numberDecimal"
-        android:selectAllOnFocus="true"
-        android:textColorHint="#010407" />
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="名称："
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/add_periodic_name_edit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/name"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColorHint="#0E171D"
+            android:textSize="20dp"/>
+    </RelativeLayout>
 
-
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#090808"
-        android:visibility="invisible" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/moneytext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="金额："
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/add_periodic_money_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/moneytext"
+            android:layout_marginTop="5dp"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:textColorHint="#010407"
+            android:textSize="20dp"/>
+
+    </RelativeLayout>
+
 
     <TextView android:id="@+id/spinnerText"
         android:textSize="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </TextView>
 
     <Spinner android:id="@+id/Spinner01"
+        android:layout_marginTop="5dp"
         android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </Spinner>
 
 
-
     <TextView android:id="@+id/account_spinnerText"
         android:textSize="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </TextView>
 
     <Spinner android:id="@+id/account_Spinner01"
         android:textSize="20dp"
+        android:layout_marginTop="5dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </Spinner>
-
 
     <View
         android:layout_width="match_parent"
@@ -138,33 +151,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:textSize="25dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:paddingTop="5dp"
+            android:textSize="20dp"
             android:text="开始于"/>
-
 
         <TextView
             android:id="@+id/date_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tmp_text1"
-            android:layout_marginTop="7dp"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
+            android:layout_toRightOf="@+id/tmp_text1"
             android:background="@drawable/shape_tb_cash"
-            android:paddingLeft="20dp"
-            android:paddingTop="6dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="7dp"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:text="开始时间"
             android:textColor="@color/cardview_light_background"
-            android:textSize="15sp" />
-
-
-
+            android:textSize="18dp" />
 
     </RelativeLayout>
-
-
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -174,43 +180,32 @@
             android:id="@+id/tmp_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:paddingTop="5dp"
+            android:textSize="20dp"
             android:text="结束于"/>
 
         <TextView
             android:id="@+id/date_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tmp_text2"
-            android:layout_marginTop="7dp"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
+            android:layout_toRightOf="@+id/tmp_text2"
+            android:layout_marginTop="10dp"
             android:background="@drawable/shape_tb_cash"
-            android:paddingLeft="20dp"
-            android:paddingTop="6dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="7dp"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
             android:text="结束时间"
             android:textColor="@color/cardview_light_background"
-            android:textSize="15sp" />
-
-
+            android:textSize="18dp" />
 
     </RelativeLayout>
-
-
-
-
-
-
-
-
 
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp"
-
         android:background="#E9E3E3"
         android:visibility="invisible" />
-
 
 
     <RadioGroup
@@ -244,20 +239,7 @@
             android:layout_height="wrap_content"
             android:text="每月" />
 
-
-
     </RadioGroup>
-
-
-
-
-
-
-
-
-
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -265,16 +247,16 @@
 
         <Button
             android:id="@+id/store_periodic"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:text="确认添加"
-            android:textSize="24dp"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="20dp"
             android:background="@drawable/shape_tb_cash"
             />
     </RelativeLayout>
-
-
 
 </LinearLayout>

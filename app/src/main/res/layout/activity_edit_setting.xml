@@ -69,8 +69,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="30dp">
         <TextView
+            android:id="@+id/pay_warn_edit"
             android:text="支出预警"
             android:textSize="20dp"
             android:textColor="#000000"
@@ -78,11 +79,11 @@
             android:layout_marginLeft="12dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
-        <EditText
-            android:id="@+id/pay_warn"
+        <TextView
+            android:id="@+id/pay_warn_money_text"
+            android:textSize="18dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1200.00"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
