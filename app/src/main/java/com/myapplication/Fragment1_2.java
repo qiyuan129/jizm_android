@@ -124,7 +124,7 @@ public class Fragment1_2 extends Fragment
                     typeFlag[0] = 0;
                     //changeTypeButton.setText("总支出"+allmoneystring+"元");
                     RefreshData(strbeginDate,strendDate,OutcomeFlag);
-                    Toast.makeText(getActivity(),"支出时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),"支出"+strbeginDate+"—"+strendDate,Toast.LENGTH_SHORT).show();
                 }
 
                 else if(typeFlag[0] == 0)
@@ -132,12 +132,12 @@ public class Fragment1_2 extends Fragment
                     typeFlag[0] = 1;
                     //changeTypeButton.setText("总收入"+allmoneystring+"元");
                     RefreshData(strbeginDate,strendDate,IncomeFlag);
-                    Toast.makeText(getActivity(),"收入时间:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),"收入"+strbeginDate+"—"+strendDate,Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        onResume();
+        //onResume();
         return mView;
     }
     @Override
@@ -389,16 +389,16 @@ public class Fragment1_2 extends Fragment
             if(typeFlag[0]==1)
             {
                 RefreshData(strbeginDate,strendDate,IncomeFlag);
-                Toast.makeText(getActivity(),"时间范围:"+strbeginDate+"--"+strendDate,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"时间范围:"+strbeginDate+"--"+strendDate,Toast.LENGTH_SHORT).show();
             }
             else if(typeFlag[0]==0)
             {
                 RefreshData(strbeginDate,strendDate,OutcomeFlag);
-                Toast.makeText(getActivity(),"时间范围:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"时间范围:"+strbeginDate+"——"+strendDate,Toast.LENGTH_SHORT).show();
             }
         }
         else {
-            Toast.makeText(getActivity(),strbegin+"--"+strend+"起始时间大于终止时间，请重新选择",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"起始时间大于终止时间，请重新选择",Toast.LENGTH_SHORT).show();
             tvBeginDate.setText(strbeginDate);
             tvEndDate.setText(strendDate);
         }
