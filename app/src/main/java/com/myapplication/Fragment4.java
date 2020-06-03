@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,6 +197,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 .addHeader("token", UserUtil.getToken())
                 .build();
 
+        Log.d("发送上传请求","发送了上传请求");
 
         //使用异步请求（用同步发送请求需要在子线程上发起，因为安卓较新的版本都不允许在主线程发送网络请求）
         client.newCall(request).enqueue(new Callback() {
@@ -238,8 +240,13 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                     if(statusCode>=200 && statusCode<400) {
                         //取出返回的数据；更新本地记录状态
                         JSONObject dataJson = resultJson.getJSONObject("data");
+                        Log.d("处理上传响应","成功获得上传响应结果，开始更新本地记录同步状态");
                         SyncUtil.processUploadResult(dataJson);
 
+
+                        Looper.prepare();
+                        Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_LONG).show();
+                        Looper.loop();
                         System.out.println("上传成功，同步完成");
 
                     }
@@ -278,6 +285,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 .addHeader("token", UserUtil.getToken())
                 .build();
 
+        Log.d("发送下载请求","开始尝试下载");
 
         //使用异步请求（用同步发送请求需要在子线程上发起，因为安卓较新的版本都不允许在主线程发送网络请求）
         client.newCall(request).enqueue(new Callback() {
@@ -326,9 +334,6 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                         System.out.println("下载成功，开始执行上传");
                         upload();
 
-                        Looper.prepare();
-                        Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_LONG).show();
-                        Looper.loop();
                         //syncTextView.setText("更新数据（上次同步时间："+new Date()+")");
 
                     }

@@ -1,6 +1,8 @@
 package util;
 
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -262,6 +264,7 @@ public class SyncUtil {
                 accountDAO.setStateAndAnchor(account.getInteger("localId"),
                         9,account.getDate("modified"));
             }
+            Log.d("处理上传响应","更新了"+accounts.size()+"条Account记录的同步状态");
         }
         if(billSyncRecords.getBoolean("needSync")==true){
             JSONArray bills=billSyncRecords.getJSONArray("recordList");
@@ -270,6 +273,7 @@ public class SyncUtil {
                 billDAO.setStateAndAnchor(bill.getInteger("localId"),
                         9,bill.getDate("modified"));
             }
+            Log.d("处理上传响应","更新了"+bills.size()+"条Bill记录的同步状态");
         }
         if(categorySyncRecords.getBoolean("needSync")==true){
             JSONArray categories=categorySyncRecords.getJSONArray("recordList");
@@ -278,6 +282,7 @@ public class SyncUtil {
                 categoryDAO.setStateAndAnchor(category.getInteger("localId"),
                         9,category.getDate("modified"));
             }
+            Log.d("处理上传响应","更新了"+categories.size()+"条Category记录的同步状态");
         }
         if(periodicSyncRecords.getBoolean("needSync")==true){
             JSONArray periodics=periodicSyncRecords.getJSONArray("recordList");
@@ -286,6 +291,7 @@ public class SyncUtil {
                 periodicDAO.setStateAndAnchor(periodic.getInteger("localId"),
                         9,periodic.getDate("modified"));
             }
+            Log.d("处理上传响应","更新了"+periodics.size()+"条Periodic记录的同步状态");
         }
         System.out.println("处理上传结果响应成功");
     }
@@ -309,6 +315,7 @@ public class SyncUtil {
         resultObject.put("Category",categoryDAO.getMaxAnchor());
         resultObject.put("Periodic",periodicDAO.getMaxAnchor());
 
+        Log.d("发送下载请求","——————发送的本地最大anchor分别为：\nPeriodic:"+periodicDAO.getMaxAnchor());
         return resultObject;
     }
 
@@ -355,10 +362,12 @@ public class SyncUtil {
 
             if(accountDAO.getAccountById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
                 accountDAO.insertAccountById(account);
+                Log.d("处理下载请求","从服务器获取新Account记录："+account.toString());
             }
             else{                           //找得到对应记录————根据从服务器那获取的数据修改
 
                 accountDAO.updateAccount(account);
+                Log.d("处理下载请求","从服务器更新Account记录："+account.toString());
             }
 
 
@@ -463,9 +472,11 @@ public class SyncUtil {
 
             if(periodicDAO.getPeriodicById(id)==null){    //本地找不到该localId的记录————说明需要在本地添加该记录
                 periodicDAO.insertPeriodicById(periodic);
+                Log.d("处理下载请求","从服务器获取新Periodic记录："+periodic.toString());
             }
             else{                           //找得到对应记录————根据从服务器那获取的数据修改
                 periodicDAO.updatePeriodic(periodic);
+                Log.d("处理下载请求","从服务器更新Periodic记录："+periodic.toString());
             }
 
 

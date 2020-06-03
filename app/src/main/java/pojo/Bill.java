@@ -106,4 +106,20 @@ public class Bill {
     public void setAnchor(Date anchor) {
         this.anchor = anchor;
     }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "bill_id=" + bill_id +
+                ", account_id=" + account_id +
+                ", category_id=" + category_id +
+                ", user_id=" + user_id +
+                ", type=" + type +
+                ", bill_name='" + bill_name + '\'' +
+                ", bill_date=" + bill_date +
+                ", bill_money=" + bill_money +
+                ", state=" + state +
+                ", anchor=" + anchor +
+                '}';
+    }
 }
