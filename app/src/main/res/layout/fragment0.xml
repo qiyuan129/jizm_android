@@ -16,6 +16,7 @@
             android:layout_weight="2"
             android:layout_height="45dp"
             android:textAlignment="center"
+            android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="17sp"
             android:text="名称"/>
@@ -24,6 +25,7 @@
             android:layout_weight="2"
             android:layout_height="45dp"
             android:textAlignment="center"
+            android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="17sp"
             android:text="金额"/>
@@ -32,6 +34,7 @@
             android:layout_weight="2"
             android:layout_height="45dp"
             android:textAlignment="center"
+            android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="17sp"
             android:text="类别"/>
@@ -40,6 +43,7 @@
             android:layout_weight="2"
             android:layout_height="45dp"
             android:textAlignment="center"
+            android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="17sp"
             android:text="时间"/>
@@ -56,6 +60,7 @@
     <Spinner
         android:id="@+id/category_spinner_F0"
         android:textSize="31dp"
+        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
     </Spinner>
@@ -65,6 +70,7 @@
         android:id="@+id/list_bill_view_frag_f0"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
         android:descendantFocusability="blocksDescendants"/>
 
 

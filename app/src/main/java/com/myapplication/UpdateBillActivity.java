@@ -44,8 +44,6 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     ArrayList<Category> categories;
     ArrayList<Account> accounts;
 
-    private List<Category> categoryList = new ArrayList<>();
-
     //这个数组用Category数组的名称来初始化，然后通过选择的下标来判定选了那个Periodic  5.3  0:06
 //    public ArrayList<String> listData = new  ArrayList<String>();
     public ArrayList<String> outcomeListData = new ArrayList<String>();
@@ -336,11 +334,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
                 view.setText("你的选择是："+ outcomeListData.get(arg2));
-                //设置Category_id 记得去掉注释
                 categoryId = outcomeListId.get(arg2);
             } else {
                 view.setText("你的选择是："+ incomeListData.get(arg2));
-                //设置Category_id 记得去掉注释
                 categoryId = incomeListId.get(arg2);
             }
         }
