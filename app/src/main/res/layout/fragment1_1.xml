@@ -16,6 +16,7 @@
             android:layout_height="30dp"
             android:text="2020"
             android:textAlignment="center"
+            android:gravity="center"
             android:textColor="#005082"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,6 +58,7 @@
                 android:layout_weight="1"
                 android:layout_height="45dp"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="17sp"
                 android:text="月份"/>
@@ -65,6 +67,7 @@
                 android:layout_weight="2"
                 android:layout_height="45dp"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="17sp"
                 android:text="收入"/>
@@ -73,6 +76,7 @@
                 android:layout_weight="2"
                 android:layout_height="45dp"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="17sp"
                 android:text="支出"/>
@@ -81,6 +85,7 @@
                 android:layout_weight="2"
                 android:layout_height="45dp"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="17sp"
                 android:text="结余"/>

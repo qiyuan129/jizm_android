@@ -56,7 +56,6 @@
         </RelativeLayout>
     </RelativeLayout>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -65,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:text="名称："/>
         <EditText
             android:id="@+id/bill_name_update"
@@ -87,6 +87,7 @@
             android:id="@+id/tmp_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:text="金额："/>
 
         <EditText
@@ -127,13 +128,15 @@
     <TextView android:id="@+id/bill_update_spinnerText"
         android:textSize="20dp"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
     </TextView>
 
     <Spinner android:id="@+id/bill_update_spinner"
         android:textSize="20dp"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
     </Spinner>
 
 
@@ -142,13 +145,15 @@
     <TextView android:id="@+id/bill_account_spinnerText"
         android:textSize="20dp"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
     </TextView>
 
     <Spinner android:id="@+id/bill_account_spinner"
         android:textSize="20dp"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
     </Spinner>
 
 
@@ -163,10 +168,12 @@
         <Button
             android:id="@+id/save_bill_update"
             android:background="@drawable/shape_tb_cash"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="保存修改"/>
+            android:layout_marginTop="15dp"
+            android:text="保存修改"
+            android:textColor="@color/cardview_light_background"/>
     </RelativeLayout>
 
 
