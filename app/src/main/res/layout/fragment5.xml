@@ -1,75 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="20dp">
-
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    android:layout_height="60dp"
-                    app:sLeftIconRes="@drawable/ic_phone"
-                    app:sLeftTextString="帐号管理"
-                    app:sLeftViewMarginLeft="10dp" />
-
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    android:layout_height="60dp"
-                    app:sLeftTextString="头像">
-
-                    <com.xuexiang.xui.widget.imageview.RadiusImageView
-                        android:id="@+id/riv_head_pic"
-                        style="@style/RadiusImageView.Circle"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/sRightImgId"
-                        app:srcCompat="@drawable/ic_person" />
-
-                </com.xuexiang.xui.widget.textview.supertextview.SuperTextView>
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_head"
+        style="@style/InfoItem.Account"
+        android:layout_height="100dp"
+        app:sCenterViewGravity="left_center"
+        app:sShapeCornersRadius="10dp"
+        app:sLeftViewMarginLeft="10dp" />
 
 
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    app:sLeftTextString="我的钱包"
-                    app:sRightTextString="已保护"
-                    app:sRightTvDrawableLeft="@drawable/icon_crown" />
+    <com.xuexiang.xui.widget.imageview.RadiusImageView
+        android:clickable="true"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/user_head"
+        app:riv_border_color="@color/xui_config_color_gray_6"
+        app:riv_border_width="1px"
+        app:riv_is_circle="true"
+        app:riv_selected_border_color="@color/xui_config_color_gray_4"
+        app:riv_selected_border_width="1px"
+        app:riv_selected_mask_color="@color/xui_config_color_gray_8"/>
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    app:sLeftTextString="恢复数据" />
+    <TextView
+        android:id="@+id/user_name"
+        android:text="用户名"
+        android:textSize="20dp"
+        android:textColor="@color/text_color"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    app:sDividerLineType="none"
-                    app:sLeftTextString="更新数据" />
-
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    app:sDividerLineType="none"
-                    app:sLeftTextString="导出账单" />
+    <TextView
+        android:id="@+id/consume"
+        android:text="本月消费：100￥"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="53dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    android:layout_marginTop="50dp"
-                    app:sDividerLineType="none"
-                    app:sLeftTextString="意见反馈" />
+    <LinearLayout
+        android:layout_below="@+id/user_head"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                    style="@style/InfoItem.Account"
-                    android:layout_marginTop="20dp"
-                    app:sDividerLineType="none"
-                    app:sLeftTextString="关于微博" />
 
-            </LinearLayout>
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_account"
+        style="@style/InfoItem.Account"
+        app:sLeftIconRes="@drawable/user_account"
+        app:sLeftTextString="我的账户"
+        />
 
-</LinearLayout>
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_recover"
+        style="@style/InfoItem.Account"
+        app:sLeftIconRes="@drawable/user_recover"
+        app:sLeftTextString="恢复数据" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_update"
+        style="@style/InfoItem.Account"
+        app:sLeftIconRes="@drawable/user_update"
+        app:sDividerLineType="none"
+        app:sLeftTextString="更新数据" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_export"
+        style="@style/InfoItem.Account"
+        app:sLeftIconRes="@drawable/user_export"
+        app:sDividerLineType="none"
+        app:sLeftTextString="导出账单" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_setting"
+        style="@style/InfoItem.Account"
+        android:layout_height="60dp"
+        app:sLeftIconRes="@drawable/user_setting"
+        app:sLeftTextString="设置"/>
+
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/user_about"
+        style="@style/InfoItem.Account"
+        app:sDividerLineType="none"
+        app:sLeftIconRes="@drawable/user_about"
+        app:sLeftTextString="关于我们" />
+
+    </LinearLayout>
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+        android:id="@+id/btn_logout"
+        style="@style/SuperButton.Primary.Login"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:text="退出登录" />
+
+</RelativeLayout>
