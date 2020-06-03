@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         boolean rememberMe=UserUtil.getRemember();
         if (!rememberMe) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity2.class);
             startActivity(intent);
         }
         float limit=UserUtil.getLimit();

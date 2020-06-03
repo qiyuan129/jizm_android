@@ -129,7 +129,7 @@ public class Fragment0 extends Fragment {
             @Override
             public void deleteOnCliclListern(int position) {
                 Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
-                Log.i("list:",String.valueOf(billList.get(position).getBill_id()));
+                //Log.i("list:",String.valueOf(billList.get(position).getBill_id()));
                 //删除这个账单
                 deleteBill(position);
             }
@@ -209,7 +209,10 @@ public class Fragment0 extends Fragment {
         if(billList!=null && newAdapter!=null && categoryAdapter!=null && spinner!=null && listView!=null){
             billList.clear();
             BillDAO billDao = new BillDAOImpl();
-            billList = billDao.listBill();
+            //按时间顺序
+            //billList = billDao.listBill();
+            billList = billDao.listBillByDate();
+
             newAdapter.clearAll();
             newAdapter.setData(billList);
 
@@ -288,7 +291,9 @@ public class Fragment0 extends Fragment {
     private void initBills(){
         //实际代码
         BillDAO billDao = new BillDAOImpl();
-        billList=billDao.listBill();
+        //billList=billDao.listBill();
+        //按时间顺序排列
+        billList = billDao.listBillByDate();
 
     }
 

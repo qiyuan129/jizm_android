@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -93,6 +94,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
     //确认修改按钮
     Button storePeriodic;
+    ImageView cancelUpdate;
+
 
 
     //需要设置默认值组件
@@ -363,6 +366,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //保存按钮
         storePeriodic=(Button)findViewById(R.id.store_periodic_update);
+        cancelUpdate = (ImageView)findViewById((R.id.cancel_update_periodic));
 
 
         //需要设置默认值的组件
@@ -381,6 +385,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //保存按钮事件监听
         storePeriodic.setOnClickListener(this);
+        cancelUpdate.setOnClickListener(this);
 
 
     }
@@ -497,6 +502,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
                 break;
 
+
+            case R.id.cancel_update_periodic:
+                this.finish();
+                break;
 
 
             default:
