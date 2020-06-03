@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -90,6 +91,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     Button storePeriodic;
     private EditText nameEditText;
     private EditText moneyEditText;
+    ImageView cancelAdd;
 
     //辅助变量
     String periodicName;
@@ -246,6 +248,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.cancel_add_periodic:
+                this.finish();
+                break;
             case R.id.date_start:
                 showStartDateSelector();
                 break;
@@ -344,10 +349,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
-                view.setText("你的选择是："+ outcomeListData.get(arg2));
+                view.setText("您的选择是："+ outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
             } else {
-                view.setText("你的选择是："+ incomeListData.get(arg2));
+                view.setText("您的选择是："+ incomeListData.get(arg2));
                 categoryId = incomeListId.get(arg2);
             }
 
