@@ -13,7 +13,7 @@
         android:background="@color/colorPrimary">
 
         <ImageView
-            android:id="@+id/setting_go_back"
+            android:id="@+id/cancel_add_periodic"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"

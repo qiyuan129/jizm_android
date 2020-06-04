@@ -14,10 +14,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="#299EE3"
-        app:tabIndicatorHeight='2dp'
+        app:tabIndicatorHeight='3dp'
         app:tabMode="fixed"
         app:tabMaxWidth="0dp"
-        app:tabGravity="fill"
+        app:tabGravity="center"
         app:tabIndicatorFullWidth="false"
         app:tabSelectedTextColor="#299EE3"/>
 

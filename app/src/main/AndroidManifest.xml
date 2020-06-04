@@ -27,12 +27,15 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".LoginActivity2" />
         <activity android:name=".FindActivity" />
+        <activity android:name=".FindActivity2" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RegisterActivity2" />
         <activity android:name=".UpdatePeriodicActivity" />
         <activity android:name=".AddPeriodicActivity" />
         <activity android:name=".EditSettingActivity" />
+        <activity android:name=".EditSettingActivity2" />
         <activity android:name=".PersonalDataEditActivity" />
+        <activity android:name=".PersonalDataEditActivity2" />
         <activity android:name=".UpdateBillActivity" />
         <activity android:name=".ListBillActivity" />
         <activity

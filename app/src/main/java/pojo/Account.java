@@ -67,4 +67,16 @@ public class Account {
     public void setAnchor(Date anchor) {
         this.anchor = anchor;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "account_id=" + account_id +
+                ", user_id=" + user_id +
+                ", account_name='" + account_name + '\'' +
+                ", money=" + money +
+                ", state=" + state +
+                ", anchor=" + anchor +
+                '}';
+    }
 }
