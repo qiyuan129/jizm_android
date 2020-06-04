@@ -16,7 +16,7 @@ public class myapp extends Application {
         XUI.init(this); //初始化UI框架
         XUI.debug(true);  //开启UI框架调试日志
 
-        Toast.makeText(this,"myapp",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"myapp",Toast.LENGTH_SHORT).show();
 
     }
 }
