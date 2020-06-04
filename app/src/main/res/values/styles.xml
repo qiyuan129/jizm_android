@@ -69,6 +69,12 @@
         <item name="android:textColor">@color/xui_config_color_white</item>
     </style>
 
+    <style name="SwitchButtonStyle">
+        <item name="android:paddingLeft">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingRight">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingTop">?attr/xui_config_content_spacing_vertical</item>
+        <item name="android:paddingBottom">?attr/xui_config_content_spacing_vertical</item>
+    </style>
 
     <style name="Container">
         <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>

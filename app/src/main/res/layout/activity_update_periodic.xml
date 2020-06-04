@@ -146,22 +146,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tmp_text1_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:paddingTop="5dp"
-            android:textSize="20dp"
-            android:text="开始于"/>
+
 
         <TextView
             android:id="@+id/date_start_update"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:layout_toRightOf="@+id/tmp_text1_up"
+            android:layout_centerInParent="true"
             android:background="@drawable/shape_tb_cash"
             android:gravity="center"
             android:layout_marginLeft="10dp"
@@ -176,21 +167,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tmp_text2_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:paddingTop="5dp"
-            android:textSize="20dp"
-            android:text="结束于"/>
+
 
         <TextView
             android:id="@+id/date_end_update_"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:layout_toRightOf="@+id/tmp_text2_up"
+            android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_tb_cash"
             android:gravity="center"

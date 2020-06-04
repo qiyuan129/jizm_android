@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment2 fragment2;
     private Fragment3 fragment3;
     private Fragment4 fragment4;
+    private Fragment5 fragment5;
     private List<Fragment> list;
 
     private Toolbar toolbar;
@@ -347,13 +348,15 @@ public class MainActivity extends AppCompatActivity {
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
         fragment4 = new Fragment4();
+        fragment5 = new Fragment5();
 
         list = new ArrayList<>();
         list.add(fragment1);
         list.add(fragment0);
         list.add(fragment2);
         list.add(fragment3);
-        list.add(fragment4);
+//        list.add(fragment4);
+        list.add(fragment5);
 
         MyViewPagerAdapter adapter = new MyViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
