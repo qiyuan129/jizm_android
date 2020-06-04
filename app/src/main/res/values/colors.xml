@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="text_color">#000000</color>
+
     <color name="pickerview_divider_color">#9D9D9D</color>
     <color name="pickerview_cancel_text_color">#979696</color>
     <color name="pickerview_submit_text_color">#FAA359</color>

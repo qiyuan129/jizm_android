@@ -30,6 +30,7 @@ import okhttp3.ResponseBody;
 import util.UserUtil;
 
 import static com.xuexiang.xutil.tip.ToastUtils.toast;
+import static util.SyncUtil.HOST_IP;
 
 public class LoginActivity2 extends AppCompatActivity {
 
@@ -101,7 +102,7 @@ public class LoginActivity2 extends AppCompatActivity {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://39.100.48.69:8080/user/login")    //这里的主机地址要填电脑的ip地址
+                .url("http://"+HOST_IP+":8080/user/login")    //这里的主机地址要填电脑的ip地址
                 .post(formBody)
                 .build();
 

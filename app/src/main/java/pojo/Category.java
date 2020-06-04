@@ -67,4 +67,16 @@ public class Category {
     public void setAnchor(Date anchor) {
         this.anchor = anchor;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "category_id=" + category_id +
+                ", user_id=" + user_id +
+                ", category_name='" + category_name + '\'' +
+                ", type=" + type +
+                ", state=" + state +
+                ", anchor=" + anchor +
+                '}';
+    }
 }

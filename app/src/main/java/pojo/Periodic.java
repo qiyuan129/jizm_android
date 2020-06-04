@@ -126,4 +126,22 @@ public class Periodic {
     public void setAnchor(Date anchor) {
         this.anchor = anchor;
     }
+
+    @Override
+    public String toString() {
+        return "Periodic{" +
+                "periodic_id=" + periodic_id +
+                ", account_id=" + account_id +
+                ", category_id=" + category_id +
+                ", user_id=" + user_id +
+                ", type=" + type +
+                ", periodic_name='" + periodic_name + '\'' +
+                ", cycle=" + cycle +
+                ", start=" + start +
+                ", end=" + end +
+                ", periodic_money=" + periodic_money +
+                ", state=" + state +
+                ", anchor=" + anchor +
+                '}';
+    }
 }

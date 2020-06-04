@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PersonalDataEditActivity2">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_back_white">
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="用户信息"
+            />
+    </android.support.v7.widget.Toolbar>
+
+
+
+    <com.xuexiang.xui.widget.imageview.RadiusImageView
+        android:clickable="true"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="85dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/user_head"
+        app:riv_border_color="@color/xui_config_color_gray_6"
+        app:riv_border_width="1px"
+        app:riv_is_circle="true"
+        app:riv_selected_border_color="@color/xui_config_color_gray_4"
+        app:riv_selected_border_width="1px"
+        app:riv_selected_mask_color="@color/xui_config_color_gray_8"/>
+
+
+
+    <LinearLayout
+        android:layout_below="@+id/user_head"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:orientation="vertical">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/user_account"
+            style="@style/InfoItem.Account"
+            app:sLeftTextString="昵称"
+            app:sRightTextString="用户名"
+            />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/user_recover"
+            style="@style/InfoItem.Account"
+            app:sRightTextString="188****8888"
+            app:sLeftTextString="手机号" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/user_update"
+            style="@style/InfoItem.Account"
+            app:sDividerLineType="none"
+            app:sRightTextString="11..7@qq.com"
+            app:sLeftTextString="邮箱" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/user_consume"
+            style="@style/InfoItem.Consume"
+            app:sDividerLineType="none"
+            app:sLeftTextString="本月消费"
+            app:sRightTextString="100￥"/>
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
