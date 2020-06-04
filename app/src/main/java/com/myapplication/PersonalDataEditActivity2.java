@@ -13,6 +13,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
+import util.UserUtil;
+
 public class PersonalDataEditActivity2 extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -37,6 +39,15 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         consume=findViewById(R.id.user_consume);
 
 
+        //设置电话号码，email，name数据
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        nameDefault = UserUtil.getUserName();
+        phoneDefault = UserUtil.getPhone();
+        emailDefault = UserUtil.getEmail();
+        name.setRightString(nameDefault);
+        phone.setRightString(phoneDefault);
+        email.setRightString(emailDefault);
+
 
 
 
@@ -51,7 +62,6 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                name.setRightString("张三");
                 showNameDialog();
             }
         });
@@ -59,7 +69,7 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                phone.setRightString("张三");
+                phone.setRightString("123*********");
                 showPhoneDialog();
             }
         });
@@ -67,7 +77,7 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                email.setRightString("张三");
+                email.setRightString("20466**");
                 showEmailDialog();
             }
         });
