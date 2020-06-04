@@ -30,7 +30,7 @@
         app:riv_selected_mask_color="@color/xui_config_color_gray_8"/>
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/user_name_f5"
         android:text="用户名"
         android:textSize="20dp"
         android:textColor="@color/text_color"

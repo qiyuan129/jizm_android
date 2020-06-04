@@ -8,17 +8,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mob.wrappers.AnalySDKWrapper;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -30,6 +36,7 @@ import okhttp3.ResponseBody;
 import util.SyncUtil;
 import util.UserUtil;
 
+import static android.content.Context.MODE_PRIVATE;
 import static util.SyncUtil.HOST_IP;
 
 public class Fragment5  extends Fragment {
@@ -44,6 +51,9 @@ public class Fragment5  extends Fragment {
     SuperTextView userSetting;
     SuperTextView userAbout;
     SuperButton logout;
+
+    TextView userName;
+    TextView comsume;
 
 
     boolean isUploadSuccess;
@@ -72,6 +82,24 @@ public class Fragment5  extends Fragment {
         userSetting=(SuperTextView)mView.findViewById(R.id.user_setting) ;
         userAbout=(SuperTextView)mView.findViewById(R.id.user_about) ;
         logout=(SuperButton)mView.findViewById(R.id.btn_logout) ;
+
+        comsume = (TextView)mView.findViewById(R.id.consume) ;
+        userName = (TextView)mView.findViewById(R.id.user_name_f5);
+
+
+
+        //设置值
+        UserUtil.setPreferences(requireContext().getSharedPreferences("user",MODE_PRIVATE));
+
+        comsume.setText(String.valueOf(monthMoney()));
+        userName.setText(UserUtil.getUserName());
+
+
+
+
+
+
+
 
         user.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,16 +193,25 @@ public class Fragment5  extends Fragment {
         });
 
 
-
-
-
-
-
-
-
-
-
         return mView;
+    }
+
+
+
+
+
+    public double monthMoney(){
+        Date date=new Date();
+        Date date1=new Date(date.getYear(),date.getMonth(),1);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date1);
+        calendar.add(Calendar.MONTH,1);
+        calendar.add(Calendar.DAY_OF_MONTH,-1);
+        Date date2=calendar.getTime();
+        BillDAO billDAO=new BillDAOImpl();
+        double sum=billDAO.getAllmoney(date1,date2,0);
+
+        return sum;
     }
 
 

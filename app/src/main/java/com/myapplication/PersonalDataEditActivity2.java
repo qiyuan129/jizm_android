@@ -19,9 +19,13 @@ import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -68,6 +72,10 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         name.setRightString(nameDefault);
         phone.setRightString(phoneDefault);
         email.setRightString(emailDefault);
+
+        //设置本月花销
+        consume.setRightString(String.valueOf(monthMoney()));
+
 
 
 
@@ -119,6 +127,21 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
 
     }
 
+
+
+    public double monthMoney(){
+        Date date=new Date();
+        Date date1=new Date(date.getYear(),date.getMonth(),1);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date1);
+        calendar.add(Calendar.MONTH,1);
+        calendar.add(Calendar.DAY_OF_MONTH,-1);
+        Date date2=calendar.getTime();
+        BillDAO billDAO=new BillDAOImpl();
+        double sum=billDAO.getAllmoney(date1,date2,0);
+
+        return sum;
+    }
 
 
 
