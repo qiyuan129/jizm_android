@@ -50,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity{
         setContentView(R.layout.activity_register);
         MobSDK.init(this, "24793dde94dc6", "6e636da9b16e5bf8d5fae19ca30ea6ac");
         SMSSDK.registerEventHandler(eh); //注册短信回调（记得销毁，避免泄露内存）
+
         et_password =(EditText)findViewById(R.id.reg_et_key) ;
         et_phonenum = (EditText) findViewById(R.id.reg_et_phonenum);
         et_userName = (EditText) findViewById(R.id.reg_et_userName);
@@ -57,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity{
         et_checkecode = (EditText) findViewById(R.id.reg_et_checkecode);
         btn_sure = (Button) findViewById(R.id.reg_btn_register);
         et_password=(EditText) findViewById(R.id.reg_et_key);
+
         btn_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
