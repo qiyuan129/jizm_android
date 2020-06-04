@@ -270,12 +270,13 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         //设置开始结束时间
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String satrtDateString = formatter.format(periodic.getStart());
-        String endDateString = formatter.format(periodic.getEnd());
+        String endDateString = formatter.format( periodic.getEnd());
 
         myStartDay=satrtDateString;
         myEndDay=endDateString;
-        startDate.setText(satrtDateString);
-        endDate.setText(endDateString);
+
+        startDate.setText("开始于" + satrtDateString);
+        endDate.setText("结束于" + endDateString);
 
         //设置周期
         switch (periodic.getCycle()){
@@ -448,10 +449,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
-                view.setText("你的选择是："+ outcomeListData.get(arg2));
+                view.setText("你选择的类别："+ outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
             } else {
-                view.setText("你的选择是："+ incomeListData.get(arg2));
+                view.setText("你选择的类别："+ incomeListData.get(arg2));
                 categoryId = incomeListId.get(arg2);
             }
         }
@@ -464,7 +465,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     class AccountSelectedListenerUp implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你的选择是："+ listAccount.get(arg2));
+            accountView.setText("你选择的账户："+ listAccount.get(arg2));
             accountId = accounts.get(arg2).getAccount_id();
 
         }
@@ -496,7 +497,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                             .append(startMonth + 1).append("-").append(startDay).toString();
                 }
             }
-            startDate.setText(myStartDay);
+            startDate.setText("开始于" + myStartDay);
 
             //打印看一下
             Toast.makeText(this,
@@ -531,7 +532,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                             .append(endMonth + 1).append("-").append(endDay).toString();
                 }
             }
-            endDate.setText(myEndDay);
+            endDate.setText("结束于"+myEndDay);
 
             //打印看一下
             Toast.makeText(this,

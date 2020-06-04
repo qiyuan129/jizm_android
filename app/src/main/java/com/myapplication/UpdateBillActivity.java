@@ -333,10 +333,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
-                view.setText("你的选择是："+ outcomeListData.get(arg2));
+                view.setText("你选择的类别："+ outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
             } else {
-                view.setText("你的选择是："+ incomeListData.get(arg2));
+                view.setText("你选择的类别："+ incomeListData.get(arg2));
                 categoryId = incomeListId.get(arg2);
             }
         }
@@ -349,7 +349,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     class BillAccountSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你的选择是："+ listAccount.get(arg2));
+            accountView.setText("你选择的账户："+ listAccount.get(arg2));
 
             //设置Account_id 记得去掉注释
             accountId = accounts.get(arg2).getAccount_id();
