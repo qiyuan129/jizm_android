@@ -99,6 +99,11 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
                 .input("用户昵称", nameDefault, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        if(TextUtils.isEmpty(input)){//输入为空
+                            //Toast.makeText(EditSettingActivity2.this,"输入不能为空",Toast.LENGTH_SHORT).show();
+                            return;//输入为空，不做处理
+                        }
+
 
                     }
                 })
