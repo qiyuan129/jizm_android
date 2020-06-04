@@ -11,6 +11,7 @@
         android:descendantFocusability="blocksDescendants">
 
         <view
+            android:background="@drawable/shape_graph"
             android:id="@+id/PieChart"
             class="com.github.mikephil.charting.charts.PieChart"
             android:layout_width="330dp"
@@ -80,10 +81,12 @@
             android:layout_width="103dp"
             android:layout_height="27dp"
             android:layout_marginStart="30dp"
+            android:textColor="#FFFFFF"
             android:background="@drawable/shape_button"
+
             android:gravity="center"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.12"
             app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +100,7 @@
             android:background="@drawable/shape_button"
             android:gravity="center"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.87"
             app:layout_constraintStart_toStartOf="parent"
