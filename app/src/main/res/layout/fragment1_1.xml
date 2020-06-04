@@ -14,19 +14,20 @@
             android:id="@+id/ButtonYear"
             android:layout_width="284dp"
             android:layout_height="30dp"
+            android:background="@drawable/shape_button"
+            android:gravity="center"
             android:text="2020"
             android:textAlignment="center"
-            android:gravity="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.574"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/shape_button"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <view
             android:id="@+id/LineChart"
+            android:background="@drawable/shape_graph"
             class="com.github.mikephil.charting.charts.LineChart"
             android:layout_width="330dp"
             android:layout_height="250dp"
