@@ -349,10 +349,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
-                view.setText("您的选择是："+ outcomeListData.get(arg2));
+                view.setText("你选择的类别："+ outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
             } else {
-                view.setText("您的选择是："+ incomeListData.get(arg2));
+                view.setText("你选择的类别："+ incomeListData.get(arg2));
                 categoryId = incomeListId.get(arg2);
             }
 
@@ -367,7 +367,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     class AccountSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你的选择是："+ listAccount.get(arg2));
+            accountView.setText("你选择的账户："+ listAccount.get(arg2));
             accountId=accounts.get(arg2).getAccount_id();
 
         }
