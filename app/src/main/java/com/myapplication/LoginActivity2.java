@@ -89,6 +89,12 @@ public class LoginActivity2 extends AppCompatActivity {
         });*/
 
     }
+
+//    @Override
+//    public void onBackPressed() {
+//
+//    }
+
     /**
      * 发起登录请求
      * @param phoneNumber

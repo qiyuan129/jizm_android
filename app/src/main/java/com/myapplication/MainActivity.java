@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private Fragment3 fragment3;
+    private Fragment4 fragment4;
     private Fragment5 fragment5;
     private List<Fragment> list;
 
@@ -311,12 +312,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_edit_category:
 //                Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, CategoryEditActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 return true;
             case R.id.menu_edit_account:
 //                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(this,AccountEditActivity.class);
-                startActivity(intent2);
+                startActivityForResult(intent2, 1);
                 return true;
             default:
                 break;
@@ -332,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
         fragment0 = new Fragment0();
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
+        fragment4 = new Fragment4();
         fragment5 = new Fragment5();
 
         list = new ArrayList<>();
@@ -339,6 +341,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(fragment0);
         list.add(fragment2);
         list.add(fragment3);
+//        list.add(fragment4);
         list.add(fragment5);
 
         MyViewPagerAdapter adapter = new MyViewPagerAdapter(getSupportFragmentManager());
