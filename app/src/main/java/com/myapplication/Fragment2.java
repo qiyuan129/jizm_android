@@ -194,6 +194,15 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            initCategory();
+            initsortTv();
+            initcashTv();
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.income_tv:  //收入按钮
@@ -212,7 +221,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                 break;
             case R.id.type_edit:  //编辑分类
                 Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.tb_note_cash:  //选择账户按钮
                 showPayAccount();

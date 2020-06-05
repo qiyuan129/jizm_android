@@ -1,19 +1,26 @@
 package com.myapplication;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+
+import util.UserUtil;
 
 public class EditSettingActivity2 extends AppCompatActivity {
 
@@ -31,6 +38,13 @@ public class EditSettingActivity2 extends AppCompatActivity {
         toolbar=findViewById(R.id.toolbar);
         password=findViewById(R.id.password);
         limit=findViewById(R.id.limit);
+
+
+        //设置值
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        float limitMoney = UserUtil.getLimit();
+        limit.setRightString(String.valueOf(limitMoney));
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +81,23 @@ public class EditSettingActivity2 extends AppCompatActivity {
                 .input("本月预算", null, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        Log.i("确定  ","输入新数字");
+
+                        if(TextUtils.isEmpty(input)){//输入为空
+                            Toast.makeText(EditSettingActivity2.this,"输入不能为空",Toast.LENGTH_SHORT).show();
+                            return;//输入为空，不做处理
+                        }
+                        else {
+                            String moneyStr = input.toString();
+                            float money = Float.valueOf(moneyStr);
+
+                            //存入本地
+                            UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+                            UserUtil.setLimit(money);
+
+                            limit.setRightString(String.valueOf(money));
+
+                        }
 
                     }
                 })
@@ -77,6 +108,7 @@ public class EditSettingActivity2 extends AppCompatActivity {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 //                        Toast.makeText(PersonalDataEditActivity2.this, "点击确定", Toast.LENGTH_SHORT).show();
                         limit.setRightString(dialog.getInputEditText().getText().toString());
+
 
                     }
                 })
@@ -91,6 +123,11 @@ public class EditSettingActivity2 extends AppCompatActivity {
                 })
                 .show();
     }
+
+
+
+
+
 
 
 }

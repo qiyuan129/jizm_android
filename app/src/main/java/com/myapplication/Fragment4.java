@@ -146,7 +146,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
 
             case R.id.user_account:
                 Intent intent2 = new Intent(getActivity(),AccountEditActivity.class);
-                startActivity(intent2);
+                startActivityForResult(intent2, 2);
                 break;
 
             case R.id.setting_enter:

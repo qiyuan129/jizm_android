@@ -80,11 +80,18 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        setResult(RESULT_OK, new Intent());
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
-                setResult(RESULT_OK, new Intent());
                 finish();
+                setResult(RESULT_OK, new Intent());
                 break;
             case R.id.add_btn:
                 showContentDialog();

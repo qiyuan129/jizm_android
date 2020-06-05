@@ -34,7 +34,7 @@ public class SyncUtil {
 
     private final static OkHttpClient client = new OkHttpClient();
 
-    public static String CLOUD_HOST_IP="39.100.69.48";
+    public static String CLOUD_HOST_IP="39.100.48.69";
 
     public static String LOCAL_HOST_IP="192.168.0.100";
 

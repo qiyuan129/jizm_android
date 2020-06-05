@@ -83,11 +83,18 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        setResult(RESULT_OK, new Intent());
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn1:
-                setResult(RESULT_OK, new Intent());
                 finish();
+                setResult(RESULT_OK, new Intent());
                 break;
             case R.id.add_btn1:
                 showContentDialog();

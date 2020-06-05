@@ -3,7 +3,6 @@ package com.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -15,21 +14,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import dao.AccountDAO;
-import dao.AccountDAOImpl;
-import dao.BillDAO;
-import dao.BillDAOImpl;
-import dao.CategoryDAO;
-import dao.CategoryDAOImpl;
-import dao.PeriodicDAO;
-import dao.PeriodicDAOImpl;
-import pojo.Account;
-import pojo.Bill;
-import pojo.Category;
-import pojo.Periodic;
 import util.MyDatabaseHelper;
 import util.UserUtil;
 
@@ -326,12 +312,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_edit_category:
 //                Toast.makeText(MainActivity.this,"分类",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, CategoryEditActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 return true;
             case R.id.menu_edit_account:
 //                Toast.makeText(MainActivity.this,"账户",Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(this,AccountEditActivity.class);
-                startActivity(intent2);
+                startActivityForResult(intent2, 1);
                 return true;
             default:
                 break;

@@ -8,8 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#F0FFF0">
+        android:layout_height="45dp">
 
         <TextView
             android:layout_width="0dp"
