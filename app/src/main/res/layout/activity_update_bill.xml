@@ -58,6 +58,9 @@
         </RelativeLayout>
     </RelativeLayout>
 
+
+
+    <!--
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -185,6 +188,8 @@
             android:text="保存修改"
             android:textColor="@color/cardview_light_background"/>
     </RelativeLayout>
+
+-->
 
 
 <!--    <LinearLayout-->
@@ -377,6 +382,7 @@
                 android:id="@+id/spinner_account"
                 style="@style/Material.SpinnerStyle"
                 android:layout_height="36dp"
+                android:textAlignment="center"
                 android:layout_width="match_parent"
                 />
 

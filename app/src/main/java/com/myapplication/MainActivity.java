@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         初始化数据
          */
 
+
+
        /* Date date0=new Date(0);
         Date date=new Date();
         Date date1= new Date(2020-1900, 1, 1);
@@ -311,6 +313,9 @@ public class MainActivity extends AppCompatActivity {
         periodic=new Periodic(4,4,5,1,1,"动车票",1,new Date(2020-1900,1-1,1),new Date(2020-1900,5-1,1),60,0,date0);
         periodicDAO.insertPeriodic(periodic);
 */
+
+
+
     }
 
     @Override

@@ -20,6 +20,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,15 +53,15 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     public ArrayList<Integer> outcomeListId = new ArrayList<Integer>();
     public ArrayList<Integer> incomeListId = new ArrayList<Integer>();
 
-    private TextView view ;
-    private Spinner spinner;
+    //private TextView view ;
+    private MaterialSpinner spinner;
     private ArrayAdapter<String> adapter;
 
 
 
     public ArrayList<String> listAccount = new ArrayList<String>();
-    private TextView accountView ;
-    private Spinner accountSpinner;
+    //private TextView accountView ;
+    private MaterialSpinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
 
     //收入支出单选button组
@@ -88,7 +91,7 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     protected int endDay;
 
     //确认添加按钮
-    Button storePeriodic;
+    SuperButton storePeriodic;
     private EditText nameEditText;
     private EditText moneyEditText;
     ImageView cancelAdd;
@@ -142,8 +145,11 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
         //设置默认选中的下拉列表项，需要在spinner填充数据之后
-        spinner.setSelection(0,true);
-        accountSpinner.setSelection(0,true);
+        //spinner.setSelection(0,true);
+        spinner.setSelectedIndex(0);
+
+       // accountSpinner.setSelection(0,true);
+        accountSpinner.setSelectedIndex(0);
 
 
         //注意是给RadioGroup绑定监视器
@@ -155,10 +161,10 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
 
 
     public void init(){
-        view = (TextView) findViewById(R.id.spinnerText);
-        accountView= (TextView) findViewById(R.id.account_spinnerText);
-        spinner = (Spinner) findViewById(R.id.Spinner01);
-        accountSpinner=(Spinner)findViewById(R.id.account_Spinner01);
+        //view = (TextView) findViewById(R.id.spinnerText);
+        //accountView= (TextView) findViewById(R.id.account_spinnerText);
+        spinner = (MaterialSpinner) findViewById(R.id.spinner_category_add);
+        accountSpinner=(MaterialSpinner)findViewById(R.id.spinner_account_add);
 
 
         //收入支出单选
@@ -173,15 +179,15 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         perMonth = (RadioButton) findViewById(R.id.per_month_RB);
 
         //名称金额
-        nameEditText = (EditText)findViewById(R.id.add_periodic_name_edit);
-        moneyEditText = (EditText)findViewById(R.id.add_periodic_money_edit);
+        nameEditText = (EditText)findViewById(R.id.periodic_name_add);
+        moneyEditText = (EditText)findViewById(R.id.periodic_money_add);
 
         //日期选择
-        startDate = (TextView)findViewById(R.id.date_start);
-        endDate = (TextView)findViewById(R.id.date_end);
+        startDate = (TextView)findViewById(R.id.periodic_start_time_add);
+        endDate = (TextView)findViewById(R.id.periodic_end_time_add);
 
         //保存按钮
-        storePeriodic=(Button)findViewById(R.id.store_periodic);
+        storePeriodic=(SuperButton)findViewById(R.id.btn_save_add);
 
         //获取当前年，月，日
         Calendar calendar = Calendar.getInstance();
@@ -251,15 +257,15 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             case R.id.cancel_add_periodic:
                 this.finish();
                 break;
-            case R.id.date_start:
+            case R.id.periodic_start_time_add:
                 showStartDateSelector();
                 break;
 
-            case R.id.date_end:
+            case R.id.periodic_end_time_add:
                 showEndDateSelector();
                 break;
 
-            case R.id.store_periodic:
+            case R.id.btn_save_add:
                 if(savePeriodic()){
                     Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
                     //告诉上一个界面添加成功
@@ -345,9 +351,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
     }
 
     //内部类，下拉列表监听者，使用数组形式操作
-    class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+    class SpinnerSelectedListener implements MaterialSpinner.OnItemSelectedListener {
 
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+       /* public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
                 view.setText("你选择的类别："+ outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
@@ -356,23 +362,42 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                 categoryId = incomeListId.get(arg2);
             }
 
-        }
+        }*/
 
         public void onNothingSelected(AdapterView<?> arg0) {
+        }
+
+        @Override
+        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+            if (isIncome == 0) {
+                view.setText(outcomeListData.get(position));
+                categoryId = outcomeListId.get(position);
+            } else {
+                view.setText(incomeListData.get(position));
+                categoryId = incomeListId.get(position);
+            }
         }
     }
 
 
     //内部类，下拉列表监听者，使用数组形式操作
-    class AccountSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+    class AccountSpinnerSelectedListener implements MaterialSpinner.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你选择的账户："+ listAccount.get(arg2));
+            //accountView.setText("你选择的账户："+ listAccount.get(arg2));
+
             accountId=accounts.get(arg2).getAccount_id();
 
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
+        }
+
+        @Override
+        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+            //accountView.setText("你选择的账户："+ listAccount.get(position));
+            view.setText(listAccount.get(position));
+            accountId=accounts.get(position).getAccount_id();
         }
     }
 
@@ -464,7 +489,8 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     spinner.setAdapter(adapter);
                     spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
                     spinner.setVisibility(View.VISIBLE);
-                    spinner.setSelection(0,true);
+                   // spinner.setSelection(0,true);
+                    spinner.setSelectedIndex(0);
                     break;
                 case R.id.income_RB:
                     // 当用户选择收入时
@@ -476,7 +502,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
                     spinner.setAdapter(adapter);
                     spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
                     spinner.setVisibility(View.VISIBLE);
-                    spinner.setSelection(0,true);
+                    //spinner.setSelection(0,true);
+                    spinner.setSelectedIndex(0);
+
 
                     Log.i("income_RB", "当前用户选择"+ incomeRB.getText().toString());
                     break;

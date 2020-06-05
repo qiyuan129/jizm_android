@@ -20,6 +20,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
+import com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,13 +54,13 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     public ArrayList<Integer> outcomeListId = new ArrayList<Integer>();
     public ArrayList<Integer> incomeListId = new ArrayList<Integer>();
 
-    private TextView view ;
-    private Spinner spinner;
+    //private TextView view ;
+    private MaterialSpinner spinner;
     private ArrayAdapter<String> adapter;
 
     public ArrayList<String> listAccount=new  ArrayList<String>();
-    private TextView accountView ;
-    private Spinner accountSpinner;
+    //private TextView accountView ;
+    private MaterialSpinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
 
     //收入支出单选button组
@@ -69,8 +73,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     private RadioButton perDay,perWeek,perMonth;
 
     //日期选择
-    private TextView startDate;
-    private TextView endDate;
+    private RoundButton startDate;
+    private RoundButton endDate;
 
     //选择开始时间
     protected String myStartDay;
@@ -85,7 +89,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     protected int endDay;
 
     //确认修改按钮
-    Button storePeriodic;
+    SuperButton storePeriodic;
     ImageView cancelUpdate;
 
     //需要设置默认值组件
@@ -161,14 +165,16 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         if (isIncome == 0) {
             for(int i=0;i<outcomeListData.size();i++){
                 if(categoryName.equals(outcomeListData.get(i))){
-                    spinner.setSelection(i);
+                    spinner.setSelectedIndex(i);
+                    categoryId = outcomeListId.get(i);
                     break;
                 }
             }
         } else {
             for(int i=0;i<incomeListData.size();i++){
                 if(categoryName.equals(incomeListData.get(i))){
-                    spinner.setSelection(i);
+                    spinner.setSelectedIndex(i);
+                    categoryId = incomeListId.get(i);
                     break;
                 }
             }
@@ -185,7 +191,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         for(int i=0;i<listAccount.size();i++){
             if(accountName.equals(listAccount.get(i))){
-                accountSpinner.setSelection(i);
+                accountSpinner.setSelectedIndex(i);
+                accountId = periodic.getAccount_id();
                 break;
             }
         }
@@ -275,8 +282,8 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         myStartDay=satrtDateString;
         myEndDay=endDateString;
 
-        startDate.setText("开始于" + satrtDateString);
-        endDate.setText("结束于" + endDateString);
+        startDate.setText(satrtDateString);
+        endDate.setText(endDateString);
 
         //设置周期
         switch (periodic.getCycle()){
@@ -299,10 +306,10 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     }
 
     public void init(){
-        view = (TextView) findViewById(R.id.spinnerText_update);
-        accountView=(TextView)findViewById(R.id.account_spinnerText_update);
-        spinner = (Spinner) findViewById(R.id.Spinner_update);
-        accountSpinner=(Spinner)findViewById(R.id.account_Spinner_update);
+        //view = (TextView) findViewById(R.id.spinnerText_update);
+       // accountView=(TextView)findViewById(R.id.account_spinnerText_update);
+        spinner = (MaterialSpinner) findViewById(R.id.spinner_category_new);
+        accountSpinner=(MaterialSpinner)findViewById(R.id.spinner_account_new);
 
         //收入支出单选
         RBGroup = (RadioGroup) findViewById(R.id.rg_type_update);
@@ -316,16 +323,16 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         perMonth = (RadioButton) findViewById(R.id.per_month_RB_update);
 
         //日期选择
-        startDate = (TextView)findViewById(R.id.date_start_update);
-        endDate = (TextView)findViewById(R.id.date_end_update_);
+        startDate = (RoundButton)findViewById(R.id.periodic_start_time_new);
+        endDate = (RoundButton)findViewById(R.id.periodic_end_time_new);
 
         //保存按钮
-        storePeriodic=(Button)findViewById(R.id.store_periodic_update);
+        storePeriodic=(SuperButton)findViewById(R.id.btn_save_new);
         cancelUpdate = (ImageView)findViewById((R.id.cancel_update_periodic));
 
         //需要设置默认值的组件
-        periodicName = (EditText)findViewById(R.id.periodic_name_update);
-        periodicMoney = (EditText)findViewById(R.id.periodic_money_update);
+        periodicName = (EditText)findViewById(R.id.periodic_name_new);
+        periodicMoney = (EditText)findViewById(R.id.periodic_money_new);
 
         startDate.setOnClickListener(this);
         endDate.setOnClickListener(this);
@@ -413,15 +420,15 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.date_start_update:
+            case R.id.periodic_start_time_new:
                 showStartDateSelector();
                 break;
 
-            case R.id.date_end_update_:
+            case R.id.periodic_end_time_new:
                 showEndDateSelector();
                 break;
 
-            case R.id.store_periodic_update:
+            case R.id.btn_save_new:
                 if(savePeriodic()){
                     Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
                     //把值periodicId传回上一个界面
@@ -445,9 +452,9 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
 
     //内部类，下拉列表监听者，使用数组形式操作
-    class SpinnerSelectedListenerUp implements AdapterView.OnItemSelectedListener {
+    class SpinnerSelectedListenerUp implements MaterialSpinner.OnItemSelectedListener {
 
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+       /* public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
                 view.setText("你选择的类别："+ outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
@@ -455,22 +462,43 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                 view.setText("你选择的类别："+ incomeListData.get(arg2));
                 categoryId = incomeListId.get(arg2);
             }
-        }
+        }*/
 
         public void onNothingSelected(AdapterView<?> arg0) {
+        }
+
+        @Override
+        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+            if (isIncome == 0) {
+                view.setText(outcomeListData.get(position));
+                categoryId = outcomeListId.get(position);
+            } else {
+                view.setText(incomeListData.get(position));
+                categoryId = incomeListId.get(position);
+            }
         }
     }
 
     //内部类，下拉列表监听者，使用数组形式操作
-    class AccountSelectedListenerUp implements AdapterView.OnItemSelectedListener {
+    class AccountSelectedListenerUp implements MaterialSpinner.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你选择的账户："+ listAccount.get(arg2));
+            //accountView.setText("你选择的账户："+ listAccount.get(arg2));
+
             accountId = accounts.get(arg2).getAccount_id();
 
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
+        }
+
+        @Override
+        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+            //accountView.setText(listAccount.get(position));
+            view.setText(listAccount.get(position));
+
+            //设置Account_id 记得去掉注释
+            accountId = accounts.get(position).getAccount_id();
         }
     }
 
@@ -497,7 +525,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                             .append(startMonth + 1).append("-").append(startDay).toString();
                 }
             }
-            startDate.setText("开始于" + myStartDay);
+            startDate.setText(myStartDay);
 
             //打印看一下
             Toast.makeText(this,
@@ -532,7 +560,7 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
                             .append(endMonth + 1).append("-").append(endDay).toString();
                 }
             }
-            endDate.setText("结束于"+myEndDay);
+            endDate.setText(myEndDay);
 
             //打印看一下
             Toast.makeText(this,
