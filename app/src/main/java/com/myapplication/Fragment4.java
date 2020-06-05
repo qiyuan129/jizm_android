@@ -139,22 +139,22 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
                 break;
 
 
-            case R.id.personal_enter:
+            case R.id.personal_enter://个人信息修改
                 Intent intent1 = new Intent(getActivity(),PersonalDataEditActivity.class);
                 startActivity(intent1);
                 break;
 
-            case R.id.user_account:
+            case R.id.user_account://个人账户
                 Intent intent2 = new Intent(getActivity(),AccountEditActivity.class);
                 startActivityForResult(intent2, 2);
                 break;
 
-            case R.id.setting_enter:
+            case R.id.setting_enter://设置
                 Intent intent3 = new Intent(getActivity(),EditSettingActivity.class);
                 startActivity(intent3);
                 break;
 
-            case R.id.syncTextView: {
+            case R.id.syncTextView: {//更新数据
                 //isUploadSuccess=false;
                 //isDownloadSuccess=false;
                 Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
