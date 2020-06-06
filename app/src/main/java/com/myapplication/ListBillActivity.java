@@ -51,7 +51,7 @@ public class ListBillActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ListBillActivity.this, "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ListBillActivity.this, "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
 
                 //查看账单,后续添加
             }

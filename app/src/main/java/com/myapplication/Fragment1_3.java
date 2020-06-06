@@ -146,7 +146,7 @@ public class Fragment1_3 extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
 
                 //查看账单,后续添加
                 //Bill tempBill = billList.get(position);
