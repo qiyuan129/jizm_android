@@ -1,5 +1,6 @@
 package com.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
@@ -79,7 +80,6 @@ public class FindActivity2 extends AppCompatActivity {
                     if((!oldPassword.getText().toString().equals("")) || (oldPassword.getText().toString()==null)){
                         if((!newPassword.getText().toString().equals("")) || (newPassword.getText().toString()==null)){
                             updatePassword(oldPassword.getText().toString(),newPassword.getText().toString());
-                            Toast.makeText(FindActivity2.this,"修改成功",Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(FindActivity2.this,"请输入新密码",Toast.LENGTH_SHORT).show();
@@ -146,6 +146,8 @@ public class FindActivity2 extends AppCompatActivity {
                         toast("修改密码成功！");
 
                         //@TODO 在这里写页面跳转
+                        Intent intent = new Intent(FindActivity2.this, MainActivity.class);
+                        startActivity(intent);
                     }
                     //响应结果为失败类型
                     else{

@@ -67,7 +67,6 @@ public class EditPasswordActivity extends AppCompatActivity {
                 if((!oldPassword.getText().toString().equals("")) || (oldPassword.getText().toString()==null)){
                     if((!newPassword.getText().toString().equals("")) || (newPassword.getText().toString()==null)){
                         updatePassword(oldPassword.getText().toString(),newPassword.getText().toString());
-                        Toast.makeText(EditPasswordActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(EditPasswordActivity.this,"请输入新密码",Toast.LENGTH_SHORT).show();
@@ -134,6 +133,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                         toast("修改密码成功！");
 
                         //@TODO 在这里写页面跳转
+                        finish();
                     }
                     //响应结果为失败类型
                     else{
