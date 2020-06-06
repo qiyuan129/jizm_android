@@ -161,9 +161,11 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
                 for (int j = 0; j < accountList.size(); j++) {
                     Account account = (Account) accountList.get(j);
-                    account_name_list.add(account.getAccount_name());
-                    account_id_list.add(account.getAccount_id());
-                    account_money_list.add(account.getMoney());
+                    if (account.getState() != -1) {
+                        account_name_list.add(account.getAccount_name());
+                        account_id_list.add(account.getAccount_id());
+                        account_money_list.add(account.getMoney());
+                    }
                 }
                 account_id = account_id_list.get(position);
                 account_name1 = account_name_list.get(position);
@@ -216,7 +218,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                             public void onClick(DialogInterface dialog, int which) {
                                 //删除该分类
                                 AccountDAO accountDAO = new AccountDAOImpl();
-                                accountDAO.deleteAccount(account_id);
+                                accountDAO.setState(account_id, -1);
                                 Toast.makeText(AccountEditActivity.this, "该分类已删除", Toast.LENGTH_SHORT).show();
                                 initAccount();
                             }
@@ -241,9 +243,11 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
         for (int j = 0; j < accountList.size(); j++) {
             Account account = (Account) accountList.get(j);
-            account_name_list1.add(account.getAccount_name());
-            account_id_list1.add(account.getAccount_id());
-            account_money_list1.add(account.getMoney());
+            if (account.getState() != -1) {
+                account_name_list1.add(account.getAccount_name());
+                account_id_list1.add(account.getAccount_id());
+                account_money_list1.add(account.getMoney());
+            }
         }
 
         if (accountList != null) {
