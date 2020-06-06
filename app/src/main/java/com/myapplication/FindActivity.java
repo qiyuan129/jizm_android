@@ -139,10 +139,7 @@ public class FindActivity extends AppCompatActivity{
                 }
             }else{//错误等在这里（包括验证失败）
                 //错误码请参照http://wiki.mob.com/android-api-错误码参考/这里我就不再继续写了
-                ((Throwable)data).printStackTrace();
-                String str = data.toString();
                 toast("验证码不匹配，请重新输入验证码");
-                et_checkecode.setText("");
             }
         }
     };
