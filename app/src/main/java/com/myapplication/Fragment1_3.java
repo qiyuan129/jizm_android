@@ -364,7 +364,7 @@ public class Fragment1_3 extends Fragment {
     class CategorySelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            //view.setText("你的选择是："+ listData.get(arg2));
+            //view.setText("你选择的类别："+ listData.get(arg2));
 
             //设置Category_id 记得去掉注释
             //categoryId = categories.get(arg2).getCategory_id();

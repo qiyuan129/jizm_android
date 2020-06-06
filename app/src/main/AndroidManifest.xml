@@ -34,6 +34,7 @@
         <activity android:name=".AddPeriodicActivity" />
         <activity android:name=".EditSettingActivity" />
         <activity android:name=".EditSettingActivity2" />
+        <activity android:name=".EditPasswordActivity" />
         <activity android:name=".PersonalDataEditActivity" />
         <activity android:name=".PersonalDataEditActivity2" />
         <activity android:name=".UpdateBillActivity" />

@@ -18,6 +18,8 @@
         app:navigationIcon="@drawable/ic_back_white">
         <TextView
             android:id="@+id/toolbar_title"
+            android:textSize="18dp"
+            android:textColor="@color/title_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -44,27 +46,26 @@
 
 
     <LinearLayout
-        android:layout_below="@+id/user_head"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="200dp"
         android:orientation="vertical">
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-            android:id="@+id/user_account"
+            android:id="@+id/user_name"
             style="@style/InfoItem.Account"
             app:sLeftTextString="昵称"
             app:sRightTextString="用户名"
             />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-            android:id="@+id/user_recover"
+            android:id="@+id/user_phone"
             style="@style/InfoItem.Account"
             app:sRightTextString="188****8888"
             app:sLeftTextString="手机号" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-            android:id="@+id/user_update"
+            android:id="@+id/user_email"
             style="@style/InfoItem.Account"
             app:sDividerLineType="none"
             app:sRightTextString="11..7@qq.com"
@@ -78,8 +79,12 @@
             app:sRightTextString="100￥"/>
 
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
 
 
 

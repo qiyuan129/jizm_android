@@ -83,6 +83,7 @@ public class PersonalDataEditActivity extends AppCompatActivity implements View.
                 String phone = phoneEdit.getText().toString();
                 String email = emailEdit.getText().toString();
                 String nickName = nickNameEdit.getText().toString();
+
                 if(judgeData(phone,email,nickName)){
                     updatePersonalData(phone,email,nickName);
 

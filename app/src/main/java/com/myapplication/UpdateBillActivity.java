@@ -18,6 +18,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
+import com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,18 +54,18 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     public ArrayList<String> incomeListData = new ArrayList<String>();
     public ArrayList<Integer> outcomeListId = new ArrayList<Integer>();
     public ArrayList<Integer> incomeListId = new ArrayList<Integer>();
-    private TextView view ;
-    private Spinner spinner;
+   // private TextView view ;
+    private MaterialSpinner spinner;
     private ArrayAdapter<String> adapter;
 
     public ArrayList<String> listAccount=new  ArrayList<String>();
-    private TextView accountView ;
-    private Spinner accountSpinner;
+    //private TextView accountView ;
+    private MaterialSpinner accountSpinner;
     private ArrayAdapter<String> accountAdapter;
 
     Button incomeButton;
     Button outComeButton;
-    Button saveBillButton;
+    SuperButton saveBillButton;
     ImageView backIv;      //返回键
 
     //名称和金额
@@ -69,7 +73,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     EditText BillMoneyEdit;
 
     //时间
-    private TextView billUpdateTime;
+    private RoundButton billUpdateTime;
     protected String days;
     public int mYear;
     public int mMonth;
@@ -122,10 +126,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void init(){
-        view = (TextView) findViewById(R.id.bill_update_spinnerText);
-        accountView=(TextView)findViewById(R.id.bill_account_spinnerText);
-        spinner = (Spinner) findViewById(R.id.bill_update_spinner);
-        accountSpinner=(Spinner)findViewById(R.id.bill_account_spinner);
+        //view = (TextView) findViewById(R.id.bill_update_spinnerText);
+        //accountView=(TextView)findViewById(R.id.bill_account_spinnerText);
+        spinner = (MaterialSpinner) findViewById(R.id.spinner_category);
+        accountSpinner=(MaterialSpinner)findViewById(R.id.spinner_account);
 
         //返回按钮
         backIv = (ImageView)findViewById(R.id.back_btn1);
@@ -133,14 +137,14 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         //输入支出按钮
         incomeButton = (Button)findViewById(R.id.bill_update_income);
         outComeButton = (Button)findViewById((R.id.bill_update_outcome));
-        saveBillButton = (Button)findViewById(R.id.save_bill_update) ;
+        saveBillButton = (SuperButton)findViewById(R.id.btn_save) ;
 
         //选择时间
-        billUpdateTime=(TextView)findViewById(R.id.bill_update_time);
+        billUpdateTime=(RoundButton)findViewById(R.id.bill_time);
 
         //账单名称和金额
-        BillNameEdit = (EditText)findViewById(R.id.bill_name_update) ;
-        BillMoneyEdit = (EditText)findViewById(R.id.bill_update_money) ;
+        BillNameEdit = (EditText)findViewById(R.id.bill_name) ;
+        BillMoneyEdit = (EditText)findViewById(R.id.bill_money) ;
 
         //设置事件监听者
         backIv.setOnClickListener(this);
@@ -161,17 +165,32 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
         Category category = catDAO.getCategoryById(catId);
         String categoryName = category.getCategory_name();
 
+
+        /*if (isIncome == 0) {
+            view.setText(outcomeListData.get(position));
+            categoryId = outcomeListId.get(position);
+        } else {
+            view.setText(incomeListData.get(position));
+            categoryId = incomeListId.get(position);
+        }*/
+
+
+
         if (isIncome == 0) {
             for(int i=0;i<outcomeListData.size();i++){
                 if(categoryName.equals(outcomeListData.get(i))){
-                    spinner.setSelection(i);
+                    //spinner.setSelection(i);
+                    spinner.setSelectedIndex(i);
+                    categoryId = outcomeListId.get(i);
                     break;
                 }
             }
         } else {
             for(int i=0;i<incomeListData.size();i++){
                 if(categoryName.equals(incomeListData.get(i))){
-                    spinner.setSelection(i);
+                    //spinner.setSelection(i);
+                    spinner.setSelectedIndex(i);
+                    categoryId = incomeListId.get(i);
                     break;
                 }
             }
@@ -188,7 +207,10 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
         for(int i=0;i<listAccount.size();i++){
             if(accountName.equals(listAccount.get(i))){
-                accountSpinner.setSelection(i);
+                //accountSpinner.setSelection(i);
+                accountSpinner.setSelectedIndex(i);
+                accountId = bill.getAccount_id();
+
                 break;
             }
         }
@@ -282,7 +304,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
 
-            case R.id.bill_update_time:
+            case R.id.bill_time:
                 showStartDateSelector();
                 break;
 
@@ -295,6 +317,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 spinner.setAdapter(adapter);
                 setDefaultPsinnerItem();
                 spinner.setOnItemSelectedListener(new SpinnerSelectedListenerBup());
+
+
+
                 spinner.setVisibility(View.VISIBLE);
                 break;
             case R.id.bill_update_income:
@@ -309,7 +334,7 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                 spinner.setVisibility(View.VISIBLE);
                 break;
 
-            case R.id.save_bill_update:
+            case R.id.btn_save:
                 if(saveBill()){
                     Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
                     //把值periodicId传回上一个界面
@@ -329,33 +354,53 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
 
     //内部类，下拉列表监听者，使用数组形式操作
-    class SpinnerSelectedListenerBup implements AdapterView.OnItemSelectedListener {
+    //MaterialSpinner.OnItemSelectedListener
+    class SpinnerSelectedListenerBup implements MaterialSpinner.OnItemSelectedListener {
 
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+       /* public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             if (isIncome == 0) {
-                view.setText("你的选择是："+ outcomeListData.get(arg2));
+                view.setText(outcomeListData.get(arg2));
                 categoryId = outcomeListId.get(arg2);
             } else {
-                view.setText("你的选择是："+ incomeListData.get(arg2));
+                view.setText(incomeListData.get(arg2));
                 categoryId = incomeListId.get(arg2);
             }
-        }
+        }*/
 
         public void onNothingSelected(AdapterView<?> arg0) {
+        }
+
+        @Override
+        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+            if (isIncome == 0) {
+                view.setText(outcomeListData.get(position));
+                categoryId = outcomeListId.get(position);
+            } else {
+                view.setText(incomeListData.get(position));
+                categoryId = incomeListId.get(position);
+            }
         }
     }
 
     //内部类，下拉列表监听者，使用数组形式操作
-    class BillAccountSelectedListener implements AdapterView.OnItemSelectedListener {
+    class BillAccountSelectedListener implements MaterialSpinner.OnItemSelectedListener {
 
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            accountView.setText("你的选择是："+ listAccount.get(arg2));
+       /* public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            //accountView.setText(listAccount.get(arg2));
 
             //设置Account_id 记得去掉注释
             accountId = accounts.get(arg2).getAccount_id();
-        }
+        }*/
 
         public void onNothingSelected(AdapterView<?> arg0) {
+        }
+
+        @Override
+        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+            //accountView.setText(listAccount.get(position));
+            view.setText(listAccount.get(position));
+            //设置Account_id 记得去掉注释
+            accountId = accounts.get(position).getAccount_id();
         }
     }
 
@@ -382,7 +427,9 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
                             .append(mMonth + 1).append("-").append(mDays).toString();
                 }
             }
+
             billUpdateTime.setText(days);
+
         },mYear,mMonth,mDays).show();
     }
 

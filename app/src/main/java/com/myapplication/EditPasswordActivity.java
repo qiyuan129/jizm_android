@@ -1,6 +1,5 @@
 package com.myapplication;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
@@ -30,14 +29,12 @@ import util.UserUtil;
 
 import static util.SyncUtil.HOST_IP;
 
-public class FindActivity2 extends AppCompatActivity {
+public class EditPasswordActivity extends AppCompatActivity {
 
     private AppCompatImageView appCompatImageView;
-    private MaterialEditText phone;
     private MaterialEditText oldPassword;
     private PasswordEditText newPassword;
 
-    private RoundButton btnGetVerifyCode;
     private SuperButton modify;
 
     private CountDownButtonHelper mCountDownHelper;
@@ -47,10 +44,9 @@ public class FindActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find2);
+        setContentView(R.layout.activity_edit_password);
 
         appCompatImageView=findViewById(R.id.back);
-        phone=findViewById(R.id.et_phone_number);
         oldPassword=findViewById(R.id.old_password);
 //        btnGetVerifyCode=findViewById(R.id.btn_get_verify_code);
         newPassword=findViewById(R.id.new_password);
@@ -64,31 +60,22 @@ public class FindActivity2 extends AppCompatActivity {
         });
 
 
-//        mCountDownHelper = new CountDownButtonHelper(btnGetVerifyCode, 60);
-//        btnGetVerifyCode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mCountDownHelper.start();
-//            }
-//        });
-
 
         modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(phone.validate()){
-                    if((!oldPassword.getText().toString().equals("")) || (oldPassword.getText().toString()==null)){
-                        if((!newPassword.getText().toString().equals("")) || (newPassword.getText().toString()==null)){
-                            updatePassword(oldPassword.getText().toString(),newPassword.getText().toString());
-                        }
-                        else {
-                            Toast.makeText(FindActivity2.this,"请输入新密码",Toast.LENGTH_SHORT).show();
-                        }
+                if((!oldPassword.getText().toString().equals("")) || (oldPassword.getText().toString()==null)){
+                    if((!newPassword.getText().toString().equals("")) || (newPassword.getText().toString()==null)){
+                        updatePassword(oldPassword.getText().toString(),newPassword.getText().toString());
                     }
                     else {
-                        Toast.makeText(FindActivity2.this,"请输入旧密码",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditPasswordActivity.this,"请输入新密码",Toast.LENGTH_SHORT).show();
                     }
                 }
+                else {
+                    Toast.makeText(EditPasswordActivity.this,"请输入旧密码",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -146,8 +133,7 @@ public class FindActivity2 extends AppCompatActivity {
                         toast("修改密码成功！");
 
                         //@TODO 在这里写页面跳转
-                        Intent intent = new Intent(FindActivity2.this, MainActivity.class);
-                        startActivity(intent);
+                        finish();
                     }
                     //响应结果为失败类型
                     else{
@@ -166,8 +152,9 @@ public class FindActivity2 extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(FindActivity2.this, str, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPasswordActivity.this, str, Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }

@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mob.MobSDK;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
@@ -20,6 +21,9 @@ import com.xuexiang.xui.widget.edittext.PasswordEditText;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
@@ -27,9 +31,18 @@ import java.util.regex.Pattern;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import util.UserUtil;
 
 import static com.xuexiang.xutil.tip.ToastUtils.toast;
+import static util.SyncUtil.HOST_IP;
 
 public class RegisterActivity2 extends AppCompatActivity {
 
@@ -50,6 +63,8 @@ public class RegisterActivity2 extends AppCompatActivity {
     public String country="86";//这是中国区号，如果需要其他国家列表，可以使用getSupportedCountries();获得国家区号
     private CountDownButtonHelper mCountDownHelper;
     private static final int CODE_REPEAT = 1; //重新发送
+
+    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +149,8 @@ public class RegisterActivity2 extends AppCompatActivity {
                 }else{//如果用户输入的内容为空，提醒用户
                     toast("请输入验证码后再提交");
                 }
+
+
             }
         });
 }
@@ -242,6 +259,74 @@ public class RegisterActivity2 extends AppCompatActivity {
         // 注销回调接口registerEventHandler必须和unregisterEventHandler配套使用，否则可能造成内存泄漏。
         SMSSDK.unregisterEventHandler(eh);
 
+    }
+
+    /**
+     * 向服务器发送注册请求（成功则跳转到登录界面）
+     * @param userName
+     * @param phoneNumber
+     * @param password
+     */
+    private void postRegisterRequest(String userName,String phoneNumber,String password){
+        RequestBody formBody = new FormBody.Builder()
+                .add("userName",userName)
+                .add("phoneNumber",phoneNumber)
+                .add("password",password)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+HOST_IP+":8080/user/registry")    //这里的主机地址要填电脑的ip地址
+                .post(formBody)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e instanceof SocketTimeoutException){//判断超时异常
+                    toast("注册失败:网络链接超时");
+                    e.printStackTrace();
+                }
+                if(e instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+                    toast("注册失败:无法连接到服务器");
+                    e.printStackTrace();
+                }
+                else{
+                    toast("注册失败：其他未知错误，详情请查看控制台");
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onResponse(Call call, Response response)  {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseString=responseBody.string();
+                    JSONObject resultJson=JSONObject.parseObject(responseString);
+                    int statusCode=resultJson.getInteger("code");
+                    String message=resultJson.getString("msg");
+
+                    //如果响应结果状态码为成功的
+                    if(statusCode>=200 && statusCode<400) {
+                        //取出返回的数据；更新本地记录状态
+
+                        toast("注册成功！");
+
+                        Intent intent=new Intent(RegisterActivity2.this,LoginActivity2.class);
+                        startActivity(intent);              //跳转到登录界面
+                    }
+                    //响应结果为失败类型
+                    else{
+                        String errorMessage="状态码："+statusCode+",错误信息："+message+'\n';
+                        toast("注册失败\n"+errorMessage);
+                    }
+                } catch (IOException e) {
+                    toast("注册失败，未知错误，错误信息请查看控制台");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }
