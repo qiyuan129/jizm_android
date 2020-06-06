@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSONObject;
+import com.mob.wrappers.UMSSDKWrapper;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import java.io.IOException;
@@ -36,6 +37,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import util.UserUtil;
 
+import static util.SyncUtil.HOST_IP;
+
 public class PersonalDataEditActivity2 extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -43,7 +46,6 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
     private SuperTextView phone;
     private SuperTextView email;
     private SuperTextView consume;
-    private Button updatePersonalData;
 
     String nameDefault="";
     String phoneDefault="";
@@ -61,7 +63,6 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         phone=findViewById(R.id.user_phone);
         email=findViewById(R.id.user_email);
         consume=findViewById(R.id.user_consume);
-        updatePersonalData=findViewById(R.id.update_personal_data_button);
 
 
         //设置电话号码，email，name数据
@@ -110,20 +111,6 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
                 showEmailDialog();
             }
         });
-
-        updatePersonalData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(judgeData(phoneDefault,emailDefault,nameDefault)){
-                    updatePersonalData(phoneDefault,emailDefault,nameDefault);
-
-                }
-
-            }
-        });
-
-
-
 
     }
 
@@ -177,6 +164,9 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                         name.setRightString(dialog.getInputEditText().getText().toString());
+                        String inputUserName=dialog.getInputEditText().getText().toString();
+                        updateUserName(inputUserName);
+
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -221,6 +211,8 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         phone.setRightString(dialog.getInputEditText().getText().toString());
+                        String inputPhoneNumber=dialog.getInputEditText().getText().toString();
+                        updatePhoneNumber(inputPhoneNumber);
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -265,6 +257,8 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         email.setRightString(dialog.getInputEditText().getText().toString());
+                        String inputEmail=dialog.getInputEditText().getText().toString();
+                        updateEmail(inputEmail);
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -315,24 +309,18 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         return true;
     }
 
-
-
     /**
-     * 向服务器发起修改用户信息请求，成功回到设置界面，失败显示提示并留在原页面
-     * @param phoneNumber
-     * @param email
+     * 向服务器发送更新用户名的请求
      * @param userName
      */
-    private void updatePersonalData(String phoneNumber,String email,String userName){
+    private void updateUserName(String userName){
         UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
         RequestBody formBody = new FormBody.Builder()
                 .add("userName",userName)
-                .add("phone",phoneNumber)
-                .add("email",email)
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://39.100.48.69:8080/user/information")    //这里的主机地址要填电脑的ip地址
+                .url("http://"+HOST_IP+":8080/user/userName")    //这里的主机地址要填电脑的ip地址
                 .post(formBody)
                 .addHeader("token",UserUtil.getToken())
                 .build();
@@ -370,11 +358,136 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
                         toast("保存成功！");
                         //服务器改完后本地更改
                         UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
-                        UserUtil.setPhone(phoneDefault);
-                        UserUtil.setEmail(emailDefault);
-                        UserUtil.setUserName(nameDefault);
+                        UserUtil.setUserName(userName);
 
-                        finish();
+                    }
+                    //响应结果为失败类型
+                    else{
+                        String errorMessage="状态码："+statusCode+",错误信息："+message+'\n';
+                        toast("保存失败\n"+errorMessage);
+                    }
+                } catch (IOException e) {
+                    toast("保存失败，未知错误，错误信息请查看控制台");
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param phoneNumber
+     */
+    private void updatePhoneNumber(String phoneNumber){
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        RequestBody formBody = new FormBody.Builder()
+                .add("phoneNumber",phoneNumber)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+HOST_IP+":8080/user/phoneNumber")    //这里的主机地址要填电脑的ip地址
+                .post(formBody)
+                .addHeader("token",UserUtil.getToken())
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e instanceof SocketTimeoutException){//判断超时异常
+                    toast("更改信息失败:网络链接超时");
+                    e.printStackTrace();
+                }
+                if(e instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+                    toast("更改信息失败:无法连接到服务器");
+                    e.printStackTrace();
+                }
+                else{
+                    toast("更改信息失败：其他未知错误，详情请查看控制台");
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onResponse(Call call, Response response)  {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseString=responseBody.string();
+                    JSONObject resultJson=JSONObject.parseObject(responseString);
+                    int statusCode=resultJson.getInteger("code");
+                    String message=resultJson.getString("msg");
+
+                    //如果响应结果状态码为成功的
+                    if(statusCode>=200 && statusCode<400) {
+                        toast("保存成功！");
+                        //服务器改完后本地更改
+                        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+                        UserUtil.setPhone(phoneNumber);
+                    }
+                    //响应结果为失败类型
+                    else{
+                        String errorMessage="状态码："+statusCode+",错误信息："+message+'\n';
+                        toast("保存失败\n"+errorMessage);
+                    }
+                } catch (IOException e) {
+                    toast("保存失败，未知错误，错误信息请查看控制台");
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param email
+     */
+    private void updateEmail(String email){
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        RequestBody formBody = new FormBody.Builder()
+                .add("email",email)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+HOST_IP+":8080/user/email")    //这里的主机地址要填电脑的ip地址
+                .post(formBody)
+                .addHeader("token",UserUtil.getToken())
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e instanceof SocketTimeoutException){//判断超时异常
+                    toast("更改信息失败:网络链接超时");
+                    e.printStackTrace();
+                }
+                if(e instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+                    toast("更改信息失败:无法连接到服务器");
+                    e.printStackTrace();
+                }
+                else{
+                    toast("更改信息失败：其他未知错误，详情请查看控制台");
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onResponse(Call call, Response response)  {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseString=responseBody.string();
+                    JSONObject resultJson=JSONObject.parseObject(responseString);
+                    int statusCode=resultJson.getInteger("code");
+                    String message=resultJson.getString("msg");
+
+                    //如果响应结果状态码为成功的
+                    if(statusCode>=200 && statusCode<400) {
+                        toast("保存成功！");
+                        //服务器改完后本地更改
+                        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+                        UserUtil.setEmail(email);
                     }
                     //响应结果为失败类型
                     else{

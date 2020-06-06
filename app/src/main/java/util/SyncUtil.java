@@ -36,7 +36,7 @@ public class SyncUtil {
 
     public static String CLOUD_HOST_IP="39.100.48.69";
 
-    public static String LOCAL_HOST_IP="192.168.0.100";
+    public static String LOCAL_HOST_IP="192.168.0.101";   //这里应填入使用ipconfig命令查看到的本机ip,可能随网络环境变化
 
     public static String HOST_IP=CLOUD_HOST_IP;
 
