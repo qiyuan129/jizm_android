@@ -125,7 +125,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         listView.setBtnDelClickListener(new BtnDeleteListern() {
             @Override
             public void deleteOnCliclListern(int position) {
-                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
                 Log.i("list:",String.valueOf(periodics.get(position).getPeriodic_id()));
                 //删除这个周期事件
                 deletePeriodic(position);

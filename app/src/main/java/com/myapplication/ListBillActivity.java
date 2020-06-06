@@ -62,7 +62,7 @@ public class ListBillActivity extends AppCompatActivity {
         listView.setBtnDelClickListener(new BtnDeleteListern() {
             @Override
             public void deleteOnCliclListern(int position) {
-                Toast.makeText(ListBillActivity.this, "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ListBillActivity.this, "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
 
                 Log.i("list:",String.valueOf(billList.get(position).getBill_id()));
 
