@@ -292,10 +292,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         accountList=accountDAO.listAccount();
         List<String> accoutNameList = new ArrayList<>();
         List<Integer> accountIdList = new ArrayList<>();
-        for (int j = 0; j < accountList.size(); j++) {
-            Account account = (Account) accountList.get(j);
-            accoutNameList.add(account.getAccount_name());
-            accountIdList.add(account.getAccount_id());
+        if (accountList.size() != 0) {
+            for (int j = 0; j < accountList.size(); j++) {
+                Account account = (Account) accountList.get(j);
+                if (account.getState() != -1) {
+                    accoutNameList.add(account.getAccount_name());
+                    accountIdList.add(account.getAccount_id());
+                }
+            }
         }
 
         new MaterialDialog.Builder(getActivity())
@@ -309,7 +313,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         cashTv.setText(text);
-                        account_id = accountIdList.get(which);
+                        if (accountIdList.size() != 0) {
+                            account_id = accountIdList.get(which);
+                        }
                         return true;
                     }
                 })
@@ -490,12 +496,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
 
         for (int j = 0; j < categoryList.size(); j++) {
             Category category = (Category)categoryList.get(j);
-            if (category.getType() == 0) {
-                outcome_category.add(category.getCategory_name());
-                outcome_category_id.add(category.getCategory_id());
-            } else {
-                income_category.add(category.getCategory_name());
-                income_category_id.add(category.getCategory_id());
+            if (category.getState() != -1) {
+                if (category.getType() == 0) {
+                    outcome_category.add(category.getCategory_name());
+                    outcome_category_id.add(category.getCategory_id());
+                } else {
+                    income_category.add(category.getCategory_name());
+                    income_category_id.add(category.getCategory_id());
+                }
             }
         }
 
@@ -568,12 +576,14 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         if (categoryList.size() != 0){
             for (int j = 0; j < categoryList.size(); j++) {
                 Category category = (Category)categoryList.get(j);
-                if (category.getType() == 0) {
-                    init_outcome_category_name.add(category.getCategory_name());
-                    init_outcome_category_id.add(category.getCategory_id());
-                } else {
-                    init_income_category_name.add(category.getCategory_name());
-                    init_income_category_id.add(category.getCategory_id());
+                if (category.getState() != -1){
+                    if (category.getType() == 0) {
+                        init_outcome_category_name.add(category.getCategory_name());
+                        init_outcome_category_id.add(category.getCategory_id());
+                    } else {
+                        init_income_category_name.add(category.getCategory_name());
+                        init_income_category_id.add(category.getCategory_id());
+                    }
                 }
             }
 
@@ -583,6 +593,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             } else if (isIncome == 1 && init_income_category_name.size() != 0){
                 sortTv.setText(init_income_category_name.get(0));
                 category_id = init_income_category_id.get(0);
+            } else if (isIncome == 0 && init_outcome_category_name.size() == 0) {
+                sortTv.setText("");
+            } else if (isIncome == 1 && init_income_category_name.size() == 0) {
+                sortTv.setText("");
             }
         }
     }
@@ -597,8 +611,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         if (accountList.size() != 0) {
             for (int i = 0; i < accountList.size(); i++) {
                 Account account = (Account)accountList.get(i);
-                init_account_name.add(account.getAccount_name());
-                init_account_id.add(account.getAccount_id());
+                if (account.getState() != -1) {
+                    init_account_name.add(account.getAccount_name());
+                    init_account_id.add(account.getAccount_id());
+                }
                 if (init_account_name.size() != 0) {
                     cashTv.setText(init_account_name.get(0));
                     account_id = init_account_id.get(0);

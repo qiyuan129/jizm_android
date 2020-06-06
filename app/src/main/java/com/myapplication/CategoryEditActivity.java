@@ -166,12 +166,14 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
 
                 for (int j = 0; j < categoryList.size(); j++) {
                     Category category = (Category)categoryList.get(j);
-                    if (category.getType() == 0) {
-                        outcome_category_name1.add(category.getCategory_name());
-                        outcome_category_id1.add(category.getCategory_id());
-                    } else {
-                        income_category_name1.add(category.getCategory_name());
-                        income_category_id1.add(category.getCategory_id());
+                    if (category.getState() != -1) {
+                        if (category.getType() == 0) {
+                            outcome_category_name1.add(category.getCategory_name());
+                            outcome_category_id1.add(category.getCategory_id());
+                        } else {
+                            income_category_name1.add(category.getCategory_name());
+                            income_category_id1.add(category.getCategory_id());
+                        }
                     }
                 }
 
@@ -219,7 +221,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 //删除该分类
                                 CategoryDAO categoryDAO = new CategoryDAOImpl();
-                                categoryDAO.deleteCategory(category_id);
+                                categoryDAO.setState(category_id, -1);
                                 initCategory();
                             }
                         })
@@ -255,12 +257,14 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
 
         for (int j = 0; j < categoryList.size(); j++) {
             Category category = (Category)categoryList.get(j);
-            if (category.getType() == 0) {
-                outcome_category.add(category.getCategory_name());
-                outcome_category_id.add(category.getCategory_id());
-            } else {
-                income_category.add(category.getCategory_name());
-                income_category_id.add(category.getCategory_id());
+            if (category.getState() != -1) {
+                if (category.getType() == 0) {
+                    outcome_category.add(category.getCategory_name());
+                    outcome_category_id.add(category.getCategory_id());
+                } else {
+                    income_category.add(category.getCategory_name());
+                    income_category_id.add(category.getCategory_id());
+                }
             }
         }
 
