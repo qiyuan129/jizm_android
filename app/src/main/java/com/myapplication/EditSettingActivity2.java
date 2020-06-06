@@ -1,6 +1,7 @@
 package com.myapplication;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,8 @@ public class EditSettingActivity2 extends AppCompatActivity {
         password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                name.setRightString("张三");
+                Intent intent = new Intent(EditSettingActivity2.this, EditPasswordActivity.class);
+                startActivity(intent);
             }
         });
 
