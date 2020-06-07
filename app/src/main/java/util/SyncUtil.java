@@ -38,7 +38,7 @@ public class SyncUtil {
 
     public static String LOCAL_HOST_IP="192.168.0.101";   //这里应填入使用ipconfig命令查看到的本机ip,可能随网络环境变化
 
-    public static String HOST_IP=CLOUD_HOST_IP;
+    public static String HOST_IP=LOCAL_HOST_IP;
 
     /**
      * 构造存有Account表待上传记录的jsonObject
@@ -268,9 +268,17 @@ public class SyncUtil {
             JSONArray accounts=accountSyncRecords.getJSONArray("recordList");
             for(int i=0;i<accounts.size();i++){
                 JSONObject account=accounts.getJSONObject(i);
-                //更新记录的同步状态和对应的服务器记录更新时间
-                accountDAO.setStateAndAnchor(account.getInteger("localId"),
-                        9,account.getDate("modified"));
+                int state=account.getInteger("state");
+                int id=account.getInteger("localId");
+
+                //对于新增或更新的记录，更新同步状态和上次与服务器同步时间
+                if(state==0 || state==1) {
+                    accountDAO.setStateAndAnchor(id,9, account.getDate("modified"));
+                }
+                //对于要删除的记录，进行物理删除
+                else{
+                    accountDAO.deleteAccount(id);
+                }
             }
             Log.d("处理上传响应","更新了"+accounts.size()+"条Account记录的同步状态");
         }
@@ -278,17 +286,36 @@ public class SyncUtil {
             JSONArray bills=billSyncRecords.getJSONArray("recordList");
             for(int i=0;i<bills.size();i++){
                 JSONObject bill=bills.getJSONObject(i);
-                billDAO.setStateAndAnchor(bill.getInteger("localId"),
-                        9,bill.getDate("modified"));
+                int state=bill.getInteger("state");
+                int id=bill.getInteger("localId");
+
+                //对于新增或更新的记录，更新同步状态和上次与服务器同步时间
+                if(state==0 || state==1){
+                    billDAO.setStateAndAnchor(id,9,bill.getDate("modified"));
+                }
+                //对于要删除的记录，进行物理删除
+                else{
+                    billDAO.deleteBill(id);
+                }
             }
+
             Log.d("处理上传响应","更新了"+bills.size()+"条Bill记录的同步状态");
         }
         if(categorySyncRecords.getBoolean("needSync")==true){
             JSONArray categories=categorySyncRecords.getJSONArray("recordList");
             for(int i=0;i<categories.size();i++){
                 JSONObject category=categories.getJSONObject(i);
-                categoryDAO.setStateAndAnchor(category.getInteger("localId"),
-                        9,category.getDate("modified"));
+                int id=category.getInteger("localId");
+                int state=category.getInteger("state");
+
+                //对于新增或更新的记录，更新同步状态和上次与服务器同步时间
+                if(state==0 || state==1){
+                    categoryDAO.setStateAndAnchor(id,9,category.getDate("modified"));
+                }
+                //对于要删除的记录，进行物理删除
+                else{
+                    categoryDAO.deleteCategory(id);
+                }
             }
             Log.d("处理上传响应","更新了"+categories.size()+"条Category记录的同步状态");
         }
@@ -296,8 +323,17 @@ public class SyncUtil {
             JSONArray periodics=periodicSyncRecords.getJSONArray("recordList");
             for(int i=0;i<periodics.size();i++){
                 JSONObject periodic=periodics.getJSONObject(i);
-                periodicDAO.setStateAndAnchor(periodic.getInteger("localId"),
-                        9,periodic.getDate("modified"));
+                int id=periodic.getInteger("localId");
+                int state=periodic.getInteger("state");
+
+                //对于新增或更新的记录，更新同步状态和上次与服务器同步时间
+                if(state==0 || state==1) {
+                    periodicDAO.setStateAndAnchor(id, 9, periodic.getDate("modified"));
+                }
+                //对于要删除的记录，进行物理删除
+                else{
+                    periodicDAO.deletePeriodic(id);
+                }
             }
             Log.d("处理上传响应","更新了"+periodics.size()+"条Periodic记录的同步状态");
         }

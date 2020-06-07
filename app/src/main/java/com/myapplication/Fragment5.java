@@ -56,10 +56,6 @@ public class Fragment5  extends Fragment {
     TextView comsume;
 
 
-    boolean isUploadSuccess;
-    //boolean isDownloadSuccess;
-    boolean isSyncSuccess;
-
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
 
@@ -187,8 +183,18 @@ public class Fragment5  extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"退出登录",Toast.LENGTH_SHORT).show();
+                UserUtil.setRemember(false);
+                UserUtil.setEmail(null);
+                UserUtil.setPhone(null);
+                UserUtil.setToken(null);
+                UserUtil.setUserId(0);
+                UserUtil.setUserName(null);
+                UserUtil.setPassword(null);
 
+                Toast.makeText(getActivity(),"退出登录",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), LoginActivity2.class));
+
+                getActivity().finish();
             }
         });
 
