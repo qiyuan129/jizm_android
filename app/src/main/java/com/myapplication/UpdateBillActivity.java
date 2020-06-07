@@ -260,7 +260,21 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
 
         //设置类别值
         CategoryDAO categoryDAO=new CategoryDAOImpl();
-        categories = (ArrayList<Category>) categoryDAO.listCategory();
+        //categories = (ArrayList<Category>) categoryDAO.listCategory();
+
+
+        //筛选未删除的类别
+        List<Category> tmpList = categoryDAO.listCategory();
+        List<Category> newData = new ArrayList<Category>();
+        for(Category item:tmpList){
+            if(item.getState()!=-1){
+                newData.add(item);
+            }
+        }
+        categories = (ArrayList<Category>)newData;
+
+
+
 //        for(Category cat:categories){
 //            listData.add(cat.getCategory_name());
 //        }
@@ -277,23 +291,31 @@ public class UpdateBillActivity extends AppCompatActivity implements View.OnClic
             }
         }
 
-        /*listData.add("学习用品");
-        listData.add("生活用品");
-        listData.add("娱乐消费");
-        listData.add("买菜");
-        listData.add("旅游");
-        listData.add("其他");*/
+
 
         //设置账户值
         AccountDAO accountDAO=new AccountDAOImpl();
-        accounts = (ArrayList<Account>) accountDAO.listAccount();
+        //accounts = (ArrayList<Account>) accountDAO.listAccount();
+
+
+       //筛选未被删除的账户
+       List<Account> tmpAccounts = accountDAO.listAccount();
+       List<Account> newAccounts = new ArrayList<Account>();
+        for(Account item:tmpAccounts){
+            if(item.getState()!=-1){
+                newAccounts.add(item);
+            }
+        }
+
+        accounts = (ArrayList<Account>)newAccounts;
+
+
         for(Account act:accounts){
             listAccount.add(act.getAccount_name());
         }
 
-      /*  listAccount.add("支付宝账户");
-        listAccount.add("微信账户");
-        listAccount.add("银行账户");*/
+
+
 
     }
 

@@ -100,7 +100,6 @@ public class Fragment5  extends Fragment {
         user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"用户",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), PersonalDataEditActivity2.class);
                 startActivity(intent);
             }
@@ -165,7 +164,6 @@ public class Fragment5  extends Fragment {
         userSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"设置",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), EditSettingActivity2.class);
                 startActivity(intent);
 

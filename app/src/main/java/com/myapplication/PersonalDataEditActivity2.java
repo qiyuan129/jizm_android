@@ -99,7 +99,6 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                phone.setRightString("123*********");
                 showPhoneDialog();
             }
         });
@@ -107,7 +106,6 @@ public class PersonalDataEditActivity2 extends AppCompatActivity {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email.setRightString("20466**");
                 showEmailDialog();
             }
         });

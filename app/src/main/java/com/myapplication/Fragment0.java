@@ -39,7 +39,7 @@ public class Fragment0 extends Fragment {
 
     SlideDeleteListView listView;
 
-    private List<Bill> billList;//只有初始化的时候用过一次，之后里面的数据都是过期的
+    private List<Bill> billList = new ArrayList<Bill>();//只有初始化的时候用过一次，之后里面的数据都是过期的
 
     BillRecomendAdapterF0 newAdapter;
 
@@ -104,7 +104,7 @@ public class Fragment0 extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击的是第" + position + "项", Toast.LENGTH_SHORT).show();
 
                 //查看账单,后续添加
                 //Bill tempBill = billList.get(position);
@@ -128,7 +128,7 @@ public class Fragment0 extends Fragment {
         listView.setBtnDelClickListener(new BtnDeleteListern() {
             @Override
             public void deleteOnCliclListern(int position) {
-                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
                 //Log.i("list:",String.valueOf(billList.get(position).getBill_id()));
                 //删除这个账单
                 deleteBill(position);
@@ -150,8 +150,12 @@ public class Fragment0 extends Fragment {
         CategoryListData = new ArrayList<String>();
 
         CategoryListData.add("全部类别");
+        //筛选状态不为删除的
         for(Category cat:categories){
-            CategoryListData.add(cat.getCategory_name());
+            if(cat.getState()!=-1){
+                CategoryListData.add(cat.getCategory_name());
+            }
+
         }
 
 
@@ -208,13 +212,14 @@ public class Fragment0 extends Fragment {
     public void RefreshData(){
         if(billList!=null && newAdapter!=null && categoryAdapter!=null && spinner!=null && listView!=null){
             billList.clear();
-            BillDAO billDao = new BillDAOImpl();
+            //BillDAO billDao = new BillDAOImpl();
             //按时间顺序
             //billList = billDao.listBill();
-            billList = billDao.listBillByDate();
-
+            //billList = billDao.listBillByDate();
+            initBills();//更新账单列表
             newAdapter.clearAll();
             newAdapter.setData(billList);
+
 
             //刷新类别
             setCategoryData();
@@ -293,7 +298,18 @@ public class Fragment0 extends Fragment {
         BillDAO billDao = new BillDAOImpl();
         //billList=billDao.listBill();
         //按时间顺序排列
-        billList = billDao.listBillByDate();
+
+        List<Bill> tmp = billDao.listBillByDate();
+        List<Bill> newData = new ArrayList<Bill>();
+
+        for(Bill item:tmp){
+            if(item.getState()!=-1){
+                newData.add(item);
+            }
+        }
+
+        billList = newData;
+
 
     }
 
@@ -310,7 +326,10 @@ public class Fragment0 extends Fragment {
         delBill.setState(-1);
         //从数据库中删除
         BillDAO billDAO = new BillDAOImpl();
-        billDAO.deleteBill(delBill.getBill_id());
+
+        //billDAO.deleteBill(delBill.getBill_id());
+        //逻辑删除
+        billDAO.setState(delBill.getBill_id(),-1);
 
         //从适配器里删除
         //adapter.remove(delBill);

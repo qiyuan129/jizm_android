@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import dao.AccountDAO;
 import dao.AccountDAOImpl;
@@ -227,7 +228,21 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
         //设置类别值
 
         CategoryDAO categoryDAO=new CategoryDAOImpl();
-        categories=(ArrayList<Category>) categoryDAO.listCategory();
+        //categories=(ArrayList<Category>) categoryDAO.listCategory();
+
+        //筛选未删除的类别
+        List<Category> tmpList = categoryDAO.listCategory();
+        List<Category> newData = new ArrayList<Category>();
+        for(Category item:tmpList){
+            if(item.getState()!=-1){
+                newData.add(item);
+            }
+        }
+        categories = (ArrayList<Category>)newData;
+
+
+
+
 //        for(Category cat:categories){
 //            listData.add(cat.getCategory_name());
 //        }
@@ -246,14 +261,24 @@ public class UpdatePeriodicActivity extends AppCompatActivity implements View.On
 
         //设置账户值
         AccountDAO accountDAO=new AccountDAOImpl();
-        accounts = (ArrayList<Account>) accountDAO.listAccount();
+        //accounts = (ArrayList<Account>) accountDAO.listAccount();
+
+        //筛选未被删除的账户
+        List<Account> tmpAccounts = accountDAO.listAccount();
+        List<Account> newAccounts = new ArrayList<Account>();
+        for(Account item:tmpAccounts){
+            if(item.getState()!=-1){
+                newAccounts.add(item);
+            }
+        }
+
+        accounts = (ArrayList<Account>)newAccounts;
+
         for(Account act:accounts){
             listAccount.add(act.getAccount_name());
         }
 
-       /* listAccount.add("支付宝账户");
-        listAccount.add("微信账户");
-        listAccount.add("银行账户");*/
+
 
         //获取当前年，月，日
         Calendar calendar = Calendar.getInstance();

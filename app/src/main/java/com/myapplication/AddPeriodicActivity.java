@@ -147,9 +147,18 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
         //设置默认选中的下拉列表项，需要在spinner填充数据之后
         //spinner.setSelection(0,true);
         spinner.setSelectedIndex(0);
+        if (isIncome == 0) {
+            categoryId = outcomeListId.get(0);
+        } else {
+            categoryId = incomeListId.get(0);
+        }
+
+
 
        // accountSpinner.setSelection(0,true);
         accountSpinner.setSelectedIndex(0);
+        accountId=accounts.get(0).getAccount_id();
+
 
 
         //注意是给RadioGroup绑定监视器

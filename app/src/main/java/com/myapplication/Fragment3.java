@@ -98,7 +98,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //获取点击到的Periodic
                 Periodic tmp=(Periodic)tmpadapter.getItem(position);
-                Toast.makeText(getActivity(), "点击的是第" + position + "项:"+tmp.getPeriodic_name(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击的是第" + position + "项:"+tmp.getPeriodic_name(), Toast.LENGTH_SHORT).show();
 
                 //这里构造的periodic没有id,先写一个
                 //tmp.setPeriodic_id(4);//设置一下id
@@ -125,7 +125,7 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
         listView.setBtnDelClickListener(new BtnDeleteListern() {
             @Override
             public void deleteOnCliclListern(int position) {
-                Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "点击删除的是第" + position + "项", Toast.LENGTH_SHORT).show();
                 Log.i("list:",String.valueOf(periodics.get(position).getPeriodic_id()));
                 //删除这个周期事件
                 deletePeriodic(position);
@@ -232,8 +232,21 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
     public void RefreshData(){
         if(periodics!=null && tmpadapter!=null && listView!=null){
             periodics.clear();
-            PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+            initPeriodics();
+
+            /*PeriodicDAO periodicDAO = new PeriodicDAOImpl();
             periodics = periodicDAO.listPeriodic();
+
+            //筛选状态不为删除的
+            for(int i=0;i<periodics.size();i++){
+                if(periodics.get(i).getState() == -1){
+                    periodics.remove(i);
+                }
+            }*/
+
+
+
+
             tmpadapter.clearAll();
             tmpadapter.setData(periodics);
             tmpadapter.notifyDataSetChanged();
@@ -276,7 +289,10 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
        tmpadapter.clearAll();
        for(Periodic item:tmpList){
-           tmpadapter.addItem(item);
+           if(item.getState() != -1){
+               tmpadapter.addItem(item);
+           }
+
        }
 
        tmpadapter.notifyDataSetChanged();
@@ -361,7 +377,18 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
        //调用DAO代码获得周期事件数组
 
        PeriodicDAO periodicDAO = new PeriodicDAOImpl();
-       periodics = periodicDAO.listPeriodic();
+       List<Periodic> tmp = periodicDAO.listPeriodic();
+       List<Periodic> newData = new ArrayList<Periodic>();
+        //筛选状态不为删除的
+        for(Periodic item:tmp){
+            if(item.getState()!=-1){
+                newData.add(item);
+            }
+        }
+
+        periodics = newData;
+
+
 
     }
 
@@ -380,7 +407,11 @@ public class Fragment3 extends Fragment implements View.OnClickListener{
 
         //从数据库里删除
         PeriodicDAO periodicDAO=new PeriodicDAOImpl();
-        periodicDAO.deletePeriodic(delPeriodic.getPeriodic_id());
+
+        //periodicDAO.deletePeriodic(delPeriodic.getPeriodic_id());
+        //逻辑删除
+        periodicDAO.setState(delPeriodic.getPeriodic_id(),-1);
+
 
         //periodics与tmpadapter里的数据是绑定的，因此periodics不用重复删除
         tmpadapter.removeItem(index);
