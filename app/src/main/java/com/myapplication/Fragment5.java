@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
-import com.mob.wrappers.AnalySDKWrapper;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
@@ -23,8 +22,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.BillDAO;
 import dao.BillDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -47,7 +52,7 @@ public class Fragment5  extends Fragment {
     SuperTextView userAccount;
     SuperTextView userRecover;
     SuperTextView userUpdate;
-    SuperTextView userExport;
+    //SuperTextView userExport;
     SuperTextView userSetting;
     SuperTextView userAbout;
     SuperButton logout;
@@ -74,7 +79,7 @@ public class Fragment5  extends Fragment {
         userAccount=(SuperTextView)mView.findViewById(R.id.user_account) ;
         userRecover=(SuperTextView)mView.findViewById(R.id.user_recover) ;
         userUpdate=(SuperTextView)mView.findViewById(R.id.user_update) ;
-        userExport=(SuperTextView)mView.findViewById(R.id.user_export) ;
+     //   userExport=(SuperTextView)mView.findViewById(R.id.user_export) ;
         userSetting=(SuperTextView)mView.findViewById(R.id.user_setting) ;
         userAbout=(SuperTextView)mView.findViewById(R.id.user_about) ;
         logout=(SuperButton)mView.findViewById(R.id.btn_logout) ;
@@ -118,8 +123,8 @@ public class Fragment5  extends Fragment {
         userRecover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"恢复数据",Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(getActivity(),"开始恢复...",Toast.LENGTH_SHORT).show();
+                postRecoverRequest();
             }
         });
 
@@ -132,9 +137,9 @@ public class Fragment5  extends Fragment {
                     //isDownloadSuccess=false;
                     Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
 
-             /*   download();
+             /*   postDownloadRequest();
                 if(isDownloadSuccess==true){       //下载成功才执行上传
-                    upload();
+                    postUploadRequest();
                 }
 
                 if(isDownloadSuccess==true && isUploadSuccess==true){
@@ -147,19 +152,19 @@ public class Fragment5  extends Fragment {
 
                 System.out.println("isDownloadSuccess="+isDownloadSuccess+",isUploadSuccess="+isUploadSuccess);*/
 
-                    download();
+                    postDownloadRequest();
                 }
 
             }
         });
 
-        userExport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"导出账单",Toast.LENGTH_SHORT).show();
-
-            }
-        });
+//        userExport.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(),"导出账单",Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
         userSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,7 +229,7 @@ public class Fragment5  extends Fragment {
     /**
      * 执行上传任务
      */
-    private void upload(){
+    private void postUploadRequest(){
         JSONObject syncRecordsJsonObject= SyncUtil.getAllSyncRecords();
         RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,
                 syncRecordsJsonObject.toJSONString());
@@ -315,7 +320,7 @@ public class Fragment5  extends Fragment {
     /**
      * 向服务器发起请求，获取待下载数据并对本地数据库执行相应更新
      */
-    private void download(){
+    private void postDownloadRequest(){
         JSONObject lastUpdateDates= SyncUtil.getTableLastUpdateTime();
         RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,
                 lastUpdateDates.toJSONString());
@@ -375,7 +380,7 @@ public class Fragment5  extends Fragment {
                         SyncUtil.processDownloadResult(dataJson);
 
                         Log.d("处理下载请求","下载成功，开始执行上传");
-                        upload();
+                        postUploadRequest();
 
                         //syncTextView.setText("更新数据（上次同步时间："+new Date()+")");
 
@@ -406,9 +411,106 @@ public class Fragment5  extends Fragment {
         });
     }
 
+    /**
+     * 向服务器发送恢复数据请求
+     */
+    private void postRecoverRequest(){
+        JSONObject dateObject=new JSONObject();
+        dateObject.put("Account",new Date(0));
+        dateObject.put("Bill",new Date(0));
+        dateObject.put("Category",new Date(0));
+        dateObject.put("Periodic",new Date(0));
+
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,
+                dateObject.toJSONString());
+
+        //这里的主机地址要填电脑的ip地址 ,token要填用户登录时获取的token，超过一定时间会失效，
+        // 需要重新获取
+        Request request = new Request.Builder()
+                .url("http://"+HOST_IP+":8080/app/download")
+                .post(requestBody)
+                .addHeader("token", UserUtil.getToken())
+                .build();
+
+        Log.d("发送恢复数据请求","开始尝试获取当前用户在服务器端的所有数据");
+
+        //使用异步请求（用同步发送请求需要在子线程上发起，因为安卓较新的版本都不允许在主线程发送网络请求）
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e instanceof SocketTimeoutException){//判断超时异常
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"下载时出错：网络连接超时",
+                            Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+                if(e instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"下载时出错：连接到服务器失败",
+                            Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+                else{
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"下载时出错：其他错误",
+                            Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+
+            }
 
 
+            @Override
+            public void onResponse(Call call, Response response)  {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseString=responseBody.string();
+                    JSONObject resultJson=JSONObject.parseObject(responseString);
+                    int statusCode=resultJson.getInteger("code");
+                    String message=resultJson.getString("msg");
 
+                    //如果响应结果状态码为成功的
+                    if(statusCode>=200 && statusCode<400) {
+                        //取出返回的数据；更新本地记录状态
+                        JSONObject dataJson = resultJson.getJSONObject("data");
 
+                        Log.d("处理恢复数据请求","下载数据成功，开始重置数据库并进行恢复数据");
+                        SyncUtil.deleteAllRecords();
+                        SyncUtil.processDownloadResult(dataJson);
+                        //syncTextView.setText("更新数据（上次同步时间："+new Date()+")");
+
+                        Looper.prepare();
+                        Toast.makeText(getActivity(),"恢复数据成功",
+                                Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+                    //响应结果为失败类型
+                    else{
+                        String errorMessage="响应状态码："+statusCode+",错误信息："+message+'\n';
+                        Looper.prepare();
+                        Toast.makeText(getActivity(),"下载服务器记录失败\n"+errorMessage,
+                                Toast.LENGTH_LONG).show();
+                        Looper.loop();
+                    }
+                } catch (IOException e) {
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"转换响应结果为字符串时出错",Toast.LENGTH_SHORT)
+                            .show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+                catch (Exception e){
+                    Looper.prepare();
+                    Toast.makeText(getActivity(),"其他错误，详细信息见控制台",Toast.LENGTH_SHORT)
+                            .show();
+                    Looper.loop();
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
 
 }

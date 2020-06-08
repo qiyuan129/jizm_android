@@ -76,14 +76,7 @@
         app:sDividerLineType="none"
         app:sLeftTextString="更新数据" />
 
-    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-        android:id="@+id/user_export"
-        style="@style/InfoItem.Account"
-        app:sLeftIconRes="@drawable/user_export"
-        app:sDividerLineType="none"
-        app:sLeftTextString="导出账单" />
-
-    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
         android:id="@+id/user_setting"
         style="@style/InfoItem.Account"
         android:layout_height="60dp"

@@ -51,11 +51,7 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     TextView userName;
     TextView userTel;
     TextView syncTextView;
-
-
-    boolean isUploadSuccess;
-    //boolean isDownloadSuccess;
-    boolean isSyncSuccess;
+   // TextView
 
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -63,7 +59,6 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
     private final OkHttpClient client = new OkHttpClient.Builder()
                                         .connectTimeout(3, TimeUnit.SECONDS)
                                         .build();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
@@ -82,10 +77,6 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
 
         return mView;
     }
-
-
-
-
 
     private void initInfomation(){
         imageViewb=(ImageView)mView.findViewById(R.id.h_back) ;
@@ -125,11 +116,6 @@ public class Fragment4 extends Fragment implements View.OnClickListener{
         settingEnter.setOnClickListener(this);
         syncTextView.setOnClickListener(this);
     }
-
-
-
-
-
 
     @Override
     public void onClick(View view) {
