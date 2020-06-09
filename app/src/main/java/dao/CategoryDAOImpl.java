@@ -90,6 +90,12 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
+    public void deleteAll() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        db.execSQL("delete from category");
+    }
+
+    @Override
     public Category getCategoryById(int id) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Category category=null;

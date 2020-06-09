@@ -1,5 +1,6 @@
 package com.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
@@ -95,7 +96,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://"+HOST_IP+":8080/user/password")    //这里的主机地址要填电脑的ip地址
+                .url("http://"+HOST_IP+":8080/user/password/byOldPassword")    //这里的主机地址要填电脑的ip地址
                 .post(formBody)
                 .addHeader("token",UserUtil.getToken())
                 .build();
@@ -132,7 +133,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                     if(statusCode>=200 && statusCode<400) {
                         toast("修改密码成功！");
 
-                        //@TODO 在这里写页面跳转
+                        startActivity(new Intent(EditPasswordActivity.this,EditSettingActivity2.class));
                         finish();
                     }
                     //响应结果为失败类型

@@ -196,6 +196,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
+            isIncome = 0;
+            incomeTv.setSelected(false);
+            outcomeTv.setSelected(true);
             initCategory();
             initsortTv();
             initcashTv();

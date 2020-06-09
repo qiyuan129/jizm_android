@@ -116,6 +116,12 @@ public class PeriodicDAOImpl implements PeriodicDAO {
     }
 
     @Override
+    public void deleteAll() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        db.execSQL("delete from periodic");
+    }
+
+    @Override
     public Periodic getPeriodicById(int id) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Periodic periodic=null;

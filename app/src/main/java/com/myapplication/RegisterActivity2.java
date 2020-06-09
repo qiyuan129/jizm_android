@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.mob.MobSDK;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
-import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.edittext.PasswordEditText;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
@@ -39,7 +38,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import util.UserUtil;
 
 import static com.xuexiang.xutil.tip.ToastUtils.toast;
 import static util.SyncUtil.HOST_IP;
@@ -48,7 +46,7 @@ public class RegisterActivity2 extends AppCompatActivity {
 
     private TimerTask tt;
     private Timer tm;
-    private AppCompatImageView appCompatImageView;
+    private AppCompatImageView back;
     private MaterialEditText phone;
     private MaterialEditText user;
     private MaterialEditText VerifyCode;
@@ -74,7 +72,7 @@ public class RegisterActivity2 extends AppCompatActivity {
         MobSDK.init(this, "24793dde94dc6", "6e636da9b16e5bf8d5fae19ca30ea6ac");
         SMSSDK.registerEventHandler(eh); //注册短信回调（记得销毁，避免泄露内存）
 
-        appCompatImageView=findViewById(R.id.back);
+        back =findViewById(R.id.back);
         phone=findViewById(R.id.et_phone_number);
         user=findViewById(R.id.et_user);
         VerifyCode=findViewById(R.id.et_verify_code);
@@ -153,6 +151,14 @@ public class RegisterActivity2 extends AppCompatActivity {
 
             }
         });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity2.this,LoginActivity2.class));
+                finish();
+            }
+        });
 }
     Handler hd = new Handler() {
         @Override
@@ -178,21 +184,9 @@ public class RegisterActivity2 extends AppCompatActivity {
                     phoneNum = phone.getText().toString();
                     Password = password.getText().toString();
                     userName = user.getText().toString();
-                    //
-                    //这里将数据userName password phoneNum发送到数据库
-                    //
-                    /**
-                     * 用set和get注册和登录
-                     */
-                    UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
-                    UserUtil.setPhone(phoneNum);
-                    UserUtil.setPassword(Password);
-                    UserUtil.setEmail(userName);
-                    //
-                    Intent intent = new Intent(RegisterActivity2.this,LoginActivity2.class);
-                    intent.putExtra("phone",phoneNum);
-                    startActivity(intent);
-                    toast("注册成功");
+
+                    postRegisterRequest(userName,phoneNum,Password);
+
                 }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){       //获取验证码成功
                     toast("获取验证码成功");
                 }else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//如果你调用了获取国家区号类表会在这里回调

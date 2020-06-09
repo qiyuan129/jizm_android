@@ -47,24 +47,24 @@ public class LoginActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
 
-        etPhoneNumber=findViewById(R.id.et_phone_number);
-        etVerifyCode=findViewById(R.id.input_password);
-        login=findViewById(R.id.btn_login);
-        register=findViewById(R.id.tv_register);
+        etPhoneNumber = findViewById(R.id.et_phone_number);
+        etVerifyCode = findViewById(R.id.input_password);
+        login = findViewById(R.id.btn_login);
+        register = findViewById(R.id.tv_register);
 
         //登录按钮对账号密码确认然后跳转到相应的页面
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //获得用户输入的验证码
-                String pn = etPhoneNumber.getText().toString().trim().replaceAll("/s","");
-                String pw = etVerifyCode.getText().toString().replaceAll("/s","");
-                if (etPhoneNumber.validate());
+                String pn = etPhoneNumber.getText().toString().trim().replaceAll("/s", "");
+                String pw = etVerifyCode.getText().toString().replaceAll("/s", "");
+                if (etPhoneNumber.validate()) ;
                 else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
                     toast("请输入密码");
                 }
                 //写登录的账号密码判断语句 和跳转
-                postLoginRequest(pn,pw);
+                postLoginRequest(pn, pw);
             }
         });
 
@@ -77,26 +77,10 @@ public class LoginActivity2 extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //跳转到寻找密码页面
-        /*
-        btn_find.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent1 = new Intent(LoginActivity.this,FindActivity.class);
-                startActivity(intent1);
-            }
-        });*/
-
     }
 
-//    @Override
-//    public void onBackPressed() {
-//
-//    }
-
     /**
-     * 发起登录请求
+     * 发送登录请求
      * @param phoneNumber
      * @param password
      */
@@ -145,7 +129,7 @@ public class LoginActivity2 extends AppCompatActivity {
                         //取出返回的数据；更新本地记录状态
                         JSONObject dataJson = resultJson.getJSONObject("data");
 
-                        toast("登陆成功！");
+                        toast("登录成功！");
                         storeUserInfomation(dataJson);     //将用户信息及token存储进文件
 
                         Intent intent=new Intent(LoginActivity2.this,MainActivity.class);
@@ -176,6 +160,7 @@ public class LoginActivity2 extends AppCompatActivity {
         String email=dataJson.getString("email");
 
         UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        UserUtil.setRemember(true);
         UserUtil.setToken(token);
         UserUtil.setUserId(userId);
         UserUtil.setUserName(userName);

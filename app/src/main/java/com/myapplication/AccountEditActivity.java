@@ -33,10 +33,16 @@ import java.util.stream.Collectors;
 
 import dao.AccountDAO;
 import dao.AccountDAOImpl;
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
 import pojo.Account;
+import pojo.Bill;
 import pojo.Category;
+import pojo.Periodic;
 
 /**
  * 账户编辑Activity
@@ -46,6 +52,8 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
     public AccountAdapter accountAdapter;
     private List<Account> accountList = new ArrayList<>();
+    private List<Bill> billList = new ArrayList<>();
+    private List<Periodic> periodicList = new ArrayList<>();
 
     public RecyclerView recycleView;
 
@@ -216,10 +224,33 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                         .setNeutralButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //删除该分类
+                                //删除账户
                                 AccountDAO accountDAO = new AccountDAOImpl();
+                                BillDAO billDAO = new BillDAOImpl();
+                                PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+                                billList = billDAO.listBill();
+                                periodicList = periodicDAO.listPeriodic();
+
+                                //若已有使用该类别的账单或周期事件，则不予删除
+                                for (int i = 0; i < billList.size(); i++) {
+                                    Bill bill = (Bill) billList.get(i);
+                                    if (account_id == bill.getAccount_id()) {
+                                        Toast.makeText(AccountEditActivity.this, "该账户下已有相关账单，为避免账单出现问题，您将无法删除该账户。若要删除该账户，请先删除该账户下所有相关账单或周期事件。", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        return;
+                                    }
+                                }
+                                for (int j = 0; j < periodicList.size(); j++) {
+                                    Periodic periodic = (Periodic) periodicList.get(j);
+                                    if (account_id == periodic.getAccount_id()) {
+                                        Toast.makeText(AccountEditActivity.this, "该账户下已有相关周期事件，为避免账单出现问题，您将无法删除该账户。若要删除该账户，请先删除该账户下所有相关账单或周期事件。", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        return;
+                                    }
+                                }
+                                //没有相关联账单，可删除该账户
                                 accountDAO.setState(account_id, -1);
-                                Toast.makeText(AccountEditActivity.this, "该分类已删除", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AccountEditActivity.this, "该账户已成功删除！", Toast.LENGTH_SHORT).show();
                                 initAccount();
                             }
                         })

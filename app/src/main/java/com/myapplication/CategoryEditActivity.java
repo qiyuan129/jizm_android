@@ -20,9 +20,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.BillDAO;
+import dao.BillDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
+import dao.PeriodicDAO;
+import dao.PeriodicDAOImpl;
+import pojo.Bill;
 import pojo.Category;
+import pojo.Periodic;
 
 /**
  * 账单分类编辑Activity
@@ -32,6 +38,8 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
 
     public CategoryChooseAdapter categoryChooseAdapter;
     private List<Category> categoryList = new ArrayList<>();
+    private List<Bill> billList = new ArrayList<>();
+    private List<Periodic> periodicList = new ArrayList<>();
 
     public RecyclerView recycleView;
     private TextView incomeTv;   //收入按钮
@@ -219,10 +227,34 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                         .onNeutral(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                //删除该分类
+                                //删除分类
+                                BillDAO billDAO = new BillDAOImpl();
+                                PeriodicDAO periodicDAO = new PeriodicDAOImpl();
+                                billList = billDAO.listBill();
+                                periodicList = periodicDAO.listPeriodic();
                                 CategoryDAO categoryDAO = new CategoryDAOImpl();
+
+                                //若已有使用该类别的账单或周期事件，则不予删除
+                                for (int i = 0; i < billList.size(); i++) {
+                                    Bill bill = (Bill) billList.get(i);
+                                    if (category_id == bill.getCategory_id()) {
+                                        Toast.makeText(CategoryEditActivity.this, "该分类下存在相关账单，为避免账单出现问题，您将无法删除该分类。若要删除该分类，请先删除该分类下所有相关账单或周期事件。", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        return;
+                                    }
+                                }
+                                for (int j = 0; j < periodicList.size(); j++) {
+                                    Periodic periodic = (Periodic) periodicList.get(j);
+                                    if (category_id == periodic.getCategory_id()) {
+                                        Toast.makeText(CategoryEditActivity.this, "该分类下存在相关周期事件，为避免账单出现问题，您将无法删除该分类。若要删除该分类，请先删除该分类下所有相关账单或周期事件。", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        return;
+                                    }
+                                }
+                                //没有该分类相关账单，可删除该分类
                                 categoryDAO.setState(category_id, -1);
                                 initCategory();
+                                Toast.makeText(CategoryEditActivity.this, "该分类已成功删除！", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .onNegative(new MaterialDialog.SingleButtonCallback() {

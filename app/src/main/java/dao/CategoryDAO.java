@@ -18,6 +18,8 @@ public interface CategoryDAO {
 
     void deleteCategory(int id);
 
+    void deleteAll();
+
     Category getCategoryById(int id);
 
     List<Category> getSyncCategory();

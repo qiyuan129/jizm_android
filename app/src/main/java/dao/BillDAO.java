@@ -19,6 +19,8 @@ public interface BillDAO {
 
     void deleteBill(int id);
 
+    void deleteAll();
+
     Bill getBillById(int id);
 
     List<Double> monthlyIncome(int year);

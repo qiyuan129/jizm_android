@@ -19,6 +19,8 @@ public interface PeriodicDAO {
 
     void deletePeriodic(int id);
 
+    void deleteAll();
+
     Periodic getPeriodicById(int id);
 
     List<Periodic> getSyncPeriodic();

@@ -62,7 +62,7 @@ public class BillDAOImpl implements BillDAO {
         Bill bill=null;
         List<Bill> list=new ArrayList<>();
 
-        Cursor cursor = db.query("bill",null,null,null,null,null,null);
+        Cursor cursor = db.query("bill",null,"state != ?",new String[]{"-1"},null,null,null);
         if (cursor.moveToFirst())
         {
             do {
@@ -92,7 +92,7 @@ public class BillDAOImpl implements BillDAO {
         Bill bill=null;
         List<Bill> list=new ArrayList<>();
 
-        Cursor cursor = db.query("bill",null,null,null,null,null,"bill_date desc");
+        Cursor cursor = db.query("bill",null,"state != ?",new String[]{"-1"},null,null,"bill_date desc");
         if (cursor.moveToFirst())
         {
             do {
@@ -165,6 +165,12 @@ public class BillDAOImpl implements BillDAO {
     }
 
     @Override
+    public void deleteAll() {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        db.execSQL("delete from bill");
+    }
+
+    @Override
     public List<Double> monthlyIncome(int year) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         double m0=0,m1=0,m2=0,m3=0,m4=0,m5=0,m6=0,m7=0,m8=0,m9=0,m10=0,m11=0;
@@ -173,7 +179,7 @@ public class BillDAOImpl implements BillDAO {
         Date date2= new Date(year-1900+1, 0, 1);
         Date date;
 
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+date1.getTime(),""+date2.getTime(),"1"},null,null,null);
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ? and state != ?",new String[]{""+date1.getTime(),""+date2.getTime(),"1","-1"},null,null,null);
         if (cursor.moveToFirst())
         {
             do {
@@ -248,7 +254,7 @@ public class BillDAOImpl implements BillDAO {
         Date date2= new Date(year-1900+1, 0, 1);
         Date date;
 
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+date1.getTime(),""+date2.getTime(),"0"},null,null,null);
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ? and state != ?",new String[]{""+date1.getTime(),""+date2.getTime(),"0","-1"},null,null,null);
         if (cursor.moveToFirst())
         {
             do {
@@ -324,7 +330,7 @@ public class BillDAOImpl implements BillDAO {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         Bill bill=null;
         List<Bill> list=new ArrayList<>();
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type1},null,null,"bill_money desc");
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ? and state != ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type1,"-1"},null,null,"bill_money desc");
         int i=0;
 
         if (cursor.moveToFirst())
@@ -365,7 +371,7 @@ public class BillDAOImpl implements BillDAO {
         for (Category category : categoryList){
             map.put(category.getCategory_id(),0.0);
         }
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type},null,null,"bill_money desc");
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ? and state != ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type,"-1"},null,null,"bill_money desc");
         if (cursor.moveToFirst())
         {
             do {
@@ -391,7 +397,7 @@ public class BillDAOImpl implements BillDAO {
 
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         double sum=0;
-        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type},null,null,"bill_money desc");
+        Cursor cursor = db.query("bill",null,"bill_date >= ? and bill_date < ? and type = ? and state != ?",new String[]{""+begin.getTime(),""+dayAfterEnd.getTime(),""+type,"-1"},null,null,"bill_money desc");
 
         if (cursor.moveToFirst())
         {
