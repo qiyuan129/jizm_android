@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         if (!rememberMe) {
             Intent intent = new Intent(MainActivity.this, LoginActivity2.class);
             startActivity(intent);
+            finish();
         }
         float limit=UserUtil.getLimit();
         String warning=UserUtil.earlyWarning();
@@ -317,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
