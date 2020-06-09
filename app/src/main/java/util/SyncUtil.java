@@ -38,7 +38,7 @@ public class SyncUtil {
 
     public static String LOCAL_HOST_IP="192.168.0.101";   //这里应填入使用ipconfig命令查看到的本机ip,可能随网络环境变化
 
-    public static String HOST_IP=LOCAL_HOST_IP;
+    public static String HOST_IP=CLOUD_HOST_IP;
 
     /**
      * 构造存有Account表待上传记录的jsonObject
