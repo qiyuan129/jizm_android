@@ -146,16 +146,24 @@ public class Fragment0 extends Fragment {
 
         //填充类别列表
         CategoryDAO categoryDAO = new CategoryDAOImpl();
+        List<Category> newData = new ArrayList<Category>();
         categories = (ArrayList<Category>) categoryDAO.listCategory();
-        CategoryListData = new ArrayList<String>();
 
-        CategoryListData.add("全部类别");
         //筛选状态不为删除的
-        for(Category cat:categories){
-            if(cat.getState()!=-1){
-                CategoryListData.add(cat.getCategory_name());
+        for(Category item:categories){
+            if(item.getState()!=-1){
+                newData.add(item);
             }
+        }
 
+
+        categories = (ArrayList<Category>)newData;
+
+        CategoryListData = new ArrayList<String>();
+        CategoryListData.add("全部类别");
+
+        for(Category cat:categories){
+            CategoryListData.add(cat.getCategory_name());
         }
 
 
