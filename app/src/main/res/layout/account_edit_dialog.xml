@@ -29,6 +29,7 @@
         android:id="@+id/editAccountMoney"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
         android:layout_marginLeft="5dp"/>
 
 </LinearLayout>
