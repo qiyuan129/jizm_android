@@ -191,7 +191,12 @@ public class LongRunningService extends Service {
         Intent i = new Intent(this, AlarmReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
 
-        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+        if(Hours>=0){
+            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+        }
+
+
+
 
         return super.onStartCommand(intent, flags, startId);
 
@@ -207,9 +212,11 @@ public class LongRunningService extends Service {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         Date time = calendar.getTime();
         Date now = new Date();
         distance=time.getTime()-now.getTime();
