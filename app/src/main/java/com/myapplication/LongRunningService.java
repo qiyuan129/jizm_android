@@ -28,7 +28,7 @@ public class LongRunningService extends Service {
     public void onCreate() {
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         //long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
-        long Hours = 1*60*1000;//一分钟后执行
+        long Hours = 5*60*1000;//一分钟后执行
 
 
         long triggerAtTime = SystemClock.elapsedRealtime() + Hours;//定时到这个时间点执行这项任务
