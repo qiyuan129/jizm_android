@@ -39,6 +39,9 @@ import dao.CategoryDAOImpl;
 import pojo.Account;
 import pojo.Bill;
 import pojo.Category;
+import util.UserUtil;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Fragment2 extends Fragment implements View.OnClickListener{
 
@@ -49,10 +52,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
     private List<Account> accountList = new ArrayList<>();
 
     //属性
-    private int category_id = 1;
-    private int user_id = 1;
+    private int category_id;
+    private int user_id;
     private int bill_id = 1;
-    private int account_id = 1;
+    private int account_id;
     private Date bill_date = new Date();
     private Date anchor= new Date(0);
     public int isIncome = 0;         //记录类别（收入/支出）
@@ -112,12 +115,17 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
             mView = inflater.inflate(R.layout.fragment2,container,false);
         }
 
+        //获取userId
+        UserUtil.setPreferences(requireContext().getSharedPreferences("user",MODE_PRIVATE));
+        user_id = UserUtil.getUserId();
+
         incomeTv=(Button) mView.findViewById(R.id.income_tv);
         incomeTv.setOnClickListener(this);
 
         outcomeTv = (Button) mView.findViewById(R.id.outcome_tv);
         outcomeTv.setOnClickListener(this);
 
+        isIncome = 0;
         outcomeTv.setSelected(true);
         incomeTv.setSelected(false);
 
@@ -306,7 +314,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener{
         }
 
         new MaterialDialog.Builder(getActivity())
-                .title("请选择支付账户")
+                .title("请选择账户")
                 .titleGravity(GravityEnum.CENTER)
                 .items(accoutNameList)
                 .positiveText("确定")

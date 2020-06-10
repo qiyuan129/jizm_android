@@ -29,6 +29,7 @@ import dao.PeriodicDAOImpl;
 import pojo.Bill;
 import pojo.Category;
 import pojo.Periodic;
+import util.UserUtil;
 
 /**
  * 账单分类编辑Activity
@@ -49,8 +50,8 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
 
     private String edit_category_name = "";
 
-    private int category_id = 1;
-    private int user_id = 1;
+    private int category_id;
+    private int user_id;
     private int isIncome = 0;
     private Date anchor = new Date(0);
 
@@ -63,6 +64,9 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_type);
+
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        user_id = UserUtil.getUserId();
 
         incomeTv = (TextView) findViewById(R.id.tb_note_income);
         incomeTv.setOnClickListener(this);
@@ -142,7 +146,7 @@ public class CategoryEditActivity extends AppCompatActivity implements View.OnCl
                             dialog = null;
                             return;
                         } else {
-                            Category category = new Category(1, 1, dialog.getInputEditText().getText().toString(), isIncome, addState, anchor);
+                            Category category = new Category(1, user_id, dialog.getInputEditText().getText().toString(), isIncome, addState, anchor);
                             CategoryDAO categoryDAO = new CategoryDAOImpl();
                             categoryDAO.insertCategory(category);
                             initCategory();

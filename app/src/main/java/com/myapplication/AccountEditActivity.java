@@ -43,6 +43,7 @@ import pojo.Account;
 import pojo.Bill;
 import pojo.Category;
 import pojo.Periodic;
+import util.UserUtil;
 
 /**
  * 账户编辑Activity
@@ -62,8 +63,8 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
     private String edit_account_name = "";
 
-    private int account_id = 1;
-    private int user_id = 1;
+    private int account_id;
+    private int user_id;
     private Date anchor = new Date(0);
     //状态
     private int addState = 0;  //本地新增
@@ -74,6 +75,9 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_edit);
+
+        UserUtil.setPreferences(getSharedPreferences("user",MODE_PRIVATE));
+        user_id = UserUtil.getUserId();
 
         backIv = (ImageView) findViewById(R.id.back_btn1);
         backIv.setOnClickListener(this);
