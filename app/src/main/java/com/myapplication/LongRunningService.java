@@ -23,6 +23,28 @@ import pojo.Bill;
 import pojo.Periodic;
 
 public class LongRunningService extends Service {
+
+    @Override
+    public void onCreate() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
+        long Hours = 1*60*1000;//一分钟后执行
+
+
+        long triggerAtTime = SystemClock.elapsedRealtime() + Hours;//定时到这个时间点执行这项任务
+
+        Intent i = new Intent(this, AlarmReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        //manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+
+        long space = 24*60*60*1000;//24小时的间隔   24*60*60*1000    5*60*1000
+
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,space,pi);
+
+
+        super.onCreate();
+    }
+
     public LongRunningService() {
     }
 
@@ -181,7 +203,10 @@ public class LongRunningService extends Service {
 
         }).start();*/
 
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+
+
+       /* AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         //long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
         long Hours = getDistance();//当前到24点间隔的毫秒数
 
@@ -192,9 +217,11 @@ public class LongRunningService extends Service {
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
 
         if(Hours>=0){
-            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+            //manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+            long space = 24*60*60*1000;
+            manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,space,pi);
         }
-
+*/
 
 
 
@@ -212,7 +239,7 @@ public class LongRunningService extends Service {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
