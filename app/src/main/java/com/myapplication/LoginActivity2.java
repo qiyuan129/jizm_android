@@ -134,6 +134,7 @@ public class LoginActivity2 extends AppCompatActivity {
 
                         Intent intent=new Intent(LoginActivity2.this,MainActivity.class);
                         startActivity(intent);              //跳转到主界面
+                        finish();
                     }
                     //响应结果为失败类型
                     else{
