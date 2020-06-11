@@ -28,7 +28,7 @@ public class LongRunningService extends Service {
     public void onCreate() {
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         //long Hours = 24*60 * 60 * 1000; // 这是一天24小时的毫秒数
-        long Hours = 4*60*60*1000;//一分钟后执行
+        long Hours = getDistance();//获得到23点的毫秒数
 
 
         long triggerAtTime = SystemClock.elapsedRealtime() + Hours;//定时到这个时间点执行这项任务
@@ -232,7 +232,7 @@ public class LongRunningService extends Service {
 
 
     /*
-   获取当前时间到今晚24点的毫秒数
+   获取当前时间到今晚23点的毫秒数
     */
     public long getDistance(){
         long distance=0;
@@ -240,7 +240,7 @@ public class LongRunningService extends Service {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
