@@ -37,9 +37,9 @@ public class LongRunningService extends Service {
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
         //manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
 
-        long space = 24*60*60*1000;//24小时的间隔   24*60*60*1000    3*60*1000
+        long space = 24*60*60*1000;//24小时的间隔   24*60*60*1000    3*60*60*1000
 
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime(),space,pi);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime()+3*60*60*1000,space,pi);
 
         Log.i("LongRunning ","------创建过程-----");
 
