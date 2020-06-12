@@ -37,9 +37,11 @@ public class LongRunningService extends Service {
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
         //manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
 
-        long space = 24*60*60*1000;//24小时的间隔   24*60*60*1000    5*60*1000
+        long space = 24*60*60*1000;//24小时的间隔   24*60*60*1000    3*60*1000
 
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,space,pi);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime(),space,pi);
+
+        Log.i("LongRunning ","------创建过程-----");
 
 
         super.onCreate();
@@ -239,8 +241,8 @@ public class LongRunningService extends Service {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 25);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
