@@ -169,7 +169,7 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                 List<Integer> account_id_list = new ArrayList<>();
                 List<Double> account_money_list = new ArrayList<>();
                 String account_name1;
-                String account_money1;
+                Double account_money1;
 
                 for (int j = 0; j < accountList.size(); j++) {
                     Account account = (Account) accountList.get(j);
@@ -181,17 +181,15 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                 }
                 account_id = account_id_list.get(position);
                 account_name1 = account_name_list.get(position);
-                account_money1 =String.valueOf(account_money_list.get(position));
+                account_money1 = account_money_list.get(position);
 
                 LayoutInflater factory = LayoutInflater.from(AccountEditActivity.this);
-                final View textEntryView = factory.inflate(R.layout.account_edit_dialog, null);
-                final EditText editAccountName = (EditText) textEntryView.findViewById(R.id.editAccountName);
-                final EditText editAccountMoney = (EditText)textEntryView.findViewById(R.id.editAccountMoney);
+                final View textEntryView = factory.inflate(R.layout.account_edit_dialog2, null);
+                final EditText editAccountName = (EditText) textEntryView.findViewById(R.id.editAccountName1);
                 editAccountName.setText(account_name1);
-                editAccountMoney.setText(account_money1);
 
                 new AlertDialog.Builder(AccountEditActivity.this)
-                        .setTitle("修改账户")
+                        .setTitle("修改账户名称")
                         .setView(textEntryView)
                         .setCancelable(false)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -202,14 +200,9 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
                                     dialog.dismiss();
                                     dialog = null;
                                     return;
-                                } else if (TextUtils.isEmpty(editAccountMoney.getText().toString())) {
-                                    Toast.makeText(AccountEditActivity.this, "您没有输入账户金额", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                    dialog = null;
-                                    return;
                                 } else {
                                     //修改账户
-                                    Account account = new Account(account_id, user_id, editAccountName.getText().toString(), Double.valueOf(editAccountMoney.getText().toString()), updateState, anchor);
+                                    Account account = new Account(account_id, user_id, editAccountName.getText().toString(), account_money1, updateState, anchor);
                                     AccountDAO accountDAO = new AccountDAOImpl();
                                     accountDAO.updateAccount(account);
                                     initAccount();
@@ -263,7 +256,6 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-
     private void initAccount() {
         //取出账户名称、id、钱数
         AccountDAO accountDAO = new AccountDAOImpl();
@@ -281,7 +273,24 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
             if (account.getState() != -1) {
                 account_name_list1.add(account.getAccount_name());
                 account_id_list1.add(account.getAccount_id());
-                account_money_list1.add(account.getMoney());
+
+                //计算账户余额
+                double account_money = 0;
+                double sum = 0;
+                BillDAO billDAO = new BillDAOImpl();
+                billList = billDAO.listBill();
+                for (int i = 0; i < billList.size(); i++) {
+                    Bill bill = (Bill) billList.get(i);
+                    if (account.getAccount_id() == bill.getAccount_id()) {
+                        if (bill.getType() == 0) {
+                            account_money -= bill.getBill_money();
+                        } else {
+                            account_money += bill.getBill_money();
+                        }
+                    }
+                }
+                sum = account.getMoney() + account_money;
+                account_money_list1.add(sum);
             }
         }
 
@@ -307,4 +316,5 @@ public class AccountEditActivity extends AppCompatActivity implements View.OnCli
 
         setAccountAdapter();
     }
+
 }
