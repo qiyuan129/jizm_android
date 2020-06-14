@@ -69,12 +69,12 @@
         app:sLeftIconRes="@drawable/user_recover"
         app:sLeftTextString="恢复数据" />
 
-    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-        android:id="@+id/user_update"
-        style="@style/InfoItem.Account"
-        app:sLeftIconRes="@drawable/user_update"
-        app:sDividerLineType="none"
-        app:sLeftTextString="更新数据" />
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/user_update"
+            style="@style/InfoItem.Account"
+            app:sDividerLineType="none"
+            app:sLeftIconRes="@drawable/user_update"
+            app:sLeftTextString="同步数据" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
         android:id="@+id/user_setting"

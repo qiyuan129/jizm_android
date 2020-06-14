@@ -127,7 +127,7 @@ public class Fragment5  extends Fragment {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(getActivity()).setTitle("系统提示")//设置对话框标题
-                    .setMessage("是否要恢复数据")//设置显示的内容
+                    .setMessage("将使用服务器数据覆盖本地数据，是否继续?")//设置显示的内容
                     .setPositiveButton("确定",new DialogInterface.OnClickListener() {//添加确定按钮
                         @Override
                         public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
@@ -152,29 +152,8 @@ public class Fragment5  extends Fragment {
         userUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"更新数据",Toast.LENGTH_SHORT).show();
-                {
-                    //isUploadSuccess=false;
-                    //isDownloadSuccess=false;
-                    Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
-
-             /*   postDownloadRequest();
-                if(isDownloadSuccess==true){       //下载成功才执行上传
-                    postUploadRequest();
-                }
-
-                if(isDownloadSuccess==true && isUploadSuccess==true){
-                    Toast.makeText(getActivity(),"同步成功！",Toast.LENGTH_SHORT).show();
-                    syncTextView.setText("更新数据（上次同步时间:"+(new Date())+")" );
-                }
-                else{
-                    Toast.makeText(getActivity(),"同步失败",Toast.LENGTH_SHORT).show();
-                }
-
-                System.out.println("isDownloadSuccess="+isDownloadSuccess+",isUploadSuccess="+isUploadSuccess);*/
-
-                    postDownloadRequest();
-                }
+                Toast.makeText(getActivity(),"同步中...请稍候",Toast.LENGTH_SHORT).show();
+                postDownloadRequest();
 
             }
         });
@@ -207,18 +186,37 @@ public class Fragment5  extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserUtil.setRemember(false);
-                UserUtil.setEmail(null);
-                UserUtil.setPhone(null);
-                UserUtil.setToken(null);
-                UserUtil.setUserId(0);
-                UserUtil.setUserName(null);
-                UserUtil.setPassword(null);
+                new AlertDialog.Builder(getActivity()).setTitle("提示")//设置对话框标题
+                        .setMessage("退出将清空本地全部数据，有未同步内容请先同步")//设置显示的内容
+                        .setPositiveButton("确定退出",new DialogInterface.OnClickListener() {//添加确定按钮
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                                UserUtil.setRemember(false);
+                                UserUtil.setEmail(null);
+                                UserUtil.setPhone(null);
+                                UserUtil.setToken(null);
+                                UserUtil.setUserId(0);
+                                UserUtil.setUserName(null);
+                                UserUtil.setPassword(null);
 
-                Toast.makeText(getActivity(),"退出登录",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getActivity(), LoginActivity2.class));
+                                SyncUtil.deleteAllRecords();      //清空所有数据
 
-                getActivity().finish();
+                                Toast.makeText(getActivity(),"退出登录",Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getActivity(), LoginActivity2.class));
+
+                                getActivity().finish();
+
+                            }
+                        }).setNegativeButton("取消",new DialogInterface.OnClickListener() {//添加返回按钮
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {//响应事件
+
+//                            Toast.makeText(getActivity(),"点击取消",Toast.LENGTH_SHORT).show();
+
+                    }
+                }).show();//在按键响应事件中显示此对话框
+
+
             }
         });
 
