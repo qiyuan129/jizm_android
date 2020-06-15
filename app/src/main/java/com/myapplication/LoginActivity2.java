@@ -43,6 +43,7 @@ public class LoginActivity2 extends AppCompatActivity {
     private PasswordEditText etVerifyCode;
     private SuperButton login;
     private XUIAlphaTextView register;
+    private XUIAlphaTextView forget;
 
     private CountDownButtonHelper mCountDownHelper;
     public static final MediaType MEDIA_TYPE_JSON
@@ -58,20 +59,24 @@ public class LoginActivity2 extends AppCompatActivity {
         etVerifyCode = findViewById(R.id.input_password);
         login = findViewById(R.id.btn_login);
         register = findViewById(R.id.tv_register);
+        forget = findViewById(R.id.tv_forget_password);
 
         //登录按钮对账号密码确认然后跳转到相应的页面
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //获得用户输入的验证码
-                String pn = etPhoneNumber.getText().toString().trim().replaceAll("/s", "");
-                String pw = etVerifyCode.getText().toString().replaceAll("/s", "");
-                if (etPhoneNumber.validate()) ;
-                else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
-                    toast("请输入密码");
+                if (etPhoneNumber.validate()){
+                    String pn = etPhoneNumber.getText().toString().trim().replaceAll("/s", "");
+                    String pw = etVerifyCode.getText().toString().replaceAll("/s", "");
+                    if (etPhoneNumber.validate()) ;
+                    else if (TextUtils.isEmpty(pw)) {//判断密码是否为空
+                        toast("请输入密码");
+                    }
+                    //写登录的账号密码判断语句 和跳转
+                    postLoginRequest(pn, pw);
                 }
-                //写登录的账号密码判断语句 和跳转
-                postLoginRequest(pn, pw);
+
             }
         });
 
@@ -81,6 +86,14 @@ public class LoginActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity2.this, RegisterActivity2.class);
+                startActivity(intent);
+            }
+        });
+
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity2.this, FindActivity2.class);
                 startActivity(intent);
             }
         });
@@ -136,7 +149,7 @@ public class LoginActivity2 extends AppCompatActivity {
                         //取出返回的数据；更新本地记录状态
                         JSONObject dataJson = resultJson.getJSONObject("data");
 
-                        toast("登录成功！");
+//                        toast("登录成功！");
                         storeUserInfomation(dataJson);     //将用户信息及token存储进文件
                         postRecoverRequest();
 

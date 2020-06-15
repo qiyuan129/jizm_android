@@ -436,9 +436,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             startDate.setText(myStartDay);
 
             //打印看一下
-            Toast.makeText(this,
-                    String.valueOf(startYear)+String.valueOf(startMonth + 1)+String.valueOf(startDay),
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,
+//                    String.valueOf(startYear)+String.valueOf(startMonth + 1)+String.valueOf(startDay),
+//                    Toast.LENGTH_SHORT).show();
             Log.i("month", myStartDay);
 
 
@@ -471,9 +471,9 @@ public class AddPeriodicActivity extends AppCompatActivity implements View.OnCli
             endDate.setText(myEndDay);
 
             //打印看一下
-            Toast.makeText(this,
-                    String.valueOf(endYear)+String.valueOf(endMonth + 1)+String.valueOf(endDay),
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,
+//                    String.valueOf(endYear)+String.valueOf(endMonth + 1)+String.valueOf(endDay),
+//                    Toast.LENGTH_SHORT).show();
             Log.i("month", myEndDay);
 
 

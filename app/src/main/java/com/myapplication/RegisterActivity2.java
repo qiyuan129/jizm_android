@@ -80,27 +80,33 @@ public class RegisterActivity2 extends AppCompatActivity {
         password=findViewById(R.id.input_password);
         register=findViewById(R.id.btn_login);
 
+        mCountDownHelper = new CountDownButtonHelper(btnGetVerifyCode, 60);
+
+
         btnGetVerifyCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Phone = phone.getText().toString().trim().replaceAll("/s", "");
-                if (!TextUtils.isEmpty(Phone)) {
-                    //定义需要匹配的正则表达式的规则
-                    String REGEX_MOBILE_SIMPLE = "[1][358]\\d{9}";
-                    //把正则表达式的规则编译成模板
-                    Pattern pattern = Pattern.compile(REGEX_MOBILE_SIMPLE);
-                    //把需要匹配的字符给模板匹配，获得匹配器
-                    Matcher matcher = pattern.matcher(Phone);
-                    // 通过匹配器查找是否有该字符，不可重复调用重复调用matcher.find()
-                    if (matcher.find()) {//匹配手机号是否存在
-                        alterWarning();
+                if (phone.validate()){
+                    if (!TextUtils.isEmpty(Phone)) {
+                        //定义需要匹配的正则表达式的规则
+                        String REGEX_MOBILE_SIMPLE = "[1][358]\\d{9}";
+                        //把正则表达式的规则编译成模板
+                        Pattern pattern = Pattern.compile(REGEX_MOBILE_SIMPLE);
+                        //把需要匹配的字符给模板匹配，获得匹配器
+                        Matcher matcher = pattern.matcher(Phone);
+                        // 通过匹配器查找是否有该字符，不可重复调用重复调用matcher.find()
+                        if (matcher.find()) {//匹配手机号是否存在
+                            alterWarning();
 
+                        } else {
+                            toast("手机号格式错误");
+                        }
                     } else {
-                        toast("手机号格式错误");
+                        toast("请先输入手机号");
                     }
-                } else {
-                    toast("请先输入手机号");
                 }
+
             }
     });
 
@@ -160,21 +166,21 @@ public class RegisterActivity2 extends AppCompatActivity {
             }
         });
 }
-    Handler hd = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == CODE_REPEAT) {
-                btnGetVerifyCode.setEnabled(true);
-                register.setEnabled(true);
-                tm.cancel();//取消任务
-                tt.cancel();//取消任务
-                TIME = 60;//时间重置
-                btnGetVerifyCode.setText("重新发送验证码");
-            }else {
-                btnGetVerifyCode.setText(TIME + "重新发送验证码");
-            }
-        }
-    };
+//    Handler hd = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if (msg.what == CODE_REPEAT) {
+//                btnGetVerifyCode.setEnabled(true);
+//                register.setEnabled(true);
+//                tm.cancel();//取消任务
+//                tt.cancel();//取消任务
+//                TIME = 60;//时间重置
+//                btnGetVerifyCode.setText("重新发送验证码");
+//            }else {
+//                btnGetVerifyCode.setText(TIME + "s");
+//            }
+//        }
+//    };
     //回调
     EventHandler eh=new EventHandler(){
         @Override
@@ -223,16 +229,17 @@ public class RegisterActivity2 extends AppCompatActivity {
                 SMSSDK.getVerificationCode(country, Phone);
                 //做倒计时操作
                 Toast.makeText(RegisterActivity2.this, "已发送" + which, Toast.LENGTH_SHORT).show();
-                btnGetVerifyCode.setEnabled(false);
-                register.setEnabled(true);
-                tm = new Timer();
-                tt = new TimerTask() {
-                    @Override
-                    public void run() {
-                        hd.sendEmptyMessage(TIME--);
-                    }
-                };
-                tm.schedule(tt,0,1000);
+//                btnGetVerifyCode.setEnabled(false);
+//                register.setEnabled(true);
+//                tm = new Timer();
+//                tt = new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        hd.sendEmptyMessage(TIME--);
+//                    }
+//                };
+//                tm.schedule(tt,0,1000);
+                mCountDownHelper.start();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮

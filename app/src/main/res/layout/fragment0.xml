@@ -65,6 +65,9 @@
     </Spinner>
 
 
+
+
+
     <hlq.com.slidedeletelistview.SlideDeleteListView
         android:id="@+id/list_bill_view_frag_f0"
         android:layout_width="match_parent"

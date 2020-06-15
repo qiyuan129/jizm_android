@@ -95,7 +95,7 @@ public class Fragment5  extends Fragment {
         //设置值
         UserUtil.setPreferences(requireContext().getSharedPreferences("user",MODE_PRIVATE));
 
-        comsume.setText(String.valueOf(monthMoney()));
+        comsume.setText("本月消费："+String.valueOf(monthMoney())+"￥");
         userName.setText(UserUtil.getUserName());
 
 

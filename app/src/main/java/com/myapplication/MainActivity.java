@@ -94,21 +94,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         boolean rememberMe=UserUtil.getRemember();
+        float limit=UserUtil.getLimit();
+        String warning=UserUtil.earlyWarning();
         if (!rememberMe) {
             Intent intent = new Intent(MainActivity.this, LoginActivity2.class);
             startActivity(intent);
             finish();
         }
-        float limit=UserUtil.getLimit();
-        String warning=UserUtil.earlyWarning();
-        if (warning!=null){
-            Toast.makeText(this,warning,Toast.LENGTH_SHORT).show();
-
-        }
         else {
-            Toast.makeText(this,"limit为"+limit,Toast.LENGTH_SHORT).show();
+            if (warning!=null ){
+                Toast.makeText(this,warning,Toast.LENGTH_SHORT).show();
 
+            }
         }
+
+//        if (warning!=null && rememberMe==true){
+//            Toast.makeText(this,warning,Toast.LENGTH_SHORT).show();
+//
+//        }
+//        else {
+//            Toast.makeText(this,"limit为"+limit,Toast.LENGTH_SHORT).show();
+//
+//        }
 
 
 

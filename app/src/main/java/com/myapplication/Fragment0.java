@@ -485,13 +485,13 @@ public class Fragment0 extends Fragment {
             String billCategory=null;
             if(billItem.getType()==0){//支出
                 tmpMoney = "-" + String.valueOf(billItem.getBill_money());
-                moneyText.setTextColor(Color.parseColor("#ff0000"));
+                moneyText.setTextColor(Color.rgb(220,20,60));
 
 
             }
             else {//收入
                 tmpMoney = "+" + String.valueOf(billItem.getBill_money());
-                moneyText.setTextColor(Color.parseColor("#00ff00"));
+                moneyText.setTextColor(Color.rgb(50,205,50));
 
             }
 
